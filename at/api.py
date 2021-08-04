@@ -4,7 +4,8 @@ from uuid import uuid4
 
 from flask import Blueprint, current_app, jsonify, request, send_from_directory
 from werkzeug.utils import secure_filename
-from xml2rfc import HtmlWriter, PrepToolWriter, V2v3XmlWriter, XmlRfcParser
+from xml2rfc import (
+        HtmlWriter, PrepToolWriter, TextWriter, V2v3XmlWriter, XmlRfcParser)
 
 ALLOWED_EXTENSIONS = {'txt', 'xml', 'md', 'mkd'}
 DIR_MODE = 0o770
@@ -85,11 +86,29 @@ def get_html(filename):
     prep.options.accept_prepped = True
     xmltree.tree = prep.prep()
 
-    # return html
+    # render html
     html = HtmlWriter(xmltree, quiet=True)
     html_file = get_filename(filename, 'html')
     html.write(html_file)
+
     return html_file
+
+
+def get_text(filename):
+    parser = XmlRfcParser(filename, quiet=True)
+    xmltree = parser.parse(remove_comments=False, quiet=True)
+
+    # run prep tool
+    prep = PrepToolWriter(xmltree, quiet=True, liberal=True)
+    prep.options.accept_prepped = True
+    xmltree.tree = prep.prep()
+
+    # render text
+    text = TextWriter(xmltree, quiet=True)
+    text_file = get_filename(filename, 'txt')
+    text.write(text_file)
+
+    return text_file
 
 
 @bp.route('/render/<format>', methods=('POST',))
@@ -115,6 +134,11 @@ def render(format):
         if format == 'html':
             html_file = get_html(xml_file)
             rendered_filename = get_file(html_file)
+        elif format == 'text':
+            text_file = get_text(xml_file)
+            rendered_filename = get_file(text_file)
+        else:
+            return jsonify(error='render format not supported')
 
         return send_from_directory(
                 dir_path,

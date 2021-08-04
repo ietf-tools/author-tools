@@ -55,3 +55,7 @@ curl localhost:5000/api/render/xml -X POST -F "file=@<xml2rfc draft | Karmadown 
 ```
 curl localhost:5000/api/render/html -X POST -F "file=@<xml2rfc draft | Karmadown draft>"
 ```
+
+* Test text RFC generation
+```
+curl localhost:5000/api/render/text -X POST -F "file=@<xml2rfc draft | Karmadown draft>"
