@@ -22,6 +22,29 @@ def get_filename(filename, ext):
     return '.'.join([root, ext])
 
 
+def get_file(filename):
+    return filename.split('/')[-1]
+
+
+def process_file(file):
+    dir_path = path.join(
+            current_app.config['UPLOAD_DIR'],
+            str(uuid4()))
+    mkdir(dir_path, mode=DIR_MODE)
+
+    filename = path.join(
+            dir_path,
+            secure_filename(file.filename))
+    file.save(filename)
+
+    _, file_ext = path.splitext(filename)
+
+    if file_ext.lower() in ['.md', '.mkd']:
+        filename = md2xml(filename)
+
+    return (dir_path, filename)
+
+
 def md2xml(filename):
     output = proc_run(
                 args=['kramdown-rfc2629', filename],
@@ -37,7 +60,7 @@ def md2xml(filename):
     return xml_file
 
 
-def render_xml(filename):
+def get_xml(filename):
     parser = XmlRfcParser(filename, quiet=True)
     xmltree = parser.parse(remove_comments=False, quiet=True)
     xmlroot = xmltree.getroot()
@@ -53,7 +76,7 @@ def render_xml(filename):
     return filename
 
 
-def render_html(filename):
+def get_html(filename):
     parser = XmlRfcParser(filename, quiet=True)
     xmltree = parser.parse(remove_comments=False, quiet=True)
 
@@ -66,11 +89,11 @@ def render_html(filename):
     html = HtmlWriter(xmltree, quiet=True)
     html_file = get_filename(filename, 'html')
     html.write(html_file)
-    return html_file.split('/')[-1]
+    return html_file
 
 
-@bp.route('/render/html', methods=('POST',))
-def render():
+@bp.route('/render/<format>', methods=('POST',))
+def render(format):
     if 'file' not in request.files:
         return jsonify(error='No file')
 
@@ -80,27 +103,20 @@ def render():
         return jsonify(error='Filename missing')
 
     if file and allowed_file(file.filename):
-        dir_path = path.join(
-                current_app.config['UPLOAD_DIR'],
-                str(uuid4()))
-        mkdir(dir_path, mode=DIR_MODE)
+        try:
+            dir_path, filename = process_file(file)
+        except CalledProcessError as e:
+            return jsonify(error='kramdown-rfc2629 error')
 
-        filename = path.join(
-                dir_path,
-                secure_filename(file.filename))
-        file.save(filename)
+        xml_file = get_xml(filename)
 
-        _, file_ext = path.splitext(filename)
+        rendered_filename = get_file(xml_file)
 
-        if file_ext.lower() in ['.md', '.mkd']:
-            try:
-                filename = md2xml(filename)
-            except CalledProcessError as e:
-                return jsonify(error='kramdown-rfc2629 error')
+        if format == 'html':
+            html_file = get_html(xml_file)
+            rendered_filename = get_file(html_file)
 
-        xml_file = render_xml(filename)
-        html_file = render_html(xml_file)
         return send_from_directory(
                 dir_path,
-                html_file,
+                get_file(rendered_filename),
                 as_attachment=True)

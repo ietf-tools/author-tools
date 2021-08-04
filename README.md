@@ -46,6 +46,11 @@ echo "UPLOAD_DIR = '$PWD/tmp'" > instance/config.py
 FLASK_APP=at FLASK_ENV=development flask run
 ```
 
+* Test XML RFC generation
+```
+curl localhost:5000/api/render/xml -X POST -F "file=@<xml2rfc draft | Karmadown draft>"
+```
+
 * Test HTML RFC generation
 ```
 curl localhost:5000/api/render/html -X POST -F "file=@<xml2rfc draft | Karmadown draft>"
