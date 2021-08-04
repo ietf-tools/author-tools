@@ -18,6 +18,12 @@ NOTE: Known issue with Jinja conflict.
 
 * Set up other dependencies for [xml2rfc](https://pypi.org/project/xml2rfc/).
 
+* Install [kramdown-rfc2629](https://github.com/cabo/kramdown-rfc2629).
+
+```
+bundle install
+```
+
 ## Configuration
 
 * Create a instance directory and tmp directory
