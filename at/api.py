@@ -5,7 +5,8 @@ from uuid import uuid4
 from flask import Blueprint, current_app, jsonify, request, send_from_directory
 from werkzeug.utils import secure_filename
 from xml2rfc import (
-        HtmlWriter, PrepToolWriter, TextWriter, V2v3XmlWriter, XmlRfcParser)
+        HtmlWriter, PdfWriter, PrepToolWriter, TextWriter, V2v3XmlWriter,
+        XmlRfcParser)
 
 ALLOWED_EXTENSIONS = {'txt', 'xml', 'md', 'mkd'}
 DIR_MODE = 0o770
@@ -111,6 +112,23 @@ def get_text(filename):
     return text_file
 
 
+def get_pdf(filename):
+    parser = XmlRfcParser(filename, quiet=True)
+    xmltree = parser.parse(remove_comments=False, quiet=True)
+
+    # run prep tool
+    prep = PrepToolWriter(xmltree, quiet=True, liberal=True)
+    prep.options.accept_prepped = True
+    xmltree.tree = prep.prep()
+
+    # render pdf
+    pdf = PdfWriter(xmltree, quiet=True)
+    pdf_file = get_filename(filename, 'pdf')
+    pdf.write(pdf_file)
+
+    return pdf_file
+
+
 @bp.route('/render/<format>', methods=('POST',))
 def render(format):
     if 'file' not in request.files:
@@ -137,6 +155,9 @@ def render(format):
         elif format == 'text':
             text_file = get_text(xml_file)
             rendered_filename = get_file(text_file)
+        elif format == 'pdf':
+            pdf_file = get_pdf(xml_file)
+            rendered_filename = get_file(pdf_file)
         else:
             return jsonify(error='render format not supported')
 

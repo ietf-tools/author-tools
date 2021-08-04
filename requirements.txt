@@ -1,3 +1,4 @@
 Flask>=2.0.1
 celery>=5.1.2
 xml2rfc>=3.9.1
+weasyprint==53.0
