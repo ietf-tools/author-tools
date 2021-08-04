@@ -1,11 +1,13 @@
-from os import path
+from os import mkdir, path
 from subprocess import run as proc_run, CalledProcessError
+from uuid import uuid4
 
 from flask import Blueprint, current_app, jsonify, request, send_from_directory
 from werkzeug.utils import secure_filename
 from xml2rfc import HtmlWriter, PrepToolWriter, V2v3XmlWriter, XmlRfcParser
 
 ALLOWED_EXTENSIONS = {'txt', 'xml', 'md', 'mkd'}
+DIR_MODE = 0o770
 
 bp = Blueprint('api', __name__, url_prefix='/api')
 
@@ -78,8 +80,13 @@ def render():
         return jsonify(error='Filename missing')
 
     if file and allowed_file(file.filename):
-        filename = path.join(
+        dir_path = path.join(
                 current_app.config['UPLOAD_DIR'],
+                str(uuid4()))
+        mkdir(dir_path, mode=DIR_MODE)
+
+        filename = path.join(
+                dir_path,
                 secure_filename(file.filename))
         file.save(filename)
 
@@ -94,6 +101,6 @@ def render():
         xml_file = render_xml(filename)
         html_file = render_html(xml_file)
         return send_from_directory(
-                current_app.config['UPLOAD_DIR'],
+                dir_path,
                 html_file,
                 as_attachment=True)
