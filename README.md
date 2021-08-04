@@ -48,20 +48,20 @@ FLASK_APP=at FLASK_ENV=development flask run
 
 * Test XML RFC generation
 ```
-curl localhost:5000/api/render/xml -X POST -F "file=@<xml2rfc draft | Karmadown draft>"
+curl localhost:5000/api/render/xml -X POST -F "file=@<xml2rfc draft | Kramdown draft>"
 ```
 
 * Test HTML RFC generation
 ```
-curl localhost:5000/api/render/html -X POST -F "file=@<xml2rfc draft | Karmadown draft>"
+curl localhost:5000/api/render/html -X POST -F "file=@<xml2rfc draft | Kramdown draft>"
 ```
 
 * Test text RFC generation
 ```
-curl localhost:5000/api/render/text -X POST -F "file=@<xml2rfc draft | Karmadown draft>"
+curl localhost:5000/api/render/text -X POST -F "file=@<xml2rfc draft | Kramdown draft>"
 ```
 
 * Test PDF RFC generation
 ```
-curl localhost:5000/api/render/pdf -X POST -F "file=@<xml2rfc draft | Karmadown draft>" -o draft-output.pdf
+curl localhost:5000/api/render/pdf -X POST -F "file=@<xml2rfc draft | Kramdown draft>" -o draft-output.pdf
 ```
