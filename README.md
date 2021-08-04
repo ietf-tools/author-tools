@@ -48,5 +48,5 @@ FLASK_APP=at FLASK_ENV=development flask run
 
 * Test HTML RFC generation
 ```
-curl localhost:5000/api/render -X POST -F "file=@<xml2rfc draft | Karmadown draft>"
+curl localhost:5000/api/render/html -X POST -F "file=@<xml2rfc draft | Karmadown draft>"
 ```

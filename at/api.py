@@ -46,6 +46,14 @@ def render_xml(filename):
         v2v3 = V2v3XmlWriter(xmltree)
         xmltree.tree = v2v3.convert2to3()
         xmlroot = xmltree.getroot()
+        v2v3.write(filename)
+
+    return filename
+
+
+def render_html(filename):
+    parser = XmlRfcParser(filename, quiet=True)
+    xmltree = parser.parse(remove_comments=False, quiet=True)
 
     # run prep tool
     prep = PrepToolWriter(xmltree, quiet=True, liberal=True)
@@ -59,7 +67,7 @@ def render_xml(filename):
     return html_file.split('/')[-1]
 
 
-@bp.route('/render', methods=('POST',))
+@bp.route('/render/html', methods=('POST',))
 def render():
     if 'file' not in request.files:
         return jsonify(error='No file')
@@ -83,7 +91,8 @@ def render():
             except CalledProcessError as e:
                 return jsonify(error='kramdown-rfc2629 error')
 
-        html_file = render_xml(filename)
+        xml_file = render_xml(filename)
+        html_file = render_html(xml_file)
         return send_from_directory(
                 current_app.config['UPLOAD_DIR'],
                 html_file,
