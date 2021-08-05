@@ -146,10 +146,11 @@ def render(format):
             return jsonify(error='kramdown-rfc2629 error')
 
         xml_file = get_xml(filename)
+        rendered_filename = ''
 
-        rendered_filename = get_file(xml_file)
-
-        if format == 'html':
+        if format == 'xml':
+            rendered_filename = get_file(xml_file)
+        elif format == 'html':
             html_file = get_html(xml_file)
             rendered_filename = get_file(html_file)
         elif format == 'text':
