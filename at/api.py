@@ -10,6 +10,7 @@ from xml2rfc import (
 
 ALLOWED_EXTENSIONS = {'txt', 'xml', 'md', 'mkd'}
 DIR_MODE = 0o770
+BAD_REQUEST = 400
 
 bp = Blueprint('api', __name__, url_prefix='/api')
 
@@ -132,18 +133,18 @@ def get_pdf(filename):
 @bp.route('/render/<format>', methods=('POST',))
 def render(format):
     if 'file' not in request.files:
-        return jsonify(error='No file')
+        return jsonify(error='No file'), BAD_REQUEST
 
     file = request.files['file']
 
     if file.filename == '':
-        return jsonify(error='Filename missing')
+        return jsonify(error='Filename missing'), BAD_REQUEST
 
     if file and allowed_file(file.filename):
         try:
             dir_path, filename = process_file(file)
         except CalledProcessError as e:
-            return jsonify(error='kramdown-rfc2629 error')
+            return jsonify(error='kramdown-rfc2629 error'), BAD_REQUEST
 
         xml_file = get_xml(filename)
         rendered_filename = ''
@@ -160,7 +161,7 @@ def render(format):
             pdf_file = get_pdf(xml_file)
             rendered_filename = get_file(pdf_file)
         else:
-            return jsonify(error='render format not supported')
+            return jsonify(error='render format not supported'), BAD_REQUEST
 
         return send_from_directory(
                 dir_path,
