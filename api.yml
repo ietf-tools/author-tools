@@ -3,6 +3,9 @@ openapi: "3.0.0"
 info:
   title: IETF @ - Author Tools API
   version: 0.0.1
+servers:
+  - url: http://devbox.amsl.com:55555
+    description: Alpha server
 paths:
   /api/render/{format}:
     post:
