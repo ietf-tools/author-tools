@@ -65,3 +65,8 @@ curl localhost:5000/api/render/text -X POST -F "file=@<xml2rfc draft | Kramdown 
 ```
 curl localhost:5000/api/render/pdf -X POST -F "file=@<xml2rfc draft | Kramdown draft>" -o draft-output.pdf
 ```
+
+## License
+
+* [IETF @ - License](LICENSE)
+* [Swagger UI - License](api-doc/LICENSE)
