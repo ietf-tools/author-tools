@@ -27,6 +27,17 @@ paths:
               - xml
               - html
               - pdf
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: kramdown-rfc2629 (.md, .mkd) file or xml2rfc v2/v3 (.xml) file
       responses:
         '200':
           description: Returns draft in requested format.
