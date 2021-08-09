@@ -41,6 +41,20 @@ paths:
       responses:
         '200':
           description: Returns draft in requested format.
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/xml:
+              schema:
+                type: string
+            text/html:
+              schema:
+                type: string
+            application/pdf:
+              schema:
+                type: string
+                format: binary
         '400':
           description: Error has occured.
           content:
