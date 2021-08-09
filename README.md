@@ -1,6 +1,11 @@
 # IETF @
 IETF @ (IETF Author Tools)
 
+## Documenation
+
+* [API documenation](https://at.fq.nz/)
+* [OpenAPI specification](api.yml)
+
 ## Installation
 
 * Set up Python 3.8+ environment.
@@ -69,4 +74,4 @@ curl localhost:5000/api/render/pdf -X POST -F "file=@<xml2rfc draft | Kramdown d
 ## License
 
 * [IETF @ - License](LICENSE)
-* [Swagger UI - License](api-doc/LICENSE)
+* [Swagger UI - License](docs/LICENSE)
