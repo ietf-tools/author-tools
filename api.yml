@@ -1,0 +1,39 @@
+---
+openapi: "3.0.0"
+info:
+  title: IETF @ - Author Tools API
+  version: 0.0.1
+paths:
+  /api/render/{format}:
+    post:
+      summary: Retuns rendered draft in specified format.
+      parameters:
+        - name: format
+          in: path
+          required: true
+          description: >
+            Required format type:
+              * `text` - text format
+              * `xml` - xml2rfc v3 format
+              * `html` - HTML format
+              * `pdf` - PDF format
+          schema:
+            type: string
+            enum:
+              - text
+              - xml
+              - html
+              - pdf
+      responses:
+        '200':
+          description: Returns draft in requested format.
+        '400':
+          description: Error has occured.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
