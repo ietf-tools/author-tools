@@ -7,26 +7,9 @@ servers:
   - url: http://devbox.amsl.com:55555
     description: Alpha server
 paths:
-  /api/render/{format}:
+  /api/render/text:
     post:
-      summary: Retuns rendered draft in specified format.
-      parameters:
-        - name: format
-          in: path
-          required: true
-          description: >
-            Required format type:
-              * `text` - text format
-              * `xml` - xml2rfc v3 format
-              * `html` - HTML format
-              * `pdf` - PDF format
-          schema:
-            type: string
-            enum:
-              - text
-              - xml
-              - html
-              - pdf
+      summary: Returns rendered draft in text format.
       requestBody:
         required: true
         content:
@@ -45,12 +28,96 @@ paths:
             text/plain:
               schema:
                 type: string
+        '400':
+          description: Error has occured.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
+  /api/render/xml:
+    post:
+      summary: Returns rendered draft in xml2rfc v3 format.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: kramdown-rfc2629 (.md, .mkd) file or xml2rfc v2/v3 (.xml) file
+      responses:
+        '200':
+          description: Returns draft in requested format.
+          content:
             application/xml:
               schema:
                 type: string
+        '400':
+          description: Error has occured.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
+  /api/render/html:
+    post:
+      summary: Returns rendered draft in HTML format.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: kramdown-rfc2629 (.md, .mkd) file or xml2rfc v2/v3 (.xml) file
+      responses:
+        '200':
+          description: Returns draft in requested format.
+          content:
             text/html:
               schema:
                 type: string
+        '400':
+          description: Error has occured.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
+  /api/render/pdf:
+    post:
+      summary: Returns rendered draft in PDF format.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: kramdown-rfc2629 (.md, .mkd) file or xml2rfc v2/v3 (.xml) file
+      responses:
+        '200':
+          description: Returns draft in requested format.
+          content:
             application/pdf:
               schema:
                 type: string
