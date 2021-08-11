@@ -15,6 +15,15 @@ BAD_REQUEST = 400
 bp = Blueprint('api', __name__, url_prefix='/api')
 
 
+# Exceptions
+class KramdownError(Exception):
+    pass
+
+
+class TextError(Exception):
+    pass
+
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -44,6 +53,8 @@ def process_file(file):
 
     if file_ext.lower() in ['.md', '.mkd']:
         filename = md2xml(filename)
+    elif file_ext.lower() == '.txt':
+        filename = txt2xml(filename)
 
     return (dir_path, filename)
 
@@ -53,12 +64,30 @@ def md2xml(filename):
                 args=['kramdown-rfc2629', filename],
                 capture_output=True)
 
-    output.check_returncode()   # raise CalledProcessError on non-zero
+    try:
+        output.check_returncode()
+    except CalledProcessError as e:
+        raise KramdownError(output.stderr.decode('utf-8'))
 
     # write output to XML file
     xml_file = get_filename(filename, 'xml')
     with open(xml_file, 'wb') as file:
         file.write(output.stdout)
+
+    return xml_file
+
+
+def txt2xml(filename):
+    xml_file = get_filename(filename, 'xml')
+
+    output = proc_run(
+                args=['id2xml', '--v3', '--out', xml_file, filename],
+                capture_output=True)
+
+    try:
+        output.check_returncode()
+    except CalledProcessError as e:
+        raise TextError(output.stderr.decode('utf-8'))
 
     return xml_file
 
@@ -143,8 +172,11 @@ def render(format):
     if file and allowed_file(file.filename):
         try:
             dir_path, filename = process_file(file)
-        except CalledProcessError as e:
-            return jsonify(error='kramdown-rfc2629 error'), BAD_REQUEST
+        except KramdownError as e:
+            return jsonify(
+                    error='kramdown-rfc2629 error: {}'.format(e)), BAD_REQUEST
+        except TextError as e:
+            return jsonify(error='id2xml error: {}'.format(e)), BAD_REQUEST
 
         xml_file = get_xml(filename)
         rendered_filename = ''

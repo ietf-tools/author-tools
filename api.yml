@@ -20,7 +20,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: kramdown-rfc2629 (.md, .mkd) file or xml2rfc v2/v3 (.xml) file
+                  description: kramdown-rfc2629 (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
       responses:
         '200':
           description: Returns draft in requested format.
@@ -51,7 +51,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: kramdown-rfc2629 (.md, .mkd) file or xml2rfc v2/v3 (.xml) file
+                  description: kramdown-rfc2629 (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
       responses:
         '200':
           description: Returns draft in requested format.
@@ -82,7 +82,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: kramdown-rfc2629 (.md, .mkd) file or xml2rfc v2/v3 (.xml) file
+                  description: kramdown-rfc2629 (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
       responses:
         '200':
           description: Returns draft in requested format.
@@ -113,7 +113,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: kramdown-rfc2629 (.md, .mkd) file or xml2rfc v2/v3 (.xml) file
+                  description: kramdown-rfc2629 (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
       responses:
         '200':
           description: Returns draft in requested format.
