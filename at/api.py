@@ -3,10 +3,12 @@ from subprocess import run as proc_run, CalledProcessError
 from uuid import uuid4
 
 from flask import Blueprint, current_app, jsonify, request, send_from_directory
+from lxml.etree import XMLSyntaxError
 from werkzeug.utils import secure_filename
 from xml2rfc import (
         HtmlWriter, PdfWriter, PrepToolWriter, TextWriter, V2v3XmlWriter,
         XmlRfcParser)
+from xml2rfc.writers.base import RfcWriterError
 
 ALLOWED_EXTENSIONS = {'txt', 'xml', 'md', 'mkd'}
 DIR_MODE = 0o770
@@ -21,6 +23,10 @@ class KramdownError(Exception):
 
 
 class TextError(Exception):
+    pass
+
+
+class XML2RFCError(Exception):
     pass
 
 
@@ -93,29 +99,44 @@ def txt2xml(filename):
 
 
 def get_xml(filename):
-    parser = XmlRfcParser(filename, quiet=True)
-    xmltree = parser.parse(remove_comments=False, quiet=True)
-    xmlroot = xmltree.getroot()
-    xml2rfc_version = xmlroot.get('version', '2')
-
-    # v2v3 conversion for v2 XML
-    if xml2rfc_version == '2':
-        v2v3 = V2v3XmlWriter(xmltree)
-        xmltree.tree = v2v3.convert2to3()
+    try:
+        parser = XmlRfcParser(filename, quiet=True)
+        xmltree = parser.parse(remove_comments=False, quiet=True)
         xmlroot = xmltree.getroot()
-        v2v3.write(filename)
+        xml2rfc_version = xmlroot.get('version', '2')
+
+        # v2v3 conversion for v2 XML
+        if xml2rfc_version == '2':
+            v2v3 = V2v3XmlWriter(xmltree)
+            xmltree.tree = v2v3.convert2to3()
+            xmlroot = xmltree.getroot()
+            v2v3.write(filename)
+    except XMLSyntaxError as e:
+        raise XML2RFCError(e)
 
     return filename
 
 
-def get_html(filename):
-    parser = XmlRfcParser(filename, quiet=True)
-    xmltree = parser.parse(remove_comments=False, quiet=True)
+def prep_xml(filename):
+    try:
+        parser = XmlRfcParser(filename, quiet=True)
+        xmltree = parser.parse(remove_comments=False, quiet=True)
 
-    # run prep tool
-    prep = PrepToolWriter(xmltree, quiet=True, liberal=True)
-    prep.options.accept_prepped = True
-    xmltree.tree = prep.prep()
+        # run prep tool
+        prep = PrepToolWriter(xmltree, quiet=True, liberal=True)
+        prep.options.accept_prepped = True
+        xmltree.tree = prep.prep()
+    except RfcWriterError as e:
+        raise XML2RFCError(e)
+
+    if xmltree.tree is None:
+        raise XML2RFCError(prep.errors)
+
+    return xmltree
+
+
+def get_html(filename):
+    xmltree = prep_xml(filename)
 
     # render html
     html = HtmlWriter(xmltree, quiet=True)
@@ -126,13 +147,7 @@ def get_html(filename):
 
 
 def get_text(filename):
-    parser = XmlRfcParser(filename, quiet=True)
-    xmltree = parser.parse(remove_comments=False, quiet=True)
-
-    # run prep tool
-    prep = PrepToolWriter(xmltree, quiet=True, liberal=True)
-    prep.options.accept_prepped = True
-    xmltree.tree = prep.prep()
+    xmltree = prep_xml(filename)
 
     # render text
     text = TextWriter(xmltree, quiet=True)
@@ -143,13 +158,7 @@ def get_text(filename):
 
 
 def get_pdf(filename):
-    parser = XmlRfcParser(filename, quiet=True)
-    xmltree = parser.parse(remove_comments=False, quiet=True)
-
-    # run prep tool
-    prep = PrepToolWriter(xmltree, quiet=True, liberal=True)
-    prep.options.accept_prepped = True
-    xmltree.tree = prep.prep()
+    xmltree = prep_xml(filename)
 
     # render pdf
     pdf = PdfWriter(xmltree, quiet=True)
@@ -178,22 +187,30 @@ def render(format):
         except TextError as e:
             return jsonify(error='id2xml error: {}'.format(e)), BAD_REQUEST
 
-        xml_file = get_xml(filename)
+        try:
+            xml_file = get_xml(filename)
+        except XML2RFCError as e:
+            return jsonify(error='xml2rfc error: {}'.format(e)), BAD_REQUEST
+
         rendered_filename = ''
 
-        if format == 'xml':
-            rendered_filename = get_file(xml_file)
-        elif format == 'html':
-            html_file = get_html(xml_file)
-            rendered_filename = get_file(html_file)
-        elif format == 'text':
-            text_file = get_text(xml_file)
-            rendered_filename = get_file(text_file)
-        elif format == 'pdf':
-            pdf_file = get_pdf(xml_file)
-            rendered_filename = get_file(pdf_file)
-        else:
-            return jsonify(error='render format not supported'), BAD_REQUEST
+        try:
+            if format == 'xml':
+                rendered_filename = get_file(xml_file)
+            elif format == 'html':
+                html_file = get_html(xml_file)
+                rendered_filename = get_file(html_file)
+            elif format == 'text':
+                text_file = get_text(xml_file)
+                rendered_filename = get_file(text_file)
+            elif format == 'pdf':
+                pdf_file = get_pdf(xml_file)
+                rendered_filename = get_file(pdf_file)
+            else:
+                return jsonify(
+                        error='render format not supported'), BAD_REQUEST
+        except XML2RFCError as e:
+            return jsonify(error='xml2rfc error: {}'.format(e)), BAD_REQUEST
 
         return send_from_directory(
                 dir_path,
