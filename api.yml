@@ -4,7 +4,7 @@ info:
   title: IETF @ - Author Tools API
   version: 0.0.1
 servers:
-  - url: http://devbox.amsl.com:55555
+  - url: http://devbox.amsl.com:8888
     description: Alpha server
 paths:
   /api/render/text:
