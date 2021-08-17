@@ -18,4 +18,6 @@ RUN bundle install
 RUN mkdir -p tmp
 RUN echo "UPLOAD_DIR = '$PWD/tmp'" > at/config.py
 
-CMD FLASK_APP=at FLASK_ENV=production flask run --host 0.0.0.0 --port 8888
+# host with waitress
+RUN pip install waitress
+CMD waitress-serve --port=8888 --call 'at:create_app'
