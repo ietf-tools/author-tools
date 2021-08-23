@@ -5,6 +5,7 @@ from uuid import uuid4
 from flask import Blueprint, current_app, jsonify, request, send_from_directory
 from lxml.etree import XMLSyntaxError
 from werkzeug.utils import secure_filename
+from xml2rfc.writers.base import default_options
 from xml2rfc import (
         HtmlWriter, PdfWriter, PrepToolWriter, TextWriter, V2v3XmlWriter,
         XmlRfcParser)
@@ -13,6 +14,7 @@ from xml2rfc.writers.base import RfcWriterError
 ALLOWED_EXTENSIONS = {'txt', 'xml', 'md', 'mkd'}
 DIR_MODE = 0o770
 BAD_REQUEST = 400
+METADATA_JS_URL = 'https://www.rfc-editor.org/js/metadata.min.js'
 
 bp = Blueprint('api', __name__, url_prefix='/api')
 
@@ -138,8 +140,12 @@ def prep_xml(filename):
 def get_html(filename):
     xmltree = prep_xml(filename)
 
+    # Update default options
+    options = default_options
+    options.metadata_js_url = METADATA_JS_URL
+
     # render html
-    html = HtmlWriter(xmltree, quiet=True)
+    html = HtmlWriter(xmltree, options=options, quiet=True)
     html_file = get_filename(filename, 'html')
     html.write(html_file)
 
