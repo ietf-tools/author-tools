@@ -22,6 +22,8 @@ subject to a Simplified BSD License) in Contributions.
 
 [Setting up development environment](#setting-up-development-environment)
 
+[Running tests](#running-tests)
+
 ## Note Well
 
 This is a reminder of IETF policies in effect on various topics such as patents
@@ -91,4 +93,15 @@ echo "UPLOAD_DIR = '$PWD/tmp'" > at/config.py
 * Run flask server.
 ```
 FLASK_APP=at FLASK_ENV=development flask run
+```
+
+## Running tests
+* Install required dependencies for testing.
+```
+pip install -r requirements.dev.txt
+```
+
+* Run unit tests.
+```
+python -m unittest discover tests -p "*.py"
 ```

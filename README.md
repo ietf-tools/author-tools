@@ -34,6 +34,10 @@ curl localhost:8888/api/render/text -X POST -F "file=@<xml2rfc draft (.xml) | Kr
 curl localhost:8888/api/render/pdf -X POST -F "file=@<xml2rfc draft (.xml) | Kramdown draft (.md, .mkd) | Text draft (.txt)>" -o draft-output.pdf
 ```
 
+## Contributing
+
+See [contributing guide](CONTRIBUTING.md).
+
 ## License
 
 * [IETF @ - License](LICENSE)
