@@ -7,8 +7,11 @@ def create_app(config=None):
     CORS(app)
 
     if config is None:
+        app.logger.info('Using configuration settings from at/config.py')
         app.config.from_object('at.config')
     else:
+        app.logger.info('Using configuration settings from {}'.format(
+            str(config)))
         app.config.from_mapping(config)
 
     from . import api
