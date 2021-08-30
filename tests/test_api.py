@@ -7,6 +7,7 @@ from faker import Faker
 from hypothesis import given, assume
 from hypothesis.strategies import text
 from werkzeug.datastructures import FileStorage
+from xml2rfc.parser import XmlRfc
 
 from at import api
 
@@ -105,3 +106,8 @@ class TestApi(unittest.TestCase):
 
             self.assertTrue(Path(saved_file).exists())
             self.assertEqual(Path(saved_file).suffix, '.xml')
+
+    def test_prep_xml(self):
+        xml = api.prep_xml(''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
+
+        self.assertIsInstance(xml, XmlRfc)
