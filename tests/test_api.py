@@ -26,8 +26,6 @@ class TestApi(unittest.TestCase):
 
     def setUp(self):
         self.faker = Faker(seed=1985)
-        # susspress logging messages
-        logging.disable(logging.CRITICAL)
         # create temporary data dir
         Path(TEMPORARY_DATA_DIR).mkdir(exist_ok=True)
         # create copies of test data in temporary data dir
@@ -37,8 +35,6 @@ class TestApi(unittest.TestCase):
             copy(original, new)
 
     def tearDown(self):
-        # enable logging messages
-        logging.disable(logging.INFO)
         # remove temporary data dir
         rmtree(TEMPORARY_DATA_DIR, ignore_errors=True)
 
@@ -94,3 +90,18 @@ class TestApi(unittest.TestCase):
 
         self.assertTrue(Path(saved_file).exists())
         self.assertEqual(Path(saved_file).suffix, '.xml')
+
+    def test_convert_v2v3(self):
+        saved_file = api.convert_v2v3(
+                ''.join([TEMPORARY_DATA_DIR, TEST_XML_V2_DRAFT]))
+
+        self.assertTrue(Path(saved_file).exists())
+        self.assertEqual(Path(saved_file).suffix, '.xml')
+
+    def test_get_xml(self):
+        for file in [TEST_XML_DRAFT, TEST_XML_V2_DRAFT]:
+            saved_file = api.get_xml(
+                    ''.join([TEMPORARY_DATA_DIR, file]))
+
+            self.assertTrue(Path(saved_file).exists())
+            self.assertEqual(Path(saved_file).suffix, '.xml')

@@ -19,7 +19,6 @@ BAD_REQUEST = 400
 METADATA_JS_URL = 'https://www.rfc-editor.org/js/metadata.min.js'
 
 bp = Blueprint('api', __name__, url_prefix='/api')
-logger = getLogger()
 
 
 # Exceptions
@@ -58,7 +57,7 @@ def get_file(filename):
     return filename.split('/')[-1]
 
 
-def process_file(file, upload_dir):
+def process_file(file, upload_dir, logger=getLogger()):
     '''Returns XML version of the given file.
     NOTE: if file is an XML file, that file wouldn't go through conversion.'''
 
@@ -75,14 +74,14 @@ def process_file(file, upload_dir):
     _, file_ext = path.splitext(filename)
 
     if file_ext.lower() in ['.md', '.mkd']:
-        filename = md2xml(filename)
+        filename = md2xml(filename, logger)
     elif file_ext.lower() == '.txt':
-        filename = txt2xml(filename)
+        filename = txt2xml(filename, logger)
 
     return (dir_path, filename)
 
 
-def md2xml(filename):
+def md2xml(filename, logger=getLogger()):
     '''Convert kramdown-rfc2629 markdown file to XML'''
 
     logger.debug('processing kramdown-rfc2629 file')
@@ -103,11 +102,11 @@ def md2xml(filename):
     with open(xml_file, 'wb') as file:
         file.write(output.stdout)
 
-    logger.info('new file saved at {}'.format(filename))
+    logger.info('new file saved at {}'.format(xml_file))
     return xml_file
 
 
-def txt2xml(filename):
+def txt2xml(filename, logger=getLogger()):
     '''Convert text RFC file to XML'''
 
     logger.debug('processing text RFC file')
@@ -125,11 +124,44 @@ def txt2xml(filename):
             output.stderr.decode('utf-8')))
         raise TextError(output.stderr.decode('utf-8'))
 
-    logger.info('new file saved at {}'.format(filename))
+    logger.info('new file saved at {}'.format(xml_file))
     return xml_file
 
 
-def get_xml(filename):
+def convert_v2v3(filename, logger=getLogger()):
+    '''Convert XML2RFC v2 file to v3'''
+    try:
+        logger.debug('converting v2 XML to v3 XML')
+
+        # Update default options
+        options = default_options
+        options.v2v3 = True
+        options.utf8 = True
+        options.vocabulary = 'v2'
+        options.no_dtd = True
+
+        parser = XmlRfcParser(filename, options=options, quiet=True)
+        xmltree = parser.parse(
+                remove_comments=False,
+                quiet=True,
+                normalize=False,
+                strip_cdata=False,
+                add_xmlns=True)
+
+        xml_file = get_filename(filename, 'v2v3.xml')
+        options.output_filename = xml_file
+
+        v2v3 = V2v3XmlWriter(xmltree, options=options)
+        v2v3.write(xml_file)
+    except XMLSyntaxError as e:
+        logger.info('xml2rfc v2v3 error: {}'.format(str(e)))
+        raise XML2RFCError(e)
+
+    logger.info('new file saved at {}'.format(xml_file))
+    return xml_file
+
+
+def get_xml(filename, logger=getLogger()):
     '''Convert/parse XML to XML2RFC v3
     NOTE: if file is XML2RFC v2 that will get converted to v3'''
 
@@ -141,14 +173,9 @@ def get_xml(filename):
         xmlroot = xmltree.getroot()
         xml2rfc_version = xmlroot.get('version', '2')
 
-        # v2v3 conversion for v2 XML
         if xml2rfc_version == '2':
-            logger.debug('converting v2 XML to v3 XML')
+            filename = convert_v2v3(filename, logger)
 
-            v2v3 = V2v3XmlWriter(xmltree)
-            xmltree.tree = v2v3.convert2to3()
-            xmlroot = xmltree.getroot()
-            v2v3.write(filename)
     except XMLSyntaxError as e:
         logger.info('xml2rfc error: {}'.format(str(e)))
         raise XML2RFCError(e)
@@ -157,7 +184,7 @@ def get_xml(filename):
     return filename
 
 
-def prep_xml(filename):
+def prep_xml(filename, logger=getLogger()):
     '''Prepare XML file with xml2rfc'''
 
     try:
@@ -179,7 +206,7 @@ def prep_xml(filename):
     return xmltree
 
 
-def get_html(filename):
+def get_html(filename, logger=getLogger()):
     '''Render HTML'''
 
     xmltree = prep_xml(filename)
@@ -198,7 +225,7 @@ def get_html(filename):
     return html_file
 
 
-def get_text(filename):
+def get_text(filename, logger=getLogger()):
     '''Render text'''
 
     xmltree = prep_xml(filename)
@@ -213,7 +240,7 @@ def get_text(filename):
     return text_file
 
 
-def get_pdf(filename):
+def get_pdf(filename, logger=getLogger()):
     '''Render PDF'''
 
     xmltree = prep_xml(filename)
@@ -234,6 +261,8 @@ def render(format):
     Returns rendered format of the given input file.
     Returns JSON on event of an error.'''
 
+    logger = current_app.logger
+
     if 'file' not in request.files:
         logger.info('no input file')
         return jsonify(error='No file'), BAD_REQUEST
@@ -247,7 +276,9 @@ def render(format):
     if file and allowed_file(file.filename):
         try:
             dir_path, filename = process_file(
-                    file, current_app.config['UPLOAD_DIR'])
+                    file=file,
+                    upload_dir=current_app.config['UPLOAD_DIR'],
+                    logger=logger)
         except KramdownError as e:
             return jsonify(
                     error='kramdown-rfc2629 error: {}'.format(e)), BAD_REQUEST
@@ -255,7 +286,7 @@ def render(format):
             return jsonify(error='id2xml error: {}'.format(e)), BAD_REQUEST
 
         try:
-            xml_file = get_xml(filename)
+            xml_file = get_xml(filename, logger=logger)
         except XML2RFCError as e:
             return jsonify(error='xml2rfc error: {}'.format(e)), BAD_REQUEST
 
@@ -265,13 +296,13 @@ def render(format):
             if format == 'xml':
                 rendered_filename = get_file(xml_file)
             elif format == 'html':
-                html_file = get_html(xml_file)
+                html_file = get_html(xml_file, logger=logger)
                 rendered_filename = get_file(html_file)
             elif format == 'text':
-                text_file = get_text(xml_file)
+                text_file = get_text(xml_file, logger=logger)
                 rendered_filename = get_file(text_file)
             elif format == 'pdf':
-                pdf_file = get_pdf(xml_file)
+                pdf_file = get_pdf(xml_file, logger=logger)
                 rendered_filename = get_file(pdf_file)
             else:
                 logger.info(
