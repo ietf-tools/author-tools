@@ -32,8 +32,8 @@ class TestApi(unittest.TestCase):
         Path(TEMPORARY_DATA_DIR).mkdir(exist_ok=True)
         # create copies of test data in temporary data dir
         for file in TEST_DATA:
-            original = '/'.join([TEST_DATA_DIR, file])
-            new = '/'.join([TEMPORARY_DATA_DIR, file])
+            original = ''.join([TEST_DATA_DIR, file])
+            new = ''.join([TEMPORARY_DATA_DIR, file])
             copy(original, new)
 
     def tearDown(self):
@@ -72,7 +72,7 @@ class TestApi(unittest.TestCase):
 
     def test_process_file(self):
         for filename in TEST_DATA:
-            with open('/'.join([TEST_DATA_DIR, filename]), 'rb') as file:
+            with open(''.join([TEST_DATA_DIR, filename]), 'rb') as file:
                 file_object = FileStorage(file, filename=filename)
                 dir_path, saved_file = api.process_file(
                         file_object, TEMPORARY_DATA_DIR)
@@ -83,14 +83,14 @@ class TestApi(unittest.TestCase):
 
     def test_md2xml(self):
         saved_file = api.md2xml(
-                '/'.join([TEMPORARY_DATA_DIR, TEST_KRAMDOWN_DRAFT]))
+                ''.join([TEMPORARY_DATA_DIR, TEST_KRAMDOWN_DRAFT]))
 
         self.assertTrue(Path(saved_file).exists())
         self.assertEqual(Path(saved_file).suffix, '.xml')
 
     def test_txt2xml(self):
         saved_file = api.md2xml(
-                '/'.join([TEMPORARY_DATA_DIR, TEST_TEXT_DRAFT]))
+                ''.join([TEMPORARY_DATA_DIR, TEST_TEXT_DRAFT]))
 
         self.assertTrue(Path(saved_file).exists())
         self.assertEqual(Path(saved_file).suffix, '.xml')
