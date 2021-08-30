@@ -1,7 +1,7 @@
 import logging
 import unittest
 from pathlib import Path
-from shutil import rmtree
+from shutil import copy, rmtree
 
 from faker import Faker
 from hypothesis import given, assume
@@ -11,10 +11,10 @@ from werkzeug.datastructures import FileStorage
 from at import api
 
 TEST_DATA_DIR = './tests/data/'
-TEST_DATA = [
-        'draft-smoke-signals-00.xml',
-        'draft-smoke-signals-00.txt',
-        'draft-smoke-signals-00.md']
+TEST_XML_DRAFT = 'draft-smoke-signals-00.xml'
+TEST_TEXT_DRAFT = 'draft-smoke-signals-00.txt'
+TEST_KRAMDOWN_DRAFT = 'draft-smoke-signals-00.md'
+TEST_DATA = [TEST_XML_DRAFT, TEST_TEXT_DRAFT, TEST_KRAMDOWN_DRAFT]
 TEMPORARY_DATA_DIR = './tests/tmp/'
 
 
@@ -27,6 +27,11 @@ class TestApi(unittest.TestCase):
         logging.disable(logging.CRITICAL)
         # create temporary data dir
         Path(TEMPORARY_DATA_DIR).mkdir(exist_ok=True)
+        # create copies of test data in temporary data dir
+        for file in TEST_DATA:
+            original = '/'.join([TEST_DATA_DIR, file])
+            new = '/'.join([TEMPORARY_DATA_DIR, file])
+            copy(original, new)
 
     def tearDown(self):
         # enable logging messages
@@ -72,3 +77,10 @@ class TestApi(unittest.TestCase):
                 self.assertTrue(Path(dir_path).is_dir())
                 self.assertTrue(Path(saved_file).exists())
                 self.assertEqual(Path(saved_file).suffix, '.xml')
+
+    def test_md2xml(self):
+        saved_file = api.md2xml(
+                '/'.join([TEMPORARY_DATA_DIR, TEST_KRAMDOWN_DRAFT]))
+
+        self.assertTrue(Path(saved_file).exists())
+        self.assertEqual(Path(saved_file).suffix, '.xml')
