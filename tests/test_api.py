@@ -84,3 +84,10 @@ class TestApi(unittest.TestCase):
 
         self.assertTrue(Path(saved_file).exists())
         self.assertEqual(Path(saved_file).suffix, '.xml')
+
+    def test_txt2xml(self):
+        saved_file = api.md2xml(
+                '/'.join([TEMPORARY_DATA_DIR, TEST_TEXT_DRAFT]))
+
+        self.assertTrue(Path(saved_file).exists())
+        self.assertEqual(Path(saved_file).suffix, '.xml')
