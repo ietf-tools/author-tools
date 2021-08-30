@@ -6,7 +6,7 @@
 <?rfc symrefs="yes"?>
 <?rfc comments="yes"?>
 
-<rfc ipr="trust200902" docName="draft-smoke-signals-00" category="exp" version="3">
+<rfc ipr="trust200902" docName="draft-smoke-signals-00" category="exp" version="2">
   <front>
     <title abbrev="smoke-signals">Standard for Data Transmission via Smoke Signals</title>
     <author initials="K." asciiSurname="Nanayakkara Rathnayake" surname="Nanayakkara Rathnayake" asciiFullname="Kesara Nanayakkara Rathnayake" fullname="&#3482;&#3545;&#3523;&#3515; &#3505;&#3535;&#3505;&#3535;&#3514;&#3482;&#3530;&#3482;&#3535;&#3515; &#3515;&#3501;&#3530;&#3505;&#3535;&#3514;&#3482;">

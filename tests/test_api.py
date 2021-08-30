@@ -12,9 +12,12 @@ from at import api
 
 TEST_DATA_DIR = './tests/data/'
 TEST_XML_DRAFT = 'draft-smoke-signals-00.xml'
+TEST_XML_V2_DRAFT = 'draft-smoke-signals-00.v2.xml'
 TEST_TEXT_DRAFT = 'draft-smoke-signals-00.txt'
 TEST_KRAMDOWN_DRAFT = 'draft-smoke-signals-00.md'
-TEST_DATA = [TEST_XML_DRAFT, TEST_TEXT_DRAFT, TEST_KRAMDOWN_DRAFT]
+TEST_DATA = [
+        TEST_XML_DRAFT, TEST_XML_V2_DRAFT, TEST_TEXT_DRAFT,
+        TEST_KRAMDOWN_DRAFT]
 TEMPORARY_DATA_DIR = './tests/tmp/'
 
 
