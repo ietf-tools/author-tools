@@ -12,7 +12,7 @@ from xml2rfc import (
         XmlRfcParser)
 from xml2rfc.writers.base import RfcWriterError
 
-ALLOWED_EXTENSIONS = {'txt', 'xml', 'md', 'mkd'}
+ALLOWED_EXTENSIONS = ('txt', 'xml', 'md', 'mkd')
 DIR_MODE = 0o770
 BAD_REQUEST = 400
 METADATA_JS_URL = 'https://www.rfc-editor.org/js/metadata.min.js'
