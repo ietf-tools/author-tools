@@ -151,7 +151,7 @@ def convert_v2v3(filename, logger=getLogger()):
         xml_file = get_filename(filename, 'v2v3.xml')
         options.output_filename = xml_file
 
-        v2v3 = V2v3XmlWriter(xmltree, options=options)
+        v2v3 = V2v3XmlWriter(xmltree, options=options, quiet=True)
         v2v3.write(xml_file)
     except XMLSyntaxError as e:
         logger.info('xml2rfc v2v3 error: {}'.format(str(e)))
