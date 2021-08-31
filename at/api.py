@@ -271,7 +271,7 @@ def render(format):
 
     if file.filename == '':
         logger.info('file name missing')
-        return jsonify(error='Filename missing'), BAD_REQUEST
+        return jsonify(error='Filename is missing'), BAD_REQUEST
 
     if file and allowed_file(file.filename):
         try:
@@ -308,7 +308,7 @@ def render(format):
                 logger.info(
                         'render format not supported: {}'.format(format))
                 return jsonify(
-                        error='render format not supported'), BAD_REQUEST
+                        error='Render format not supported'), BAD_REQUEST
         except XML2RFCError as e:
             return jsonify(error='xml2rfc error: {}'.format(e)), BAD_REQUEST
 
@@ -318,4 +318,4 @@ def render(format):
                 as_attachment=True)
     else:
         logger.info('File format not supportted: {}'.format(file.filename))
-        return jsonify(error='input file format not supported'), BAD_REQUEST
+        return jsonify(error='Input file format not supported'), BAD_REQUEST
