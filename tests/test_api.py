@@ -111,3 +111,10 @@ class TestApi(unittest.TestCase):
         xml = api.prep_xml(''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
 
         self.assertIsInstance(xml, XmlRfc)
+
+    def test_get_html(self):
+        saved_file = api.get_html(
+                ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
+
+        self.assertTrue(Path(saved_file).exists())
+        self.assertEqual(Path(saved_file).suffix, '.html')
