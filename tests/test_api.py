@@ -1,7 +1,7 @@
-import logging
-import unittest
+from logging import disable as set_logger, INFO, CRITICAL
 from pathlib import Path
 from shutil import copy, rmtree
+from unittest import TestCase
 
 from faker import Faker
 from hypothesis import given, assume
@@ -22,11 +22,13 @@ TEST_DATA = [
 TEMPORARY_DATA_DIR = './tests/tmp/'
 
 
-class TestApi(unittest.TestCase):
+class TestApi(TestCase):
     '''Tests for at.api'''
 
     def setUp(self):
         self.faker = Faker(seed=1985)
+        # susspress logging messages
+        set_logger(CRITICAL)
         # create temporary data dir
         Path(TEMPORARY_DATA_DIR).mkdir(exist_ok=True)
         # create copies of test data in temporary data dir
@@ -36,6 +38,8 @@ class TestApi(unittest.TestCase):
             copy(original, new)
 
     def tearDown(self):
+        # set logging to INFO
+        set_logger(INFO)
         # remove temporary data dir
         rmtree(TEMPORARY_DATA_DIR, ignore_errors=True)
 
