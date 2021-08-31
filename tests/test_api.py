@@ -118,3 +118,10 @@ class TestApi(unittest.TestCase):
 
         self.assertTrue(Path(saved_file).exists())
         self.assertEqual(Path(saved_file).suffix, '.html')
+
+    def test_get_pdf(self):
+        saved_file = api.get_pdf(
+                ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
+
+        self.assertTrue(Path(saved_file).exists())
+        self.assertEqual(Path(saved_file).suffix, '.pdf')
