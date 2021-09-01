@@ -12,6 +12,7 @@ TEST_XML_V2_DRAFT = 'draft-smoke-signals-00.v2.xml'
 TEST_TEXT_DRAFT = 'draft-smoke-signals-00.txt'
 TEST_KRAMDOWN_DRAFT = 'draft-smoke-signals-00.md'
 TEST_UNSUPPORTED_FORMAT = 'draft-smoke-signals-00.odt'
+TEST_KRAMDOWN_ERROR = 'draft-smoke-signals-00.error.md'
 TEST_DATA = [
         TEST_XML_DRAFT, TEST_XML_V2_DRAFT, TEST_TEXT_DRAFT,
         TEST_KRAMDOWN_DRAFT]
@@ -139,3 +140,17 @@ class TestApiRender(TestCase):
 
                     self.assertEqual(result.status_code, 200)
                     self.assertIsNotNone(result.data)
+
+    def test_kramdown_error(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post(
+                        '/api/render/xml',
+                        data={'file': (
+                            open(get_path(TEST_KRAMDOWN_ERROR), 'rb'),
+                            TEST_KRAMDOWN_ERROR)})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                self.assertTrue(json_data['error'].startswith(
+                    'kramdown-rfc2629 error:'))
