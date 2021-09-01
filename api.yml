@@ -6,6 +6,14 @@ info:
 servers:
   - url: http://devbox.amsl.com:8888
     description: Alpha server
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: query
+      name: apikey
+security:
+  - apiKeyAuth: []
 paths:
   /api/render/text:
     post:
@@ -21,6 +29,9 @@ paths:
                   type: string
                   format: binary
                   description: kramdown-rfc2629 (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                apikey:
+                  type: string
+                  description: API Key (can be submitted as query string)
       responses:
         '200':
           description: Returns draft in requested format.
@@ -52,6 +63,9 @@ paths:
                   type: string
                   format: binary
                   description: kramdown-rfc2629 (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                apikey:
+                  type: string
+                  description: API Key (can be submitted as query string)
       responses:
         '200':
           description: Returns draft in requested format.
@@ -83,6 +97,9 @@ paths:
                   type: string
                   format: binary
                   description: kramdown-rfc2629 (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                apikey:
+                  type: string
+                  description: API Key (can be submitted as query string)
       responses:
         '200':
           description: Returns draft in requested format.
@@ -114,6 +131,9 @@ paths:
                   type: string
                   format: binary
                   description: kramdown-rfc2629 (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                apikey:
+                  type: string
+                  description: API Key (can be submitted as query string)
       responses:
         '200':
           description: Returns draft in requested format.

@@ -16,6 +16,7 @@ from xml2rfc.writers.base import RfcWriterError
 ALLOWED_EXTENSIONS = ('txt', 'xml', 'md', 'mkd')
 DIR_MODE = 0o770
 BAD_REQUEST = 400
+UNAUTHORIZED = 401
 METADATA_JS_URL = 'https://www.rfc-editor.org/js/metadata.min.js'
 
 bp = Blueprint('api', __name__, url_prefix='/api')
@@ -262,6 +263,19 @@ def render(format):
     Returns JSON on event of an error.'''
 
     logger = current_app.logger
+
+    # NOTE: this authentication is only fit for the PoC testing phase
+    # and needs to be replaced.
+    if 'API_KEYS' in current_app.config.keys():
+        if 'apikey' in request.values.keys():
+            if request.values['apikey'] in current_app.config['API_KEYS']:
+                logger.debug('valid apikey')
+            else:
+                logger.error('invalid api key')
+                return jsonify(error='API key is invalid'), UNAUTHORIZED
+        else:
+            logger.error('missing api key')
+            return jsonify(error='API key is missing'), UNAUTHORIZED
 
     if 'file' not in request.files:
         logger.info('no input file')
