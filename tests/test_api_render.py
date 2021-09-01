@@ -103,3 +103,15 @@ class TestApiRender(TestCase):
 
                     self.assertEqual(result.status_code, 200)
                     self.assertIsNotNone(result.data)
+
+    def test_render_text(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                for filename in TEST_DATA:
+                    result = client.post(
+                            '/api/render/text',
+                            data={'file': (
+                                open(get_path(filename), 'rb'), filename)})
+
+                    self.assertEqual(result.status_code, 200)
+                    self.assertIsNotNone(result.data)
