@@ -12,6 +12,7 @@ TEST_XML_V2_DRAFT = 'draft-smoke-signals-00.v2.xml'
 TEST_TEXT_DRAFT = 'draft-smoke-signals-00.txt'
 TEST_KRAMDOWN_DRAFT = 'draft-smoke-signals-00.md'
 TEST_UNSUPPORTED_FORMAT = 'draft-smoke-signals-00.odt'
+TEST_XML_ERROR = 'draft-smoke-signals-00.error.xml'
 TEST_TEXT_ERROR = 'draft-smoke-signals-00.error.txt'
 TEST_KRAMDOWN_ERROR = 'draft-smoke-signals-00.error.md'
 TEST_DATA = [
@@ -169,3 +170,17 @@ class TestApiRender(TestCase):
                 self.assertEqual(result.status_code, 400)
                 self.assertTrue(json_data['error'].startswith(
                     'id2xml error:'))
+
+    def test_xml_error(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post(
+                        '/api/render/xml',
+                        data={'file': (
+                            open(get_path(TEST_XML_ERROR), 'rb'),
+                            TEST_XML_ERROR)})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                self.assertTrue(json_data['error'].startswith(
+                    'xml2rfc error:'))
