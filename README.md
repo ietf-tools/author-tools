@@ -3,7 +3,7 @@ IETF @ (IETF Author Tools)
 
 ## Documenation
 
-* [API documenation](http://devbox.amsl.com:8080/doc/)
+* [API documenation](http://author-tools.ietf.org/doc/)
 * [OpenAPI specification](api.yml)
 
 ## Running API service
