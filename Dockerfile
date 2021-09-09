@@ -20,4 +20,4 @@ RUN echo "UPLOAD_DIR = '$PWD/tmp'" > at/config.py
 
 # host with waitress
 RUN pip install waitress
-CMD waitress-serve --port=8888 --call 'at:create_app'
+CMD waitress-serve --port=80 --call 'at:create_app'
