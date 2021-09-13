@@ -3,7 +3,7 @@ IETF @ (IETF Author Tools)
 
 ## Documenation
 
-* [API documenation](http://author-tools.ietf.org/doc/)
+* [API documenation](https://author-tools.ietf.org/doc/)
 * [OpenAPI specification](api.yml)
 
 ## Running API service
