@@ -10,7 +10,7 @@ from werkzeug.utils import secure_filename
 from xml2rfc.writers.base import default_options
 from xml2rfc import (
         HtmlWriter, PdfWriter, PrepToolWriter, TextWriter, V2v3XmlWriter,
-        XmlRfcParser)
+        __version__ as xml2rfc_version, XmlRfcParser)
 from xml2rfc.writers.base import RfcWriterError
 
 ALLOWED_EXTENSIONS = ('txt', 'xml', 'md', 'mkd')
@@ -256,6 +256,37 @@ def get_pdf(filename, logger=getLogger()):
     return pdf_file
 
 
+def get_kramdown_rfc2629_version(logger=getLogger()):
+    '''Return kramdown-rfc2629 version'''
+
+    output = proc_run(
+                args=['kramdown-rfc2629', '--version'],
+                capture_output=True)
+
+    try:
+        output.check_returncode()
+        return output.stdout.decode('utf-8').replace(
+                'kramdown-rfc2629', '').strip()
+    except CalledProcessError as e:
+        logger.info('kramdown-rfc2629 error: {}'.format(
+            output.stderr.decode('utf-8')))
+        return None
+
+
+def get_id2xml_version(logger=getLogger()):
+    '''Return id2xml version'''
+
+    output = proc_run(args=['id2xml', '--version'], capture_output=True)
+
+    try:
+        output.check_returncode()
+        return output.stdout.decode('utf-8').replace('id2xml', '').strip()
+    except CalledProcessError as e:
+        logger.info('id2xml error: {}'.format(
+            output.stderr.decode('utf-8')))
+        return None
+
+
 @bp.route('/render/<format>', methods=('POST',))
 def render(format):
     '''POST: /render/<format> API call
@@ -333,3 +364,20 @@ def render(format):
     else:
         logger.info('File format not supportted: {}'.format(file.filename))
         return jsonify(error='Input file format not supported'), BAD_REQUEST
+
+
+@bp.route('/version', methods=('GET',))
+def version():
+    '''GET: /version API call
+    Returns JSON with version information'''
+
+    logger = current_app.logger
+    logger.debug('version information request')
+
+    version_information = {
+            'author_tools_api': current_app.config['VERSION'],
+            'xml2rfc': xml2rfc_version,
+            'kramdown-rfc2629': get_kramdown_rfc2629_version(logger),
+            'id2xml': get_id2xml_version(logger)}
+
+    return jsonify(versions=version_information)

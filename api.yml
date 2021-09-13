@@ -152,3 +152,29 @@ paths:
                   error:
                     type: string
                     description: Error description
+  /api/version:
+    get:
+      summary: Returns version information.
+      responses:
+        '200':
+          description: Returns version information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  versions:
+                    type: object
+                    properties:
+                      author_tools_api:
+                        type: string
+                        description: Author Tools API version
+                      xml2rfc:
+                        type: string
+                        description: xml2rfc version
+                      kramdown-rfc2629:
+                        type: string
+                        description: kramdown-rfc2629 version
+                      id2xml:
+                        type: string
+                        description: id2xml version

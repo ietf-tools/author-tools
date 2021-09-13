@@ -58,6 +58,7 @@ mkdir tmp
 * Create a configuration file.
 ```
 echo "UPLOAD_DIR = '$PWD/tmp'" > at/config.py
+echo "VERSION = '0.0.1'" > at/config.py
 ```
 
 * Run flask server.

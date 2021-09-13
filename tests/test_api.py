@@ -136,3 +136,15 @@ class TestApi(TestCase):
 
         self.assertTrue(Path(saved_file).exists())
         self.assertEqual(Path(saved_file).suffix, '.pdf')
+
+    def test_get_kramdown_rfc2629_version(self):
+        result = api.get_kramdown_rfc2629_version()
+
+        self.assertIsNotNone(result)
+        self.assertIn('.', result)
+
+    def test_get_id2xml_version(self):
+        result = api.get_id2xml_version()
+
+        self.assertIsNotNone(result)
+        self.assertIn('.', result)

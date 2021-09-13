@@ -17,6 +17,7 @@ RUN bundle install
 
 RUN mkdir -p tmp
 RUN echo "UPLOAD_DIR = '$PWD/tmp'" > at/config.py
+RUN echo "VERSION = '0.0.1'" >> at/config.py
 
 # host with waitress
 RUN pip install waitress
