@@ -17,7 +17,6 @@ ALLOWED_EXTENSIONS = ('txt', 'xml', 'md', 'mkd')
 DIR_MODE = 0o770
 BAD_REQUEST = 400
 UNAUTHORIZED = 401
-METADATA_JS_URL = 'https://www.rfc-editor.org/js/metadata.min.js'
 
 bp = Blueprint('api', __name__, url_prefix='/api')
 
@@ -214,7 +213,6 @@ def get_html(filename, logger=getLogger()):
 
     # Update default options
     options = default_options
-    options.metadata_js_url = METADATA_JS_URL
 
     # render html
     logger.debug('running xml2rfc html writer')
