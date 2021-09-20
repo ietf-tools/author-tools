@@ -45,6 +45,14 @@ pip install -r requirements.txt
 
 * Set up other dependencies for [xml2rfc](https://pypi.org/project/xml2rfc/).
 
+* Install kramdown-rfc2629 dependencies
+
+    Install [GoAT](https://github.com/blampe/goat).
+    (_Requires [Go lang](https://golang.org/)_)
+    ```
+    go get github.com/blampe/goat
+    ```
+
 * Install [kramdown-rfc2629](https://github.com/cabo/kramdown-rfc2629).
 ```
 bundle install

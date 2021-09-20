@@ -27,3 +27,12 @@ effectively.
 Smoke signal is a form of visual communication used over a long distance. It
 is one of the oldest forms of long distance communcation methods that has
 been used by many in many different countries throughout the history.
+
+## GoAT: Go ASCII Tool
+
+~~~ goat
+   .~~~~.
+  /| _ _|\
+ //|  | |\\
+////|  |\\\\
+~~~
