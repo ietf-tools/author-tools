@@ -3,13 +3,12 @@ from pathlib import Path
 from shutil import copy, rmtree
 from unittest import TestCase
 
-from faker import Faker
-from hypothesis import given, assume
-from hypothesis.strategies import text
 from werkzeug.datastructures import FileStorage
 from xml2rfc.parser import XmlRfc
 
-from at import api
+from at.utils.processor import (
+        convert_v2v3, get_html, get_pdf, get_text, get_xml, md2xml, prep_xml,
+        process_file)
 
 TEST_DATA_DIR = './tests/data/'
 TEST_XML_DRAFT = 'draft-smoke-signals-00.xml'
@@ -22,11 +21,10 @@ TEST_DATA = [
 TEMPORARY_DATA_DIR = './tests/tmp/'
 
 
-class TestApi(TestCase):
-    '''Tests for at.api'''
+class TestUtilsProcessor(TestCase):
+    '''Tests for at.utils.processor'''
 
     def setUp(self):
-        self.faker = Faker(seed=1985)
         # susspress logging messages
         set_logger(CRITICAL)
         # create temporary data dir
@@ -43,39 +41,11 @@ class TestApi(TestCase):
         # remove temporary data dir
         rmtree(TEMPORARY_DATA_DIR, ignore_errors=True)
 
-    @given(text())
-    def test_allowed_file_for_non_supported(self, filename):
-        for extension in api.ALLOWED_EXTENSIONS:
-            assume(not filename.endswith(extension))
-
-        self.assertFalse(api.allowed_file(filename))
-
-    def test_allowed_file_for_supported(self):
-        for extension in api.ALLOWED_EXTENSIONS:
-            filename = self.faker.file_name(extension=extension)
-
-            self.assertTrue(api.allowed_file(filename))
-
-    def test_get_filename(self):
-        for extension in api.ALLOWED_EXTENSIONS:
-            filename = self.faker.file_name()
-
-            self.assertTrue(
-                    api.get_filename(filename, extension).endswith(extension))
-
-    def test_get_file(self):
-        for extension in api.ALLOWED_EXTENSIONS:
-            file_path = self.faker.file_path(extension=extension)
-            result = api.get_file(file_path)
-
-            self.assertTrue(result.endswith(extension))
-            self.assertNotIn('/', result)
-
     def test_process_file(self):
         for filename in TEST_DATA:
             with open(''.join([TEST_DATA_DIR, filename]), 'rb') as file:
                 file_object = FileStorage(file, filename=filename)
-                dir_path, saved_file = api.process_file(
+                dir_path, saved_file = process_file(
                         file_object, TEMPORARY_DATA_DIR)
 
                 self.assertTrue(Path(dir_path).is_dir())
@@ -83,21 +53,21 @@ class TestApi(TestCase):
                 self.assertEqual(Path(saved_file).suffix, '.xml')
 
     def test_md2xml(self):
-        saved_file = api.md2xml(
+        saved_file = md2xml(
                 ''.join([TEMPORARY_DATA_DIR, TEST_KRAMDOWN_DRAFT]))
 
         self.assertTrue(Path(saved_file).exists())
         self.assertEqual(Path(saved_file).suffix, '.xml')
 
     def test_txt2xml(self):
-        saved_file = api.md2xml(
+        saved_file = md2xml(
                 ''.join([TEMPORARY_DATA_DIR, TEST_TEXT_DRAFT]))
 
         self.assertTrue(Path(saved_file).exists())
         self.assertEqual(Path(saved_file).suffix, '.xml')
 
     def test_convert_v2v3(self):
-        saved_file = api.convert_v2v3(
+        saved_file = convert_v2v3(
                 ''.join([TEMPORARY_DATA_DIR, TEST_XML_V2_DRAFT]))
 
         self.assertTrue(Path(saved_file).exists())
@@ -105,46 +75,34 @@ class TestApi(TestCase):
 
     def test_get_xml(self):
         for file in [TEST_XML_DRAFT, TEST_XML_V2_DRAFT]:
-            saved_file = api.get_xml(
+            saved_file = get_xml(
                     ''.join([TEMPORARY_DATA_DIR, file]))
 
             self.assertTrue(Path(saved_file).exists())
             self.assertEqual(Path(saved_file).suffix, '.xml')
 
     def test_prep_xml(self):
-        xml = api.prep_xml(''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
+        xml = prep_xml(''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
 
         self.assertIsInstance(xml, XmlRfc)
 
     def test_get_html(self):
-        saved_file = api.get_html(
+        saved_file = get_html(
                 ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
 
         self.assertTrue(Path(saved_file).exists())
         self.assertEqual(Path(saved_file).suffix, '.html')
 
     def test_get_text(self):
-        saved_file = api.get_text(
+        saved_file = get_text(
                 ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
 
         self.assertTrue(Path(saved_file).exists())
         self.assertEqual(Path(saved_file).suffix, '.txt')
 
     def test_get_pdf(self):
-        saved_file = api.get_pdf(
+        saved_file = get_pdf(
                 ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
 
         self.assertTrue(Path(saved_file).exists())
         self.assertEqual(Path(saved_file).suffix, '.pdf')
-
-    def test_get_kramdown_rfc2629_version(self):
-        result = api.get_kramdown_rfc2629_version()
-
-        self.assertIsNotNone(result)
-        self.assertIn('.', result)
-
-    def test_get_id2xml_version(self):
-        result = api.get_id2xml_version()
-
-        self.assertIsNotNone(result)
-        self.assertIn('.', result)
