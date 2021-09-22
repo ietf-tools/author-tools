@@ -130,3 +130,4 @@ dmypy.json
 
 # at specific
 /tmp
+at/config.py

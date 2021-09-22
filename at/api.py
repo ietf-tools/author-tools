@@ -1,6 +1,7 @@
 from flask import (
         Blueprint, current_app, jsonify, request, send_from_directory)
 
+from at.utils.authentication import require_api_key
 from at.utils.file import allowed_file, get_file
 from at.utils.processor import (
         get_html, get_pdf, get_text, get_xml, process_file, KramdownError,
@@ -15,25 +16,13 @@ bp = Blueprint('api', __name__, url_prefix='/api')
 
 
 @bp.route('/render/<format>', methods=('POST',))
+@require_api_key
 def render(format):
     '''POST: /render/<format> API call
     Returns rendered format of the given input file.
     Returns JSON on event of an error.'''
 
     logger = current_app.logger
-
-    # NOTE: this authentication is only fit for the PoC testing phase
-    # and needs to be replaced.
-    if 'API_KEYS' in current_app.config.keys():
-        if 'apikey' in request.values.keys():
-            if request.values['apikey'] in current_app.config['API_KEYS']:
-                logger.debug('valid apikey')
-            else:
-                logger.error('invalid api key')
-                return jsonify(error='API key is invalid'), UNAUTHORIZED
-        else:
-            logger.error('missing api key')
-            return jsonify(error='API key is missing'), UNAUTHORIZED
 
     if 'file' not in request.files:
         logger.info('no input file')
@@ -93,9 +82,10 @@ def render(format):
         return jsonify(error='Input file format not supported'), BAD_REQUEST
 
 
-@bp.route('/version', methods=('GET',))
+@bp.route('/version', methods=('GET', 'POST'))
+@require_api_key
 def version():
-    '''GET: /version API call
+    '''GET/POST: /version API call
     Returns JSON with version information'''
 
     logger = current_app.logger

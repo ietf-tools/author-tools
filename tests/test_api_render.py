@@ -4,8 +4,7 @@ from pathlib import Path
 from shutil import rmtree
 from unittest import TestCase
 
-from hypothesis import given, assume
-from hypothesis.strategies import text
+import responses
 
 from at import create_app
 
@@ -22,6 +21,7 @@ TEST_DATA = [
         TEST_XML_DRAFT, TEST_XML_V2_DRAFT, TEST_TEXT_DRAFT,
         TEST_KRAMDOWN_DRAFT]
 TEMPORARY_DATA_DIR = './tests/tmp/'
+DT_APPAUTH_URL = 'https://example.com/'
 VALID_API_KEY = 'foobar'
 
 
@@ -40,8 +40,19 @@ class TestApiRender(TestCase):
         Path(TEMPORARY_DATA_DIR).mkdir(exist_ok=True)
 
         config = {
-                'UPLOAD_DIR': abspath('./tests/tmp'),
-                'API_KEYS': [VALID_API_KEY, ]}
+                'UPLOAD_DIR': abspath(TEMPORARY_DATA_DIR),
+                'DT_APPAUTH_URL': DT_APPAUTH_URL}
+
+        # mock datatracker api response
+        self.responses = responses.RequestsMock()
+        self.responses.start()
+        self.responses.add(
+                responses.POST,
+                DT_APPAUTH_URL,
+                json={'success': True},
+                status=200)
+        self.addCleanup(self.responses.stop)
+        self.addCleanup(self.responses.reset)
 
         self.app = create_app(config)
 
@@ -213,72 +224,3 @@ class TestApiRender(TestCase):
                 self.assertEqual(result.status_code, 400)
                 self.assertTrue(json_data['error'].startswith(
                     'xml2rfc error:'))
-
-    def test_authentication_missing_api_key(self):
-        with self.app.test_client() as client:
-            with self.app.app_context():
-                result = client.post('/api/render/xml')
-                json_data = result.get_json()
-
-                self.assertEqual(result.status_code, 401)
-                self.assertEqual(json_data['error'], 'API key is missing')
-
-    def test_authentication_valid_api_key(self):
-        with self.app.test_client() as client:
-            with self.app.app_context():
-                result = client.post(
-                        '/api/render/xml',
-                        data={
-                            'file': (
-                                open(get_path(TEST_XML_DRAFT), 'rb'),
-                                TEST_XML_DRAFT),
-                            'apikey': VALID_API_KEY})
-
-                self.assertEqual(result.status_code, 200)
-
-    @given(text())
-    def test_authentication_invalid_api_key(self, api_key):
-        assume(api_key != VALID_API_KEY)
-
-        with self.app.test_client() as client:
-            with self.app.app_context():
-                result = client.post(
-                        '/api/render/xml',
-                        data={
-                            'file': (
-                                open(get_path(TEST_XML_DRAFT), 'rb'),
-                                TEST_XML_DRAFT),
-                            'apikey': api_key})
-                json_data = result.get_json()
-
-                self.assertEqual(result.status_code, 401)
-                self.assertEqual(json_data['error'], 'API key is invalid')
-
-    def test_authentication_valid_api_key_as_query_param(self):
-        with self.app.test_client() as client:
-            with self.app.app_context():
-                result = client.post(
-                        '/api/render/xml?apikey={}'.format(VALID_API_KEY),
-                        data={
-                            'file': (
-                                open(get_path(TEST_XML_DRAFT), 'rb'),
-                                TEST_XML_DRAFT)})
-
-                self.assertEqual(result.status_code, 200)
-
-    @given(text())
-    def test_authentication_invalid_api_key_as_query_param(self, api_key):
-        assume(api_key != VALID_API_KEY)
-
-        with self.app.test_client() as client:
-            with self.app.app_context():
-                result = client.post(
-                        '/api/render/xml?apikey={}'.format(api_key),
-                        data={
-                            'file': (
-                                open(get_path(TEST_XML_DRAFT), 'rb'),
-                                TEST_XML_DRAFT)})
-                json_data = result.get_json()
-
-                self.assertEqual(result.status_code, 401)
-                self.assertEqual(json_data['error'], 'API key is invalid')
