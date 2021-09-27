@@ -20,8 +20,10 @@ RUN bundle install
 
 # install required fonts
 RUN mkdir -p ~/.fonts/opentype
-RUN wget https://noto-website-2.storage.googleapis.com/pkgs/Noto-unhinted.zip
-RUN unzip Noto-unhinted.zip -d ~/.fonts/opentype/
+RUN wget -q https://noto-website-2.storage.googleapis.com/pkgs/Noto-unhinted.zip
+RUN unzip -q Noto-unhinted.zip -d ~/.fonts/opentype/
+RUN wget -q https://fonts.google.com/download?family=Roboto%20Mono -O roboto-mono.zip
+RUN unzip -q roboto-mono.zip -d ~/.fonts/opentype/
 
 RUN mkdir -p tmp
 RUN echo "UPLOAD_DIR = '$PWD/tmp'" > at/config.py
