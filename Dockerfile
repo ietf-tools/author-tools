@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 RUN apt-get update
-RUN apt-get install -y software-properties-common gcc
+RUN apt-get install -y software-properties-common gcc wget
 RUN apt-get install -y ruby python3.8 python3-pip
 # xml2rfc (Weasyprint) dependencies
 RUN apt-get install -y python3-cffi python3-brotli libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0
@@ -18,6 +18,10 @@ RUN pip3 install -r requirements.txt
 RUN gem install bundler
 RUN bundle install
 
+# install required fonts
+RUN mkdir -p ~/.fonts/opentype
+RUN wget https://noto-website-2.storage.googleapis.com/pkgs/Noto-unhinted.zip
+RUN unzip Noto-unhinted.zip -d ~/.fonts/opentype/
 
 RUN mkdir -p tmp
 RUN echo "UPLOAD_DIR = '$PWD/tmp'" > at/config.py
