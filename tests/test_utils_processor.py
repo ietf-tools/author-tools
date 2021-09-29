@@ -4,10 +4,9 @@ from shutil import copy, rmtree
 from unittest import TestCase
 
 from werkzeug.datastructures import FileStorage
-from xml2rfc.parser import XmlRfc
 
 from at.utils.processor import (
-        convert_v2v3, get_html, get_pdf, get_text, get_xml, md2xml, prep_xml,
+        convert_v2v3, get_html, get_pdf, get_text, get_xml, md2xml,
         process_file)
 
 TEST_DATA_DIR = './tests/data/'
@@ -80,11 +79,6 @@ class TestUtilsProcessor(TestCase):
 
             self.assertTrue(Path(saved_file).exists())
             self.assertEqual(Path(saved_file).suffix, '.xml')
-
-    def test_prep_xml(self):
-        xml = prep_xml(''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
-
-        self.assertIsInstance(xml, XmlRfc)
 
     def test_get_html(self):
         saved_file = get_html(

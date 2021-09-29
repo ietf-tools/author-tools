@@ -8,7 +8,7 @@ RUN apt-get update
 RUN apt-get install -y software-properties-common gcc wget
 RUN apt-get install -y ruby python3.8 python3-pip
 # xml2rfc (Weasyprint) dependencies
-RUN apt-get install -y python3-cffi python3-brotli libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0
+RUN apt-get install -y python3-cffi python3-brotli libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0 libcairo2-dev libpangocairo-1.0-0
 # install kramdown-rfc2629 dependencies
 RUN apt-get install -y golang git
 ENV GOPATH=/

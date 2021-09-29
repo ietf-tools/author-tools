@@ -1,11 +1,7 @@
 from logging import getLogger
 from subprocess import run as proc_run, CalledProcessError
 
-from xml2rfc.writers.base import default_options
-from xml2rfc import (
-        HtmlWriter, PdfWriter, PrepToolWriter, TextWriter, V2v3XmlWriter,
-        XmlRfcParser)
-from xml2rfc.writers.base import RfcWriterError
+from xml2rfc import XmlRfcParser
 from lxml.etree import XMLSyntaxError
 
 from at.utils.file import get_extension, get_filename, save_file
@@ -78,7 +74,7 @@ def txt2xml(filename, logger=getLogger()):
     xml_file = get_filename(filename, 'xml')
 
     output = proc_run(
-                args=['id2xml', '--v3', '--out', xml_file, filename],
+                args=['id2xml', '--v2', '--out', xml_file, filename],
                 capture_output=True)
 
     try:
@@ -94,32 +90,24 @@ def txt2xml(filename, logger=getLogger()):
 
 def convert_v2v3(filename, logger=getLogger()):
     '''Convert XML2RFC v2 file to v3'''
+    logger.debug('converting v2 XML to v3 XML')
+
+    xml_file = get_filename(filename, 'v2v3.xml')
+
+    output = proc_run(args=[
+                        'xml2rfc', '--v2v3', '--quiet', '--out', xml_file,
+                        filename])
+
     try:
-        logger.debug('converting v2 XML to v3 XML')
-
-        # Update default options
-        options = default_options
-        options.v2v3 = True
-        options.utf8 = True
-        options.vocabulary = 'v2'
-        options.no_dtd = True
-
-        parser = XmlRfcParser(filename, options=options, quiet=True)
-        xmltree = parser.parse(
-                remove_comments=False,
-                quiet=True,
-                normalize=False,
-                strip_cdata=False,
-                add_xmlns=True)
-
-        xml_file = get_filename(filename, 'v2v3.xml')
-        options.output_filename = xml_file
-
-        v2v3 = V2v3XmlWriter(xmltree, options=options, quiet=True)
-        v2v3.write(xml_file)
-    except XMLSyntaxError as e:
-        logger.info('xml2rfc v2v3 error: {}'.format(str(e)))
-        raise XML2RFCError(e)
+        output.check_returncode()
+    except CalledProcessError:
+        if output.stderr:
+            error = output.stderr.decode('utf-8')
+            logger.info('xml2rfc v2v3 error: {}'.format(error))
+        else:
+            error = 'v2v3 generation error'
+            logger.info('xml2rfc v2v3 error: no stderr output')
+        raise XML2RFCError(error)
 
     logger.info('new file saved at {}'.format(xml_file))
     return xml_file
@@ -148,41 +136,26 @@ def get_xml(filename, logger=getLogger()):
     return filename
 
 
-def prep_xml(filename, logger=getLogger()):
-    '''Prepare XML file with xml2rfc'''
-
-    try:
-        parser = XmlRfcParser(filename, quiet=True)
-        xmltree = parser.parse(remove_comments=False, quiet=True)
-
-        # run prep tool
-        logger.debug('running xml2rfc prep tool')
-        prep = PrepToolWriter(xmltree, quiet=True, liberal=True)
-        prep.options.accept_prepped = True
-        xmltree.tree = prep.prep()
-    except RfcWriterError as e:
-        logger.error('xml2rfc preptool error: {}'.format(str(e)))
-        raise XML2RFCError(e)
-
-    if xmltree.tree is None:
-        raise XML2RFCError(prep.errors)
-
-    return xmltree
-
-
 def get_html(filename, logger=getLogger()):
     '''Render HTML'''
-
-    xmltree = prep_xml(filename)
-
-    # Update default options
-    options = default_options
-
-    # render html
     logger.debug('running xml2rfc html writer')
-    html = HtmlWriter(xmltree, options=options, quiet=True)
+
     html_file = get_filename(filename, 'html')
-    html.write(html_file)
+
+    output = proc_run(args=[
+                        'xml2rfc', '--html', '--quiet', '--out', html_file,
+                        filename])
+
+    try:
+        output.check_returncode()
+    except CalledProcessError:
+        if output.stderr:
+            error = output.stderr.decode('utf-8')
+            logger.info('xml2rfc html error: {}'.format(error))
+        else:
+            error = 'html generation error'
+            logger.info('xml2rfc html error: no stderr output')
+        raise XML2RFCError(error)
 
     logger.info('new file saved at {}'.format(html_file))
     return html_file
@@ -190,14 +163,24 @@ def get_html(filename, logger=getLogger()):
 
 def get_text(filename, logger=getLogger()):
     '''Render text'''
-
-    xmltree = prep_xml(filename)
-
-    # render text
     logger.debug('running xml2rfc text writer')
-    text = TextWriter(xmltree, quiet=True)
+
     text_file = get_filename(filename, 'txt')
-    text.write(text_file)
+
+    output = proc_run(args=[
+                        'xml2rfc', '--text', '--quiet', '--out', text_file,
+                        filename])
+
+    try:
+        output.check_returncode()
+    except CalledProcessError:
+        if output.stderr:
+            error = output.stderr.decode('utf-8')
+            logger.info('xml2rfc text error: {}'.format(error))
+        else:
+            error = 'text generation error'
+            logger.info('xml2rfc text error: no stderr output')
+        raise XML2RFCError(error)
 
     logger.info('new file saved at {}'.format(text_file))
     return text_file
@@ -205,14 +188,24 @@ def get_text(filename, logger=getLogger()):
 
 def get_pdf(filename, logger=getLogger()):
     '''Render PDF'''
-
-    xmltree = prep_xml(filename)
-
-    # render pdf
     logger.debug('running xml2rfc pdf writer')
-    pdf = PdfWriter(xmltree, quiet=True)
+
     pdf_file = get_filename(filename, 'pdf')
-    pdf.write(pdf_file)
+
+    output = proc_run(args=[
+                        'xml2rfc', '--pdf', '--quiet', '--out', pdf_file,
+                        filename])
+
+    try:
+        output.check_returncode()
+    except CalledProcessError:
+        if output.stderr:
+            error = output.stderr.decode('utf-8')
+            logger.info('xml2rfc pdf error: {}'.format(error))
+        else:
+            error = 'pdf generation error'
+            logger.info('xml2rfc pdf error: no stderr output')
+        raise XML2RFCError(error)
 
     logger.info('new file saved at {}'.format(pdf_file))
     return pdf_file
