@@ -28,7 +28,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: kramdown-rfc2629 (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                  description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
                   description: API Key (can be submitted as query string)
@@ -62,7 +62,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: kramdown-rfc2629 (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                  description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
                   description: API Key (can be submitted as query string)
@@ -96,7 +96,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: kramdown-rfc2629 (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                  description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
                   description: API Key (can be submitted as query string)
@@ -130,7 +130,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: kramdown-rfc2629 (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                  description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
                   description: API Key (can be submitted as query string)
@@ -175,6 +175,9 @@ paths:
                       kramdown-rfc2629:
                         type: string
                         description: kramdown-rfc2629 version
+                      mmark:
+                        type: string
+                        description: mmark version
                       id2xml:
                         type: string
                         description: id2xml version

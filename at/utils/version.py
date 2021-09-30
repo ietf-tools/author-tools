@@ -21,6 +21,20 @@ def get_kramdown_rfc2629_version(logger=getLogger()):
         return None
 
 
+def get_mmark_version(logger=getLogger()):
+    '''Return mmark version'''
+
+    output = proc_run(args=['mmark', '--version'], capture_output=True)
+
+    try:
+        output.check_returncode()
+        return output.stdout.decode('utf-8').strip()
+    except CalledProcessError:
+        logger.info('mmark error: {}'.format(
+            output.stderr.decode('utf-8')))
+        return None
+
+
 def get_id2xml_version(logger=getLogger()):
     '''Return id2xml version'''
 

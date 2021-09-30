@@ -11,6 +11,7 @@ VERSION_LABELS = (
     'author_tools_api',
     'xml2rfc',
     'kramdown-rfc2629',
+    'mmark',
     'id2xml')
 
 
