@@ -1,6 +1,7 @@
 from logging import getLogger
 from subprocess import run as proc_run, CalledProcessError
 
+from weasyprint import __version__ as weasyprint_version
 from xml2rfc import __version__ as xml2rfc_version
 
 
@@ -53,3 +54,9 @@ def get_xml2rfc_version():
     '''Return xml2rfc version'''
 
     return xml2rfc_version
+
+
+def get_weasyprint_version():
+    '''Return Weasyprint version'''
+
+    return weasyprint_version

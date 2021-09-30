@@ -181,3 +181,6 @@ paths:
                       id2xml:
                         type: string
                         description: id2xml version
+                      weasyprint:
+                        type: string
+                        description: weasyprint version

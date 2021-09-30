@@ -8,7 +8,7 @@ from at.utils.processor import (
         MmarkError, TextError, XML2RFCError)
 from at.utils.version import (
         get_id2xml_version, get_kramdown_rfc2629_version, get_mmark_version,
-        get_xml2rfc_version)
+        get_weasyprint_version, get_xml2rfc_version)
 
 BAD_REQUEST = 400
 UNAUTHORIZED = 401
@@ -100,6 +100,7 @@ def version():
             'xml2rfc': get_xml2rfc_version(),
             'kramdown-rfc2629': get_kramdown_rfc2629_version(logger),
             'mmark': get_mmark_version(logger),
-            'id2xml': get_id2xml_version(logger)}
+            'id2xml': get_id2xml_version(logger),
+            'weasyprint': get_weasyprint_version()}
 
     return jsonify(versions=version_information)
