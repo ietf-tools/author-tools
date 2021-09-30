@@ -18,6 +18,11 @@ class KramdownError(Exception):
     pass
 
 
+class MmarkError(Exception):
+    '''Error class for mmark errors'''
+    pass
+
+
 class TextError(Exception):
     '''Error class for id2xml errors'''
     pass
@@ -42,6 +47,17 @@ def process_file(file, upload_dir, logger=getLogger()):
 
 
 def md2xml(filename, logger=getLogger()):
+    '''Calls correct markdown processor for markdown files'''
+    with open(filename, 'r') as file:
+        first_line = file.readline().strip()
+
+    if len(first_line) > 2 and first_line[:3] == '%%%':
+        return mmark2xml(filename, logger)
+    else:
+        return kramdown2xml(filename, logger)
+
+
+def kramdown2xml(filename, logger=getLogger()):
     '''Convert kramdown-rfc2629 markdown file to XML'''
 
     logger.debug('processing kramdown-rfc2629 file')
@@ -56,6 +72,35 @@ def md2xml(filename, logger=getLogger()):
         logger.info('kramdown-rfc2629 error: {}'.format(
             output.stderr.decode('utf-8')))
         raise KramdownError(output.stderr.decode('utf-8'))
+
+    # write output to XML file
+    xml_file = get_filename(filename, 'xml')
+    with open(xml_file, 'wb') as file:
+        file.write(output.stdout)
+
+    logger.info('new file saved at {}'.format(xml_file))
+    return xml_file
+
+
+def mmark2xml(filename, logger=getLogger()):
+    '''Convert mmark markdown file to XML'''
+
+    logger.debug('processing mmark file')
+
+    output = proc_run(
+                args=['mmark', filename],
+                capture_output=True)
+
+    try:
+        output.check_returncode()
+    except CalledProcessError:
+        if output.stderr:
+            error = output.stderr.decode('utf-8')
+            logger.info('mmark error: {}'.format(error))
+        else:
+            error = 'mmark error'
+            logger.info('mmark error: no stderr output')
+        raise MmarkError(error)
 
     # write output to XML file
     xml_file = get_filename(filename, 'xml')

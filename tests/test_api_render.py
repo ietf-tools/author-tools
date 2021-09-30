@@ -13,13 +13,14 @@ TEST_XML_DRAFT = 'draft-smoke-signals-00.xml'
 TEST_XML_V2_DRAFT = 'draft-smoke-signals-00.v2.xml'
 TEST_TEXT_DRAFT = 'draft-smoke-signals-00.txt'
 TEST_KRAMDOWN_DRAFT = 'draft-smoke-signals-00.md'
+TEST_MMARK_DRAFT = 'draft-smoke-signals-00.mmark.md'
 TEST_UNSUPPORTED_FORMAT = 'draft-smoke-signals-00.odt'
 TEST_XML_ERROR = 'draft-smoke-signals-00.error.xml'
 TEST_TEXT_ERROR = 'draft-smoke-signals-00.error.txt'
 TEST_KRAMDOWN_ERROR = 'draft-smoke-signals-00.error.md'
 TEST_DATA = [
         TEST_XML_DRAFT, TEST_XML_V2_DRAFT, TEST_TEXT_DRAFT,
-        TEST_KRAMDOWN_DRAFT]
+        TEST_KRAMDOWN_DRAFT, TEST_MMARK_DRAFT]
 TEMPORARY_DATA_DIR = './tests/tmp/'
 DT_APPAUTH_URL = 'https://example.com/'
 VALID_API_KEY = 'foobar'

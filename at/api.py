@@ -5,9 +5,10 @@ from at.utils.authentication import require_api_key
 from at.utils.file import allowed_file, get_file
 from at.utils.processor import (
         get_html, get_pdf, get_text, get_xml, process_file, KramdownError,
-        TextError, XML2RFCError)
+        MmarkError, TextError, XML2RFCError)
 from at.utils.version import (
-        get_id2xml_version, get_kramdown_rfc2629_version, get_xml2rfc_version)
+        get_id2xml_version, get_kramdown_rfc2629_version, get_mmark_version,
+        get_xml2rfc_version)
 
 BAD_REQUEST = 400
 UNAUTHORIZED = 401
@@ -43,6 +44,9 @@ def render(format):
         except KramdownError as e:
             return jsonify(
                     error='kramdown-rfc2629 error: {}'.format(e)), BAD_REQUEST
+        except MmarkError as e:
+            return jsonify(
+                    error='mmark error: {}'.format(e)), BAD_REQUEST
         except TextError as e:
             return jsonify(error='id2xml error: {}'.format(e)), BAD_REQUEST
 
@@ -95,6 +99,7 @@ def version():
             'author_tools_api': current_app.config['VERSION'],
             'xml2rfc': get_xml2rfc_version(),
             'kramdown-rfc2629': get_kramdown_rfc2629_version(logger),
+            'mmark': get_mmark_version(logger),
             'id2xml': get_id2xml_version(logger)}
 
     return jsonify(versions=version_information)

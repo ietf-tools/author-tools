@@ -6,17 +6,18 @@ from unittest import TestCase
 from werkzeug.datastructures import FileStorage
 
 from at.utils.processor import (
-        convert_v2v3, get_html, get_pdf, get_text, get_xml, md2xml,
-        process_file)
+        convert_v2v3, get_html, get_pdf, get_text, get_xml, kramdown2xml,
+        md2xml, mmark2xml, process_file, txt2xml, MmarkError)
 
 TEST_DATA_DIR = './tests/data/'
 TEST_XML_DRAFT = 'draft-smoke-signals-00.xml'
 TEST_XML_V2_DRAFT = 'draft-smoke-signals-00.v2.xml'
 TEST_TEXT_DRAFT = 'draft-smoke-signals-00.txt'
 TEST_KRAMDOWN_DRAFT = 'draft-smoke-signals-00.md'
+TEST_MMARK_DRAFT = 'draft-smoke-signals-00.mmark.md'
 TEST_DATA = [
         TEST_XML_DRAFT, TEST_XML_V2_DRAFT, TEST_TEXT_DRAFT,
-        TEST_KRAMDOWN_DRAFT]
+        TEST_KRAMDOWN_DRAFT, TEST_MMARK_DRAFT]
 TEMPORARY_DATA_DIR = './tests/tmp/'
 
 
@@ -52,14 +53,33 @@ class TestUtilsProcessor(TestCase):
                 self.assertEqual(Path(saved_file).suffix, '.xml')
 
     def test_md2xml(self):
-        saved_file = md2xml(
+        for filename in [TEST_KRAMDOWN_DRAFT, TEST_MMARK_DRAFT]:
+            saved_file = md2xml(
+                    ''.join([TEMPORARY_DATA_DIR, filename]))
+
+            self.assertTrue(Path(saved_file).exists())
+            self.assertEqual(Path(saved_file).suffix, '.xml')
+
+    def test_kramdown2xml(self):
+        saved_file = kramdown2xml(
                 ''.join([TEMPORARY_DATA_DIR, TEST_KRAMDOWN_DRAFT]))
 
         self.assertTrue(Path(saved_file).exists())
         self.assertEqual(Path(saved_file).suffix, '.xml')
 
+    def test_mmark2xml(self):
+        saved_file = mmark2xml(
+                ''.join([TEMPORARY_DATA_DIR, TEST_MMARK_DRAFT]))
+
+        self.assertTrue(Path(saved_file).exists())
+        self.assertEqual(Path(saved_file).suffix, '.xml')
+
+    def test_mmark2xml_error(self):
+        mmark2xml('foobar')
+        self.assertRaises(MmarkError)
+
     def test_txt2xml(self):
-        saved_file = md2xml(
+        saved_file = txt2xml(
                 ''.join([TEMPORARY_DATA_DIR, TEST_TEXT_DRAFT]))
 
         self.assertTrue(Path(saved_file).exists())
