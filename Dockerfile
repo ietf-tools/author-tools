@@ -33,7 +33,7 @@ RUN unzip -q roboto-mono.zip -d ~/.fonts/opentype/
 
 RUN mkdir -p tmp
 RUN echo "UPLOAD_DIR = '$PWD/tmp'" > at/config.py
-RUN echo "VERSION = '0.0.1'" >> at/config.py
+RUN echo "VERSION = '0.1.0'" >> at/config.py
 RUN echo "DT_APPAUTH_URL = 'https://datatracker.ietf.org/api/appauth/authortools'" >> at/config.py
 
 # host with waitress
