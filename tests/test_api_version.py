@@ -13,7 +13,8 @@ VERSION_LABELS = (
     'kramdown-rfc2629',
     'mmark',
     'id2xml',
-    'weasyprint')
+    'weasyprint',
+    'goat')
 
 
 class TestApiVersion(TestCase):

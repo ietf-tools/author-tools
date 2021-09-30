@@ -184,3 +184,6 @@ paths:
                       weasyprint:
                         type: string
                         description: weasyprint version
+                      goat:
+                        type: string
+                        description: goat version
