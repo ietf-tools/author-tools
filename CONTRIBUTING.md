@@ -45,10 +45,12 @@ pip install -r requirements.txt
 
 * Set up other dependencies for [xml2rfc](https://pypi.org/project/xml2rfc/).
 
+* To use kramdown-rfc2629 and mmark, you need to have
+[ruby](https://www.ruby-lang.org/) and [go](https://golang.org/) installed.
+
 * Install kramdown-rfc2629 dependencies
 
     Install [GoAT](https://github.com/blampe/goat).
-    (_Requires [Go lang](https://golang.org/)_)
     ```
     go get github.com/blampe/goat
     ```
@@ -56,6 +58,11 @@ pip install -r requirements.txt
 * Install [kramdown-rfc2629](https://github.com/cabo/kramdown-rfc2629).
 ```
 bundle install
+```
+
+* Install [mmark](https://github.com/mmarkdown/mmark).
+```
+go get github.com/mmarkdown/mmark
 ```
 
 * Create a tmp directory.
