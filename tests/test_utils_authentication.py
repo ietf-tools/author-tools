@@ -88,22 +88,7 @@ class TestUtilsAuthentication(TestCase):
         with self.app.test_client() as client:
             with self.app.app_context():
                 result = client.get('/api/version?apikey=valid_api_key')
-
-                self.assertEqual(result.status_code, 200)
-
-    @responses.activate
-    @given(text())
-    def test_authentication_invalid_api_key_as_query_param(self, api_key):
-        responses.add(
-                responses.POST,
-                DT_APPAUTH_URL,
-                status=403)
-
-        with self.app.test_client() as client:
-            with self.app.app_context():
-                result = client.get(
-                        '/api/version?apikey={}'.format(api_key))
                 json_data = result.get_json()
 
                 self.assertEqual(result.status_code, 401)
-                self.assertEqual(json_data['error'], 'API key is invalid')
+                self.assertEqual(json_data['error'], 'API key is missing')
