@@ -13,7 +13,7 @@ def require_api_key(f, *args, **kwargs):
     logger = current_app.logger
     config = current_app.config
 
-    apikey = request.headers.get('X-APIKEY')
+    apikey = request.headers.get('X-API-KEY')
     if apikey is None or apikey.strip() == '':
         if 'apikey' in request.form.keys():
             apikey = request.form['apikey']

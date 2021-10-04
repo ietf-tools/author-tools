@@ -116,7 +116,7 @@ class TestUtilsAuthentication(TestCase):
                 filename = get_path(TEST_XML_DRAFT)
                 result = client.post(
                             '/api/render/xml',
-                            headers={'X-APIKEY': VALID_API_KEY},
+                            headers={'X-API-KEY': VALID_API_KEY},
                             data={'file': (open(filename, 'rb'), filename)})
 
                 self.assertEqual(result.status_code, 200)
@@ -134,7 +134,7 @@ class TestUtilsAuthentication(TestCase):
                 filename = get_path(TEST_XML_DRAFT)
                 result = client.post(
                             '/api/render/xml',
-                            headers={'X-APIKEY': VALID_API_KEY},
+                            headers={'X-API-KEY': VALID_API_KEY},
                             data={'file': (open(filename, 'rb'), filename)})
                 json_data = result.get_json()
 

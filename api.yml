@@ -11,7 +11,7 @@ components:
     apiKeyAuth:
       type: apiKey
       in: header
-      name: X-APIKEY
+      name: X-API-KEY
 security:
   - apiKeyAuth: []
 paths:
@@ -31,7 +31,7 @@ paths:
                   description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
-                  description: API Key (also can be submitted as X-APIKEY in headers)
+                  description: API Key (also can be submitted as X-API-KEY in headers)
       responses:
         '200':
           description: Returns draft in requested format.
@@ -65,7 +65,7 @@ paths:
                   description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
-                  description: API Key (also can be submitted as X-APIKEY in headers)
+                  description: API Key (also can be submitted as X-API-KEY in headers)
       responses:
         '200':
           description: Returns draft in requested format.
@@ -99,7 +99,7 @@ paths:
                   description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
-                  description: API Key (also can be submitted as X-APIKEY in headers)
+                  description: API Key (also can be submitted as X-API-KEY in headers)
       responses:
         '200':
           description: Returns draft in requested format.
@@ -133,7 +133,7 @@ paths:
                   description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
-                  description: API Key (also can be submitted as X-APIKEY in headers)
+                  description: API Key (also can be submitted as X-API-KEY in headers)
       responses:
         '200':
           description: Returns draft in requested format.
