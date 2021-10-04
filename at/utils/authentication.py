@@ -13,17 +13,22 @@ def require_api_key(f, *args, **kwargs):
     logger = current_app.logger
     config = current_app.config
 
-    if 'apikey' in request.form.keys():
-        response = post(
-                    config['DT_APPAUTH_URL'],
-                    data={'apikey': request.form['apikey']})
-        if response.status_code == OK and response.json()['success'] is True:
-            logger.debug('valid apikey')
+    apikey = request.headers.get('X-APIKEY')
+    if apikey is None or apikey.strip() == '':
+        if 'apikey' in request.form.keys():
+            apikey = request.form['apikey']
         else:
-            logger.error('invalid api key')
-            return jsonify(error='API key is invalid'), UNAUTHORIZED
+            logger.error('missing api key')
+            return jsonify(error='API key is missing'), UNAUTHORIZED
+
+    response = post(
+                config['DT_APPAUTH_URL'],
+                data={'apikey': apikey.strip()})
+
+    if response.status_code == OK and response.json()['success'] is True:
+        logger.debug('valid apikey')
     else:
-        logger.error('missing api key')
-        return jsonify(error='API key is missing'), UNAUTHORIZED
+        logger.error('invalid api key')
+        return jsonify(error='API key is invalid'), UNAUTHORIZED
 
     return f(*args, **kwargs)

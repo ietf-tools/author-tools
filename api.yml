@@ -6,6 +6,14 @@ info:
 servers:
   - url: https://author-tools.ietf.org
     description: Alpha server
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-APIKEY
+security:
+  - apiKeyAuth: []
 paths:
   /api/render/text:
     post:
@@ -23,7 +31,7 @@ paths:
                   description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
-                  description: API Key
+                  description: API Key (also can be submitted as X-APIKEY in headers)
       responses:
         '200':
           description: Returns draft in requested format.
@@ -57,7 +65,7 @@ paths:
                   description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
-                  description: API Key
+                  description: API Key (also can be submitted as X-APIKEY in headers)
       responses:
         '200':
           description: Returns draft in requested format.
@@ -91,7 +99,7 @@ paths:
                   description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
-                  description: API Key
+                  description: API Key (also can be submitted as X-APIKEY in headers)
       responses:
         '200':
           description: Returns draft in requested format.
@@ -125,7 +133,7 @@ paths:
                   description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
-                  description: API Key
+                  description: API Key (also can be submitted as X-APIKEY in headers)
       responses:
         '200':
           description: Returns draft in requested format.
