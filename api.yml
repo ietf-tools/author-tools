@@ -49,6 +49,16 @@ paths:
                   error:
                     type: string
                     description: Error description
+        '401':
+          description: Failed to authenticate.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
   /api/render/xml:
     post:
       summary: Returns rendered draft in xml2rfc v3 format.
@@ -75,6 +85,16 @@ paths:
                 type: string
         '400':
           description: Error has occured.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
+        '401':
+          description: Failed to authenticate.
           content:
             application/json:
               schema:
@@ -117,6 +137,16 @@ paths:
                   error:
                     type: string
                     description: Error description
+        '401':
+          description: Failed to authenticate.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
   /api/render/pdf:
     post:
       summary: Returns rendered draft in PDF format.
@@ -144,6 +174,16 @@ paths:
                 format: binary
         '400':
           description: Error has occured.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
+        '401':
+          description: Failed to authenticate.
           content:
             application/json:
               schema:
