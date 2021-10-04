@@ -102,3 +102,41 @@ class TestUtilsAuthentication(TestCase):
 
                 self.assertEqual(result.status_code, 401)
                 self.assertEqual(json_data['error'], 'API key is invalid')
+
+    @responses.activate
+    def test_authentication_valid_api_key_in_headers(self):
+        responses.add(
+                responses.POST,
+                DT_APPAUTH_URL,
+                json={'success': True},
+                status=200)
+
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                filename = get_path(TEST_XML_DRAFT)
+                result = client.post(
+                            '/api/render/xml',
+                            headers={'X-APIKEY': VALID_API_KEY},
+                            data={'file': (open(filename, 'rb'), filename)})
+
+                self.assertEqual(result.status_code, 200)
+
+    @responses.activate
+    @given(text())
+    def test_authentication_invalid_api_key_in_headers(self, api_key):
+        responses.add(
+                responses.POST,
+                DT_APPAUTH_URL,
+                status=403)
+
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                filename = get_path(TEST_XML_DRAFT)
+                result = client.post(
+                            '/api/render/xml',
+                            headers={'X-APIKEY': VALID_API_KEY},
+                            data={'file': (open(filename, 'rb'), filename)})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 401)
+                self.assertEqual(json_data['error'], 'API key is invalid')
