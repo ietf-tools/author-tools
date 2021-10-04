@@ -13,10 +13,10 @@ def require_api_key(f, *args, **kwargs):
     logger = current_app.logger
     config = current_app.config
 
-    if 'apikey' in request.values.keys():
+    if 'apikey' in request.form.keys():
         response = post(
                     config['DT_APPAUTH_URL'],
-                    data={'apikey': request.values['apikey']})
+                    data={'apikey': request.form['apikey']})
         if response.status_code == OK and response.json()['success'] is True:
             logger.debug('valid apikey')
         else:

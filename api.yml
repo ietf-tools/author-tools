@@ -6,14 +6,6 @@ info:
 servers:
   - url: https://author-tools.ietf.org
     description: Alpha server
-components:
-  securitySchemes:
-    apiKeyAuth:
-      type: apiKey
-      in: query
-      name: apikey
-security:
-  - apiKeyAuth: []
 paths:
   /api/render/text:
     post:
@@ -31,7 +23,7 @@ paths:
                   description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
-                  description: API Key (can be submitted as query string)
+                  description: API Key
       responses:
         '200':
           description: Returns draft in requested format.
@@ -65,7 +57,7 @@ paths:
                   description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
-                  description: API Key (can be submitted as query string)
+                  description: API Key
       responses:
         '200':
           description: Returns draft in requested format.
@@ -99,7 +91,7 @@ paths:
                   description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
-                  description: API Key (can be submitted as query string)
+                  description: API Key
       responses:
         '200':
           description: Returns draft in requested format.
@@ -133,7 +125,7 @@ paths:
                   description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
-                  description: API Key (can be submitted as query string)
+                  description: API Key
       responses:
         '200':
           description: Returns draft in requested format.

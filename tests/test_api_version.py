@@ -48,7 +48,9 @@ class TestApiVersion(TestCase):
     def test_get_version(self):
         with self.app.test_client() as client:
             with self.app.app_context():
-                result = client.get('/api/version?apikey=valid_api_key')
+                result = client.get(
+                            '/api/version',
+                            data={'apikey': 'valid_api_key'})
                 json_data = result.get_json()
 
                 self.assertEqual(result.status_code, 200)
@@ -64,8 +66,8 @@ class TestApiVersion(TestCase):
         with self.app.test_client() as client:
             with self.app.app_context():
                 result = client.post(
-                        '/api/version',
-                        data={'apikey': 'valid_api_key'})
+                            '/api/version',
+                            data={'apikey': 'valid_api_key'})
                 json_data = result.get_json()
 
                 self.assertEqual(result.status_code, 200)
