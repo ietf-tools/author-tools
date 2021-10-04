@@ -87,10 +87,9 @@ def render(format):
         return jsonify(error='Input file format not supported'), BAD_REQUEST
 
 
-@bp.route('/version', methods=('GET', 'POST'))
-@require_api_key
+@bp.route('/version', methods=('GET',))
 def version():
-    '''GET/POST: /version API call
+    '''GET: /version API call
     Returns JSON with version information'''
 
     logger = current_app.logger
