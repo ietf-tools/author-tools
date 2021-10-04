@@ -12,7 +12,6 @@ from at.utils.version import (
         get_xml2rfc_version)
 
 BAD_REQUEST = 400
-UNAUTHORIZED = 401
 
 bp = Blueprint('api', __name__, url_prefix='/api')
 
