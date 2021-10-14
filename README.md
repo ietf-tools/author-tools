@@ -1,5 +1,5 @@
 # IETF @
-IETF @ (IETF Author Tools)
+IETF Author Tools API
 
 ## Documenation
 
@@ -48,4 +48,4 @@ See [contributing guide](CONTRIBUTING.md).
 
 ## License
 
-* [IETF @ - License](LICENSE)
+* [IETF Author Tools API - License](LICENSE)
