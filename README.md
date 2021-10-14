@@ -1,5 +1,4 @@
-# IETF @
-IETF Author Tools API
+# IETF Author Tools API
 
 ## Documenation
 
