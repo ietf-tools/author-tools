@@ -6,10 +6,11 @@ from at.utils.file import allowed_file, get_file
 from at.utils.processor import (
         get_html, get_pdf, get_text, get_xml, process_file, KramdownError,
         MmarkError, TextError, XML2RFCError)
+from at.utils.validation import validate_xml
 from at.utils.version import (
-        get_id2xml_version, get_goat_version, get_mmark_version,
-        get_kramdown_rfc2629_version, get_weasyprint_version,
-        get_xml2rfc_version)
+        get_goat_version, get_idnits_version, get_id2xml_version,
+        get_mmark_version, get_kramdown_rfc2629_version,
+        get_weasyprint_version, get_xml2rfc_version)
 
 BAD_REQUEST = 400
 
@@ -86,6 +87,50 @@ def render(format):
         return jsonify(error='Input file format not supported'), BAD_REQUEST
 
 
+@bp.route('/validate', methods=('POST',))
+@require_api_key
+def validate():
+    '''POST: /validate API call
+    Returns JSON with errors, warnings and informational output'''
+
+    logger = current_app.logger
+
+    if 'file' not in request.files:
+        logger.info('no input file')
+        return jsonify(error='No file'), BAD_REQUEST
+
+    file = request.files['file']
+
+    if file.filename == '':
+        logger.info('file name missing')
+        return jsonify(error='Filename is missing'), BAD_REQUEST
+
+    if file and allowed_file(file.filename):
+        try:
+            dir_path, filename = process_file(
+                    file=file,
+                    upload_dir=current_app.config['UPLOAD_DIR'],
+                    logger=logger)
+        except KramdownError as e:
+            return jsonify(
+                    error='kramdown-rfc2629 error: {}'.format(e)), BAD_REQUEST
+        except MmarkError as e:
+            return jsonify(
+                    error='mmark error: {}'.format(e)), BAD_REQUEST
+        except TextError as e:
+            return jsonify(error='id2xml error: {}'.format(e)), BAD_REQUEST
+
+        try:
+            log = validate_xml(filename, logger=logger)
+        except XML2RFCError as e:
+            return jsonify(error='xml2rfc error: {}'.format(e)), BAD_REQUEST
+
+        return jsonify(log)
+    else:
+        logger.info('File format not supportted: {}'.format(file.filename))
+        return jsonify(error='Input file format not supported'), BAD_REQUEST
+
+
 @bp.route('/version', methods=('GET',))
 def version():
     '''GET: /version API call
@@ -101,6 +146,7 @@ def version():
             'mmark': get_mmark_version(logger),
             'id2xml': get_id2xml_version(logger),
             'weasyprint': get_weasyprint_version(),
+            'idnits': get_idnits_version(logger),
             'goat': get_goat_version(logger)}
 
     return jsonify(versions=version_information)

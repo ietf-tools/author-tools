@@ -42,6 +42,11 @@ curl localhost:8888/api/render/text -X POST -F "apikey=datatracker_authortools_a
 curl localhost:8888/api/render/pdf -X POST -F "apikey=datatracker_authortools_api_key" -F "file=@<xml2rfc draft (.xml) | Kramdown/mmark draft (.md, .mkd) | Text draft (.txt)>" -o draft-output.pdf
 ```
 
+* Test validation
+```
+curl localhost:8888/api/validate -X POST -F "apikey=datatracker_authortools_api_key" -F "file=@<xml2rfc draft (.xml) | Kramdown/mmark draft (.md, .mkd) | Text draft (.txt)>"
+```
+
 ## Contributing
 
 See [contributing guide](CONTRIBUTING.md).

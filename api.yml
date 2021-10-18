@@ -192,6 +192,66 @@ paths:
                   error:
                     type: string
                     description: Error description
+  /api/validate:
+    post:
+      summary: Validates the draft
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                apikey:
+                  type: string
+                  description: API Key (also can be submitted as X-API-KEY in headers)
+      responses:
+        '200':
+          description: Returns errors, warnings and idnits output
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    description: list of errors
+                    items:
+                      type: string
+                      description: error description
+                  warnings:
+                    type: array
+                    description: list of warnings
+                    items:
+                      type: string
+                      description: warning description
+                  idnits:
+                    type: string
+                    description: idnits output
+        '400':
+          description: Error has occured.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
+        '401':
+          description: Failed to authenticate.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
   /api/version:
     get:
       summary: Returns version information.
@@ -224,6 +284,9 @@ paths:
                       weasyprint:
                         type: string
                         description: weasyprint version
+                      idnits:
+                        type: string
+                        description: idnits version
                       goat:
                         type: string
                         description: goat version

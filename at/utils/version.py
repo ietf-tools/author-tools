@@ -76,3 +76,17 @@ def get_goat_version(logger=getLogger()):
         logger.info('goat error: {}'.format(
             output.stderr.decode('utf-8')))
         return None
+
+
+def get_idnits_version(logger=getLogger()):
+    '''Return idnits version'''
+
+    output = proc_run(args=['idnits', '--version'], capture_output=True)
+
+    try:
+        output.check_returncode()
+        return output.stdout.decode('utf-8').replace('idnits', '').strip()
+    except CalledProcessError:
+        logger.info('idnits error: {}'.format(
+            output.stderr.decode('utf-8')))
+        return None

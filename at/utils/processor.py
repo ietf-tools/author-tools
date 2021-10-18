@@ -150,7 +150,7 @@ def convert_v2v3(filename, logger=getLogger()):
             error = output.stderr.decode('utf-8')
             logger.info('xml2rfc v2v3 error: {}'.format(error))
         else:
-            error = 'v2v3 generation error'
+            error = 'v2v3 conversion error'
             logger.info('xml2rfc v2v3 error: no stderr output')
         raise XML2RFCError(error)
 
@@ -183,7 +183,7 @@ def get_xml(filename, logger=getLogger()):
 
 def get_html(filename, logger=getLogger()):
     '''Render HTML'''
-    logger.debug('running xml2rfc html writer')
+    logger.debug('running xml2rfc html converter')
 
     html_file = get_filename(filename, 'html')
 
@@ -208,7 +208,7 @@ def get_html(filename, logger=getLogger()):
 
 def get_text(filename, logger=getLogger()):
     '''Render text'''
-    logger.debug('running xml2rfc text writer')
+    logger.debug('running xml2rfc text converter')
 
     text_file = get_filename(filename, 'txt')
 
@@ -233,7 +233,7 @@ def get_text(filename, logger=getLogger()):
 
 def get_pdf(filename, logger=getLogger()):
     '''Render PDF'''
-    logger.debug('running xml2rfc pdf writer')
+    logger.debug('running xml2rfc pdf converter')
 
     pdf_file = get_filename(filename, 'pdf')
 

@@ -16,11 +16,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     # Required OS dependencies
-    - name: Install xml2rfc OS dependencies
+    - name: Install OS dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y software-properties-common gcc
         sudo apt-get install -y python3-cffi python3-brotli libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0 libcairo2-dev libpangocairo-1.0-0
+        sudo apt-get install -y gawk
+        sudo curl https://tools.ietf.org/tools/idnits/idnits-2.17.00.tgz --output idnits-2.17.00.tgz
+        sudo tar xv --strip-components=1 -C /bin -f idnits-2.17.00.tgz
     # Python
     - name: Set up Python 3.8
       uses: actions/setup-python@v2

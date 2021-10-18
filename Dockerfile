@@ -20,6 +20,11 @@ RUN go get github.com/mmarkdown/mmark
 # install goat (kramdown-rfc2629 dependency)
 RUN go get github.com/blampe/goat
 
+# install idnits
+RUN apt-get install -y gawk
+RUN wget https://tools.ietf.org/tools/idnits/idnits-2.17.00.tgz
+RUN tar xv --strip-components=1 -C /bin -f idnits-2.17.00.tgz
+
 RUN pip3 install -r requirements.txt
 RUN gem install bundler
 RUN bundle install
