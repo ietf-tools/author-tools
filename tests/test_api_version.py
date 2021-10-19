@@ -12,6 +12,7 @@ VERSION_LABELS = (
     'mmark',
     'id2xml',
     'weasyprint',
+    'idnits',
     'goat')
 
 

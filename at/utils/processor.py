@@ -5,6 +5,7 @@ from xml2rfc import XmlRfcParser
 from lxml.etree import XMLSyntaxError
 
 from at.utils.file import get_extension, get_filename, save_file
+from at.utils.logs import get_errors
 
 
 # Exceptions
@@ -139,20 +140,22 @@ def convert_v2v3(filename, logger=getLogger()):
 
     xml_file = get_filename(filename, 'v2v3.xml')
 
-    output = proc_run(args=[
-                        'xml2rfc', '--v2v3', '--quiet', '--out', xml_file,
-                        filename])
+    output = proc_run(
+                args=[
+                    'xml2rfc', '--v2v3', '--quiet', '--out', xml_file,
+                    filename],
+                capture_output=True)
 
     try:
         output.check_returncode()
     except CalledProcessError:
-        if output.stderr:
-            error = output.stderr.decode('utf-8')
-            logger.info('xml2rfc v2v3 error: {}'.format(error))
+        errors = get_errors(output)
+        if errors:
+            logger.info('xml2rfc v2v3 error: {}'.format(errors))
         else:
-            error = 'v2v3 generation error'
-            logger.info('xml2rfc v2v3 error: no stderr output')
-        raise XML2RFCError(error)
+            errors = 'v2v3 conversion error'
+            logger.info('xml2rfc v2v3 error: no error output')
+        raise XML2RFCError(errors)
 
     logger.info('new file saved at {}'.format(xml_file))
     return xml_file
@@ -183,24 +186,26 @@ def get_xml(filename, logger=getLogger()):
 
 def get_html(filename, logger=getLogger()):
     '''Render HTML'''
-    logger.debug('running xml2rfc html writer')
+    logger.debug('running xml2rfc html converter')
 
     html_file = get_filename(filename, 'html')
 
-    output = proc_run(args=[
-                        'xml2rfc', '--html', '--quiet', '--out', html_file,
-                        filename])
+    output = proc_run(
+                args=[
+                    'xml2rfc', '--html', '--quiet', '--out', html_file,
+                    filename],
+                capture_output=True)
 
     try:
         output.check_returncode()
     except CalledProcessError:
-        if output.stderr:
-            error = output.stderr.decode('utf-8')
-            logger.info('xml2rfc html error: {}'.format(error))
+        errors = get_errors(output)
+        if errors:
+            logger.info('xml2rfc html error: {}'.format(errors))
         else:
-            error = 'html generation error'
-            logger.info('xml2rfc html error: no stderr output')
-        raise XML2RFCError(error)
+            errors = 'html generation error'
+            logger.info('xml2rfc html error: no error output')
+        raise XML2RFCError(errors)
 
     logger.info('new file saved at {}'.format(html_file))
     return html_file
@@ -208,24 +213,26 @@ def get_html(filename, logger=getLogger()):
 
 def get_text(filename, logger=getLogger()):
     '''Render text'''
-    logger.debug('running xml2rfc text writer')
+    logger.debug('running xml2rfc text converter')
 
     text_file = get_filename(filename, 'txt')
 
-    output = proc_run(args=[
-                        'xml2rfc', '--text', '--quiet', '--out', text_file,
-                        filename])
+    output = proc_run(
+                args=[
+                    'xml2rfc', '--text', '--quiet', '--out', text_file,
+                    filename],
+                capture_output=True)
 
     try:
         output.check_returncode()
     except CalledProcessError:
-        if output.stderr:
-            error = output.stderr.decode('utf-8')
-            logger.info('xml2rfc text error: {}'.format(error))
+        errors = get_errors(output)
+        if errors:
+            logger.info('xml2rfc text error: {}'.format(errors))
         else:
-            error = 'text generation error'
-            logger.info('xml2rfc text error: no stderr output')
-        raise XML2RFCError(error)
+            errors = 'text generation error'
+            logger.info('xml2rfc text error: no error output')
+        raise XML2RFCError(errors)
 
     logger.info('new file saved at {}'.format(text_file))
     return text_file
@@ -233,24 +240,26 @@ def get_text(filename, logger=getLogger()):
 
 def get_pdf(filename, logger=getLogger()):
     '''Render PDF'''
-    logger.debug('running xml2rfc pdf writer')
+    logger.debug('running xml2rfc pdf converter')
 
     pdf_file = get_filename(filename, 'pdf')
 
-    output = proc_run(args=[
-                        'xml2rfc', '--pdf', '--quiet', '--out', pdf_file,
-                        filename])
+    output = proc_run(
+                args=[
+                    'xml2rfc', '--pdf', '--quiet', '--out', pdf_file,
+                    filename],
+                capture_output=True)
 
     try:
         output.check_returncode()
     except CalledProcessError:
-        if output.stderr:
-            error = output.stderr.decode('utf-8')
-            logger.info('xml2rfc pdf error: {}'.format(error))
+        errors = get_errors(output)
+        if errors:
+            logger.info('xml2rfc pdf error: {}'.format(errors))
         else:
-            error = 'pdf generation error'
-            logger.info('xml2rfc pdf error: no stderr output')
-        raise XML2RFCError(error)
+            errors = 'pdf generation error'
+            logger.info('xml2rfc pdf error: no error output')
+        raise XML2RFCError(errors)
 
     logger.info('new file saved at {}'.format(pdf_file))
     return pdf_file
