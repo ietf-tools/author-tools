@@ -24,3 +24,14 @@ def process_xml2rfc_log(output):
             warnings.append(warning.group('message'))
 
     return {'errors': errors, 'warnings': warnings}
+
+
+def get_errors(output):
+    '''Returns errors as a string'''
+
+    log = process_xml2rfc_log(output)
+
+    if len(log['errors']) > 0:
+        return '\n'.join(log['errors'])
+    else:
+        return None

@@ -3,7 +3,7 @@ from pathlib import Path
 from shutil import copy, rmtree
 from unittest import TestCase
 
-from at.utils.logs import process_xml2rfc_log
+from at.utils.logs import process_xml2rfc_log, get_errors
 from at.utils.validation import xml2rfc_validation
 
 TEST_DATA_DIR = './tests/data/'
@@ -49,3 +49,19 @@ class TestUtilsLogs(TestCase):
             for warning in log['warnings']:
                 self.assertNotRegex(r'xml2rfc', warning)
                 self.assertNotRegex(r'Warning:', warning)
+
+    def test_get_errors_valid(self):
+        output, _ = xml2rfc_validation(
+                        ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
+        errors = get_errors(output)
+
+        self.assertIsNone(errors)
+
+    def test_get_errors_invalid(self):
+        output, _ = xml2rfc_validation(
+                        ''.join([TEMPORARY_DATA_DIR, TEST_XML_INVALID]))
+        errors = get_errors(output)
+
+        self.assertIsNotNone(errors)
+        self.assertIsInstance(errors, str)
+        self.assertGreater(len(errors), 0)
