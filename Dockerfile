@@ -43,4 +43,4 @@ RUN echo "DT_APPAUTH_URL = 'https://datatracker.ietf.org/api/appauth/authortools
 
 # host with waitress
 RUN pip3 install waitress
-CMD waitress-serve --port=80 --call 'at:create_app'
+CMD python3 serve.py
