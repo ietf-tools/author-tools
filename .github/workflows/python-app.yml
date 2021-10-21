@@ -54,8 +54,17 @@ jobs:
       run: |
         go get github.com/mmarkdown/mmark
         go get github.com/blampe/goat
+    # Node
+    - name: Set up Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+    - name: Install dependencies
+      run: npm install
     # Tests
     - name: Run tests
+      env:
+        PATH: $PATH:/bin:./node_modules/.bin/
       run: |
         python -m unittest discover tests -p "*.py"
         pyflakes at tests

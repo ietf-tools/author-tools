@@ -1,9 +1,10 @@
 from unittest import TestCase
 
 from at.utils.version import (
-        get_goat_version, get_idnits_version, get_id2xml_version,
-        get_mmark_version, get_kramdown_rfc2629_version,
-        get_weasyprint_version, get_xml2rfc_version)
+        get_aasvg_version, get_goat_version, get_idnits_version,
+        get_id2xml_version, get_mmark_version,
+        get_kramdown_rfc2629_version, get_weasyprint_version,
+        get_xml2rfc_version)
 
 
 class TestUtilsVersion(TestCase):
@@ -47,6 +48,12 @@ class TestUtilsVersion(TestCase):
 
     def test_get_idnits_version(self):
         result = get_idnits_version()
+
+        self.assertIsNotNone(result)
+        self.assertIn('.', result)
+
+    def test_get_aasvg_version(self):
+        result = get_aasvg_version()
 
         self.assertIsNotNone(result)
         self.assertIn('.', result)

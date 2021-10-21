@@ -2,7 +2,7 @@
 openapi: "3.0.0"
 info:
   title: IETF Author Tools API
-  version: 0.2.0
+  version: 0.2.1
 servers:
   - url: https://author-tools.ietf.org
     description: Alpha server
@@ -287,6 +287,9 @@ paths:
                       idnits:
                         type: string
                         description: idnits version
+                      aasvg:
+                        type: string
+                        description: aasvg version
                       goat:
                         type: string
                         description: goat version

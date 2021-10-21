@@ -20,6 +20,11 @@ RUN go get github.com/mmarkdown/mmark
 # install goat (kramdown-rfc2629 dependency)
 RUN go get github.com/blampe/goat
 
+# install npm dependencies
+RUN apt-get install -y npm
+RUN npm install
+ENV PATH=$PATH:./node_modules/.bin
+
 # install idnits
 RUN apt-get install -y gawk
 RUN wget https://tools.ietf.org/tools/idnits/idnits-2.17.00.tgz
@@ -38,7 +43,7 @@ RUN unzip -q roboto-mono.zip -d ~/.fonts/opentype/
 
 RUN mkdir -p tmp
 RUN echo "UPLOAD_DIR = '$PWD/tmp'" > at/config.py
-RUN echo "VERSION = '0.2.0'" >> at/config.py
+RUN echo "VERSION = '0.2.1'" >> at/config.py
 RUN echo "DT_APPAUTH_URL = 'https://datatracker.ietf.org/api/appauth/authortools'" >> at/config.py
 
 # host with waitress

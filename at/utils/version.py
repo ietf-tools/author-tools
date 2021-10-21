@@ -90,3 +90,17 @@ def get_idnits_version(logger=getLogger()):
         logger.info('idnits error: {}'.format(
             output.stderr.decode('utf-8')))
         return None
+
+
+def get_aasvg_version(logger=getLogger()):
+    '''Return aasvg version'''
+
+    output = proc_run(args=['aasvg', '--version'], capture_output=True)
+
+    try:
+        output.check_returncode()
+        return output.stdout.decode('utf-8').replace('aasvg', '').strip()
+    except CalledProcessError:
+        logger.info('aasvg error: {}'.format(
+            output.stderr.decode('utf-8')))
+        return None

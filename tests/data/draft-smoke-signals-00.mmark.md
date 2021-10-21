@@ -33,7 +33,7 @@ been used by many in many different countries throughout the history.
              (8)
            (8)
     _   _(8)_
-   | |_| |_| | 
+   | |_| |_| |
    |         |
    |  __     |
 ___|  ||     |___

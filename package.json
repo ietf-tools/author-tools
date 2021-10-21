@@ -1,0 +1,21 @@
+{
+  "name": "ietf-at",
+  "version": "0.2.1",
+  "description": "IETF Author Tools API",
+  "main": "",
+  "directories": {},
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kesara/ietf-at.git"
+  },
+  "author": "Kesara Rathnayake",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/kesara/ietf-at/issues"
+  },
+  "homepage": "https://github.com/kesara/ietf-at#readme",
+  "dependencies": {
+    "aasvg": "^0.1.5"
+  }
+}

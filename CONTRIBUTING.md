@@ -55,6 +55,11 @@ pip install -r requirements.txt
     go get github.com/blampe/goat
     ```
 
+* Install npm dependencies
+```
+npm install
+```
+
 * Install [kramdown-rfc2629](https://github.com/cabo/kramdown-rfc2629).
 ```
 bundle install
