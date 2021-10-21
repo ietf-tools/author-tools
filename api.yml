@@ -287,6 +287,9 @@ paths:
                       idnits:
                         type: string
                         description: idnits version
+                      aasvg:
+                        type: string
+                        description: aasvg version
                       goat:
                         type: string
                         description: goat version
