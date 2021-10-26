@@ -12,6 +12,7 @@ components:
       type: apiKey
       in: header
       name: X-API-KEY
+      description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey).
 security:
   - apiKeyAuth: []
 paths:
@@ -31,7 +32,7 @@ paths:
                   description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
-                  description: API Key (also can be submitted as X-API-KEY in headers)
+                  description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well.
       responses:
         '200':
           description: Returns draft in requested format.
@@ -75,7 +76,7 @@ paths:
                   description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
-                  description: API Key (also can be submitted as X-API-KEY in headers)
+                  description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well.
       responses:
         '200':
           description: Returns draft in requested format.
@@ -119,7 +120,7 @@ paths:
                   description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
-                  description: API Key (also can be submitted as X-API-KEY in headers)
+                  description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well.
       responses:
         '200':
           description: Returns draft in requested format.
@@ -163,7 +164,7 @@ paths:
                   description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
-                  description: API Key (also can be submitted as X-API-KEY in headers)
+                  description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well.
       responses:
         '200':
           description: Returns draft in requested format.
@@ -208,7 +209,7 @@ paths:
                   description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
-                  description: API Key (also can be submitted as X-API-KEY in headers)
+                  description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well.
       responses:
         '200':
           description: Returns errors, warnings and idnits output
