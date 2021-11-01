@@ -5,7 +5,8 @@ from hypothesis import given, assume
 from hypothesis.strategies import text
 
 from at.utils.file import (
-        ALLOWED_EXTENSIONS, allowed_file, get_file, get_filename)
+        ALLOWED_EXTENSIONS, ALLOWED_DIFF_EXTENSIONS, allowed_file, get_file,
+        get_filename)
 
 
 class TestUtilsFile(TestCase):
@@ -21,11 +22,24 @@ class TestUtilsFile(TestCase):
 
         self.assertFalse(allowed_file(filename))
 
+    @given(text())
+    def test_allowed_file_for_non_supported_diff(self, filename):
+        for extension in ALLOWED_DIFF_EXTENSIONS:
+            assume(not filename.endswith(extension))
+
+        self.assertFalse(allowed_file(filename, diff=True))
+
     def test_allowed_file_for_supported(self):
         for extension in ALLOWED_EXTENSIONS:
             filename = self.faker.file_name(extension=extension)
 
             self.assertTrue(allowed_file(filename))
+
+    def test_allowed_file_for_supported_diff(self):
+        for extension in ALLOWED_DIFF_EXTENSIONS:
+            filename = self.faker.file_name(extension=extension)
+
+            self.assertTrue(allowed_file(filename, diff=True))
 
     def test_get_filename(self):
         for extension in ALLOWED_EXTENSIONS:
