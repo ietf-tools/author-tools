@@ -2,7 +2,8 @@ from flask import (
         Blueprint, current_app, jsonify, request, send_from_directory)
 
 from at.utils.authentication import require_api_key
-from at.utils.file import allowed_file, get_file
+from at.utils.file import allowed_file, get_file, save_file
+from at.utils.iddiff import get_id_diff, IddiffError
 from at.utils.processor import (
         get_html, get_pdf, get_text, get_xml, process_file, KramdownError,
         MmarkError, TextError, XML2RFCError)
@@ -34,7 +35,7 @@ def render(format):
     file = request.files['file']
 
     if file.filename == '':
-        logger.info('file name missing')
+        logger.info('filename missing')
         return jsonify(error='Filename is missing'), BAD_REQUEST
 
     if file and allowed_file(file.filename):
@@ -103,12 +104,12 @@ def validate():
     file = request.files['file']
 
     if file.filename == '':
-        logger.info('file name missing')
+        logger.info('filename missing')
         return jsonify(error='Filename is missing'), BAD_REQUEST
 
     if file and allowed_file(file.filename):
         try:
-            dir_path, filename = process_file(
+            _, filename = process_file(
                     file=file,
                     upload_dir=current_app.config['UPLOAD_DIR'],
                     logger=logger)
@@ -130,6 +131,50 @@ def validate():
     else:
         logger.info('File format not supportted: {}'.format(file.filename))
         return jsonify(error='Input file format not supported'), BAD_REQUEST
+
+
+@bp.route('/iddiff', methods=('POST',))
+@require_api_key
+def id_diff():
+    '''POST: /iddiff API call
+    Returns HTML output of ID diff
+    Returns JSON on event of an error.'''
+
+    logger = current_app.logger
+
+    if 'file_1' not in request.files or 'file_2' not in request.files:
+        logger.info('missing input file(s)')
+        return jsonify(error='Missing file(s)'), BAD_REQUEST
+
+    file_1 = request.files['file_1']
+    file_2 = request.files['file_2']
+
+    if file_1.filename == '' or file_2.filename == '':
+        logger.info('filename(s) missing')
+        return jsonify(error='Filename(s) missing'), BAD_REQUEST
+
+    if (
+            file_1 and allowed_file(file_1.filename, diff=True) and
+            file_2 and allowed_file(file_2.filename, diff=True)):
+        dir_path_1, filename_1 = save_file(
+                file=file_1,
+                upload_dir=current_app.config['UPLOAD_DIR'])
+        dir_path_2, filename_2 = save_file(
+                file=file_2,
+                upload_dir=current_app.config['UPLOAD_DIR'])
+
+        try:
+            iddiff = get_id_diff(filename_1, filename_2, logger=logger)
+            for dir_path in (dir_path_1, dir_path_2):
+                iddiff = iddiff.replace('{}/'.format(dir_path), '')
+            return iddiff
+        except IddiffError as e:
+            return jsonify(error='iddiff error: {}'.format(e)), BAD_REQUEST
+    else:
+        logger.info('File format(s) not supportted: [{}, {}]'.format(
+            file_1.filename,
+            file_1.filename))
+        return jsonify(error='Input file format(s) not supported'), BAD_REQUEST
 
 
 @bp.route('/version', methods=('GET',))
