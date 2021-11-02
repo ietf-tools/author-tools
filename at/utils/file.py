@@ -3,8 +3,8 @@ from uuid import uuid4
 
 from werkzeug.utils import secure_filename
 
-ALLOWED_EXTENSIONS = ('txt', 'xml', 'md', 'mkd')
-ALLOWED_DIFF_EXTENSIONS = ('txt')
+ALLOWED_EXTENSIONS = ('txt', 'xml', 'md', 'mkd',)
+ALLOWED_DIFF_EXTENSIONS = ('txt',)
 DIR_MODE = 0o770
 
 
