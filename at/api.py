@@ -2,8 +2,11 @@ from flask import (
         Blueprint, current_app, jsonify, request, send_from_directory)
 
 from at.utils.authentication import require_api_key
-from at.utils.file import allowed_file, get_file, save_file
-from at.utils.iddiff import get_id_diff, IddiffError
+from at.utils.file import (
+        allowed_file, get_file, get_name, save_file, save_file_from_url,
+        DownloadError)
+from at.utils.iddiff import (
+        get_id_diff, get_latest, IddiffError, LatestDraftNotFound)
 from at.utils.processor import (
         get_html, get_pdf, get_text, get_xml, process_file, KramdownError,
         MmarkError, TextError, XML2RFCError)
@@ -142,39 +145,110 @@ def id_diff():
 
     logger = current_app.logger
 
-    if 'file_1' not in request.files or 'file_2' not in request.files:
-        logger.info('missing input file(s)')
-        return jsonify(error='Missing file(s)'), BAD_REQUEST
+    id_1 = request.values.get('id_1', None)
+    id_2 = request.values.get('id_2', None)
 
-    file_1 = request.files['file_1']
-    file_2 = request.files['file_2']
+    if id_1 is None:
+        if 'file_1' not in request.files:
+            logger.info('missing first draft')
+            return jsonify(error='Missing first draft'), BAD_REQUEST
+        else:
+            file_1 = request.files['file_1']
 
-    if file_1.filename == '' or file_2.filename == '':
-        logger.info('filename(s) missing')
-        return jsonify(error='Filename(s) missing'), BAD_REQUEST
+        if file_1.filename == '':
+            logger.info('first draft filename missing')
+            return jsonify(
+                    error='Filename of first draft missing'), BAD_REQUEST
 
-    if (
-            file_1 and allowed_file(file_1.filename, diff=True) and
-            file_2 and allowed_file(file_2.filename, diff=True)):
-        dir_path_1, filename_1 = save_file(
-                file=file_1,
-                upload_dir=current_app.config['UPLOAD_DIR'])
-        dir_path_2, filename_2 = save_file(
-                file=file_2,
-                upload_dir=current_app.config['UPLOAD_DIR'])
+        if (file_1 and allowed_file(file_1.filename, diff=True)):
+            dir_path_1, filename_1 = save_file(
+                    file=file_1,
+                    upload_dir=current_app.config['UPLOAD_DIR'])
+        else:
+            logger.info('File format not supportted: {}'.format(
+                                                            file_1.filename))
+            return jsonify(
+                        error='First file format not supported'), BAD_REQUEST
+    else:
+        try:
+            url = get_latest(id_1,
+                             current_app.config['DT_LATEST_DRAFT_URL'],
+                             logger)
+        except LatestDraftNotFound as e:
+            return jsonify(error=str(e)), BAD_REQUEST
+        except DownloadError as e:
+            return jsonify(error=str(e)), BAD_REQUEST
 
         try:
-            iddiff = get_id_diff(filename_1, filename_2, logger=logger)
-            for dir_path in (dir_path_1, dir_path_2):
-                iddiff = iddiff.replace('{}/'.format(dir_path), '')
-            return iddiff
-        except IddiffError as e:
-            return jsonify(error='iddiff error: {}'.format(e)), BAD_REQUEST
+            dir_path_1, filename_1 = save_file_from_url(
+                                            url,
+                                            current_app.config['UPLOAD_DIR'],
+                                            logger)
+        except DownloadError as e:
+            return jsonify(error=str(e)), BAD_REQUEST
+
+    if id_2 is None:
+        if 'file_2' not in request.files:
+            if 'file_1' in request.files:
+                draft_name = get_name(file_1.filename)
+            else:
+                draft_name = get_name(id_1)
+
+            if draft_name is None:
+                logger.error('Can not determine draft name for {}'.format(
+                                                            file_1.filename))
+                return jsonify(error='Can not determine draft/rfc')
+            else:
+                try:
+                    url = get_latest(
+                                    draft_name,
+                                    current_app.config['DT_LATEST_DRAFT_URL'],
+                                    logger)
+                    dir_path_2, filename_2 = save_file_from_url(
+                                            url,
+                                            current_app.config['UPLOAD_DIR'],
+                                            logger)
+                except LatestDraftNotFound as e:
+                    return jsonify(error=str(e)), BAD_REQUEST
+                except DownloadError as e:
+                    return jsonify(error=str(e)), BAD_REQUEST
+        else:
+            file_2 = request.files['file_2']
+
+            if file_2.filename == '':
+                logger.info('second draft filename missing')
+                return jsonify(
+                        error='Filename of second draft missing'), BAD_REQUEST
+
+            if (file_2 and allowed_file(file_2.filename, diff=True)):
+                dir_path_2, filename_2 = save_file(
+                        file=file_2,
+                        upload_dir=current_app.config['UPLOAD_DIR'])
+            else:
+                logger.info('File format not supportted: {}'.format(
+                                                            file_2.filename))
+                return jsonify(
+                        error='Second file format not supported'), BAD_REQUEST
     else:
-        logger.info('File format(s) not supportted: [{}, {}]'.format(
-            file_1.filename,
-            file_1.filename))
-        return jsonify(error='Input file format(s) not supported'), BAD_REQUEST
+        try:
+            url = get_latest(id_2,
+                             current_app.config['DT_LATEST_DRAFT_URL'],
+                             logger)
+        except LatestDraftNotFound as e:
+            return jsonify(error=str(e)), BAD_REQUEST
+
+        dir_path_2, filename_2 = save_file_from_url(
+                                            url,
+                                            current_app.config['UPLOAD_DIR'],
+                                            logger)
+
+    try:
+        iddiff = get_id_diff(filename_1, filename_2, logger=logger)
+        for dir_path in (dir_path_1, dir_path_2):
+            iddiff = iddiff.replace('{}/'.format(dir_path), '')
+        return iddiff
+    except IddiffError as e:
+        return jsonify(error='iddiff error: {}'.format(e)), BAD_REQUEST
 
 
 @bp.route('/version', methods=('GET',))
