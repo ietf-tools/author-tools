@@ -80,6 +80,7 @@ mkdir tmp
 echo "UPLOAD_DIR = '$PWD/tmp'" > at/config.py
 echo "VERSION = '0.0.1'" >> at/config.py
 echo "DT_APPAUTH_URL = 'https://datatracker.ietf.org/api/appauth/authortools'" >> at/config.py
+echo "DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/doc/rfcdiff-latest-json'" >> at/config.py
 ```
 
 * Run flask server.
