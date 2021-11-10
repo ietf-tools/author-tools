@@ -1,11 +1,23 @@
+from logging import getLogger
 from os import mkdir, path
+from re import compile as re_compile
 from uuid import uuid4
 
+from requests import get
+from requests.exceptions import ConnectionError, Timeout
 from werkzeug.utils import secure_filename
 
 ALLOWED_EXTENSIONS = ('txt', 'xml', 'md', 'mkd',)
 ALLOWED_DIFF_EXTENSIONS = ('txt',)
 DIR_MODE = 0o770
+DRAFT_VERSION = re_compile(r'-\d+(.txt)?$')
+OK = 200
+
+
+# Exceptions
+class DownloadError(Exception):
+    '''Error class for download errors'''
+    pass
 
 
 def allowed_file(filename, diff=False):
@@ -47,3 +59,41 @@ def save_file(file, upload_dir):
     file.save(filename)
 
     return (dir_path, filename)
+
+
+def save_file_from_url(url, upload_dir, logger=getLogger()):
+    '''Download and save the file from given URL and returns path'''
+    dir_path = path.join(upload_dir, str(uuid4()))
+    mkdir(dir_path, mode=DIR_MODE)
+    filename = path.join(
+            dir_path,
+            secure_filename(url.split('/')[-1]))
+
+    try:
+        response = get(url)
+    except (ConnectionError, Timeout) as e:
+        logger.error('Connection error on {url}: {error}'.format(
+                                                            url=url,
+                                                            error=e))
+        raise DownloadError('Error occured while downloading file.')
+
+    if response.status_code == OK:
+        with open(filename, 'w') as file:
+            file.write(response.text)
+    else:
+        logger.error('Error downloading file: {}'.format(url))
+        raise DownloadError('Error occured while downloading file.')
+
+    return (dir_path, filename)
+
+
+def get_name(filename):
+    '''Returns file name if it's a draft or rfc'''
+    name = None
+
+    if (
+            filename.lower().startswith('draft-') or
+            filename.lower().startswith('rfc')):
+        name = DRAFT_VERSION.sub('', filename.lower(), count=1)
+
+    return name
