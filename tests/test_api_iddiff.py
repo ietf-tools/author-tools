@@ -11,7 +11,9 @@ from at import create_app
 TEST_DATA_DIR = './tests/data/'
 DRAFT_A = 'draft-smoke-signals-00.txt'
 DRAFT_B = 'draft-smoke-signals-01.txt'
+XML_DRAFT = 'draft-smoke-signals-00.xml'
 TEST_UNSUPPORTED_FORMAT = 'draft-smoke-signals-00.odt'
+TEST_XML_ERROR = 'draft-smoke-signals-00.error.xml'
 TEMPORARY_DATA_DIR = './tests/tmp/'
 DT_APPAUTH_URL = 'https://example.com/'
 DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/doc/rfcdiff-latest-json'
@@ -151,6 +153,44 @@ class TestApiIddiff(TestCase):
                         json_data['error'],
                         'Second file format not supported')
 
+    def test_first_file_convert_error(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post(
+                        '/api/iddiff',
+                        data={
+                            'file_1': (
+                                open(get_path(TEST_XML_ERROR), 'rb'),
+                                TEST_XML_ERROR),
+                            'file_2': (
+                                open(get_path(DRAFT_A), 'rb'),
+                                DRAFT_A),
+                            'apikey': VALID_API_KEY})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                self.assertTrue(json_data['error'].startswith(
+                                    'Error converting first draft to text'))
+
+    def test_second_file_convert_error(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post(
+                        '/api/iddiff',
+                        data={
+                            'file_1': (
+                                open(get_path(DRAFT_A), 'rb'),
+                                DRAFT_A),
+                            'file_2': (
+                                open(get_path(TEST_XML_ERROR), 'rb'),
+                                TEST_XML_ERROR),
+                            'apikey': VALID_API_KEY})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                self.assertTrue(json_data['error'].startswith(
+                                    'Error converting second draft to text'))
+
     def test_iddiff_with_two_files(self):
         with self.app.test_client() as client:
             with self.app.app_context():
@@ -278,3 +318,23 @@ class TestApiIddiff(TestCase):
                 self.assertIn(b'<html lang="en">', data)
                 self.assertIn(str.encode(draft_name), data)
                 self.assertIn(str.encode(DRAFT_A), data)
+
+    def test_iddiff_with_non_text_draft(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post(
+                        '/api/iddiff',
+                        data={
+                            'file_1': (
+                                open(get_path(XML_DRAFT), 'rb'),
+                                XML_DRAFT),
+                            'file_2': (
+                                open(get_path(XML_DRAFT), 'rb'),
+                                XML_DRAFT),
+                            'apikey': VALID_API_KEY})
+
+                data = result.get_data()
+
+                self.assertEqual(result.status_code, 200)
+                self.assertIn(b'<html lang="en">', data)
+                self.assertIn(str.encode(XML_DRAFT.split('.')[0]), data)

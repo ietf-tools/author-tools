@@ -10,8 +10,7 @@ from werkzeug.datastructures import FileStorage
 
 from at.utils.file import (
         allowed_file, get_file, get_filename, get_name, save_file,
-        save_file_from_url, ALLOWED_EXTENSIONS, ALLOWED_DIFF_EXTENSIONS,
-        DownloadError)
+        save_file_from_url, ALLOWED_EXTENSIONS, DownloadError)
 
 TEST_DATA_DIR = './tests/data/'
 TEST_XML_DRAFT = 'draft-smoke-signals-00.xml'
@@ -49,24 +48,11 @@ class TestUtilsFile(TestCase):
 
         self.assertFalse(allowed_file(filename))
 
-    @given(text())
-    def test_allowed_file_for_non_supported_diff(self, filename):
-        for extension in ALLOWED_DIFF_EXTENSIONS:
-            assume(not filename.endswith(extension))
-
-        self.assertFalse(allowed_file(filename, diff=True))
-
     def test_allowed_file_for_supported(self):
         for extension in ALLOWED_EXTENSIONS:
             filename = self.faker.file_name(extension=extension)
 
             self.assertTrue(allowed_file(filename))
-
-    def test_allowed_file_for_supported_diff(self):
-        for extension in ALLOWED_DIFF_EXTENSIONS:
-            filename = self.faker.file_name(extension=extension)
-
-            self.assertTrue(allowed_file(filename, diff=True))
 
     def test_get_filename(self):
         for extension in ALLOWED_EXTENSIONS:
