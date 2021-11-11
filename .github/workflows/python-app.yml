@@ -66,5 +66,5 @@ jobs:
       env:
         PATH: $PATH:/bin:./node_modules/.bin/
       run: |
-        python -m unittest discover tests -p "*.py"
+        python -m unittest discover tests
         pyflakes at tests
