@@ -96,5 +96,5 @@ pip install -r requirements.dev.txt
 
 * Run unit tests.
 ```
-python -m unittest discover tests -p "*.py"
+python -m unittest discover tests
 ```
