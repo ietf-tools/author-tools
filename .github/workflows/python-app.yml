@@ -62,9 +62,15 @@ jobs:
     - name: Install dependencies
       run: npm install
     # Tests
-    - name: Run tests
+    - name: Run Pyflakes
+      run: pyflakes at tests
+    - name: Run tests and collect coverage
       env:
         PATH: $PATH:/bin:./node_modules/.bin/
       run: |
-        python -m unittest discover tests -p "*.py"
-        pyflakes at tests
+        coverage run -m unittest discover tests
+        coverage xml
+    - name: Upload coverage to Codecov
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        uses: codecov/codecov-action@v2
