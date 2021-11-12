@@ -3,6 +3,10 @@ from subprocess import run as proc_run, CalledProcessError
 
 from requests import get
 
+from at.utils.file import get_extension, save_file
+from at.utils.processor import (
+        get_text, get_xml, md2xml, KramdownError, MmarkError, XML2RFCError)
+
 
 OK = 200
 
@@ -54,3 +58,25 @@ def get_latest(draft, dt_latest_url, logger=getLogger()):
                 'Can not find the latest draft on datatracker')
 
     return latest_draft
+
+
+def get_text_id(file, upload_dir, logger=getLogger()):
+    '''Returns text draft'''
+
+    (dir_path, filename) = save_file(file, upload_dir)
+    file_ext = get_extension(filename)
+
+    if file_ext.lower() != '.txt':
+        logger.debug('processing non text file')
+
+        try:
+            if file_ext.lower() in ['.md', '.mkd']:
+                filename = md2xml(filename, logger)
+            xml_file = get_xml(filename, logger=logger)
+            filename = get_text(xml_file, logger=logger)
+        except (KramdownError, MmarkError, XML2RFCError) as e:
+            logger.error(
+                    'error processing non text file: {}'.format(filename))
+            raise IddiffError(str(e))
+
+    return (dir_path, filename)

@@ -138,7 +138,7 @@ def convert_v2v3(filename, logger=getLogger()):
     '''Convert XML2RFC v2 file to v3'''
     logger.debug('converting v2 XML to v3 XML')
 
-    xml_file = get_filename(filename, 'v2v3.xml')
+    xml_file = get_filename(filename, 'xml')
 
     output = proc_run(
                 args=[
