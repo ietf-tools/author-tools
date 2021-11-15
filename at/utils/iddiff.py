@@ -39,7 +39,7 @@ def get_id_diff(filename_1, filename_2, logger=getLogger()):
     return output.stdout.decode('utf-8')
 
 
-def get_latest(draft, dt_latest_url, logger=getLogger()):
+def get_latest(draft, dt_latest_url, original_draft=None, logger=getLogger()):
     '''Returns URL latest ID/RFC from Datatracker.'''
 
     url = '/'.join([dt_latest_url, draft])
@@ -47,7 +47,19 @@ def get_latest(draft, dt_latest_url, logger=getLogger()):
 
     if response.status_code == OK:
         try:
-            latest_draft = response.json()['content_url']
+            data = response.json()
+            latest_draft = data['content_url']
+
+            if original_draft:
+                draft_name = data['name']
+                if 'rev' in data.keys():
+                    draft_name = '-'.join([data['name'], data['rev']])
+
+                if draft_name == original_draft:
+                    latest_draft = get_latest(draft=data['previous'],
+                                              dt_latest_url=dt_latest_url,
+                                              logger=logger)
+
         except KeyError:
             logger.error('can not find content_url for {}'.format(url))
             raise LatestDraftNotFound(

@@ -73,10 +73,37 @@ class TestUtilsIddiff(TestCase):
                     str(error.exception),
                     'Can not find url for the latest draft on datatracker')
 
-    def test_get_latest(self):
+    def test_get_latest_rfc(self):
         rfc = 'rfc666'
         latest_draft_url = get_latest(rfc, DT_LATEST_DRAFT_URL)
         self.assertTrue(latest_draft_url.startswith('https://'))
+
+    def test_get_latest_id(self):
+        draft = 'draft-ietf-quic-http'
+        latest_draft_url = get_latest(draft, DT_LATEST_DRAFT_URL)
+        self.assertTrue(latest_draft_url.startswith('https://'))
+
+    def test_get_latest_with_original_mismatching(self):
+        draft_name = 'draft-ietf-quic-http'
+        revision = '23'
+        draft = '-'.join([draft_name, revision])
+        latest_draft_url = get_latest(draft=draft,
+                                      dt_latest_url=DT_LATEST_DRAFT_URL,
+                                      original_draft=draft)
+        self.assertTrue(latest_draft_url.startswith('https://'))
+        self.assertIn(draft_name, latest_draft_url)
+        self.assertNotIn(revision, latest_draft_url)
+        self.assertNotIn(draft, latest_draft_url)
+
+    def test_get_latest_with_original_matching(self):
+        rfc = 'rfc7231'
+        previous = 'draft-ietf-httpbis-p2-semantics-26'
+        latest_draft_url = get_latest(draft=rfc,
+                                      dt_latest_url=DT_LATEST_DRAFT_URL,
+                                      original_draft=rfc)
+        self.assertTrue(latest_draft_url.startswith('https://'))
+        self.assertIn(previous, latest_draft_url)
+        self.assertNotIn(previous, rfc)
 
     def test_get_text_id(self):
         for filename in TEST_DATA:
