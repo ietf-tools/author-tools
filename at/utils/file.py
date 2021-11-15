@@ -9,7 +9,8 @@ from werkzeug.utils import secure_filename
 
 ALLOWED_EXTENSIONS = ('txt', 'xml', 'md', 'mkd',)
 DIR_MODE = 0o770
-DRAFT_VERSION = re_compile(r'-\d+(.txt)?$')
+DRAFT_NAME = re_compile(r'(-\d+)?(\..*)?$')
+DRAFT_NAME_WITH_REVISION = re_compile(r'\..*$')
 OK = 200
 
 
@@ -85,12 +86,24 @@ def save_file_from_url(url, upload_dir, logger=getLogger()):
 
 
 def get_name(filename):
-    '''Returns file name if it's a draft or rfc'''
+    '''Returns draft/rfc name'''
     name = None
 
     if (
             filename.lower().startswith('draft-') or
             filename.lower().startswith('rfc')):
-        name = DRAFT_VERSION.sub('', filename.lower(), count=1)
+        name = DRAFT_NAME.sub('', filename.lower(), count=1)
+
+    return name
+
+
+def get_name_with_revision(filename):
+    '''Retuns draft/rfc name with revision'''
+    name = None
+
+    if (
+            filename.lower().startswith('draft-') or
+            filename.lower().startswith('rfc')):
+        name = DRAFT_NAME_WITH_REVISION.sub('', filename.lower(), count=1)
 
     return name

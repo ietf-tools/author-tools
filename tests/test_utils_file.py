@@ -9,8 +9,8 @@ from hypothesis.strategies import text
 from werkzeug.datastructures import FileStorage
 
 from at.utils.file import (
-        allowed_file, get_file, get_filename, get_name, save_file,
-        save_file_from_url, ALLOWED_EXTENSIONS, DownloadError)
+        allowed_file, get_file, get_filename, get_name, get_name_with_revision,
+        save_file, save_file_from_url, ALLOWED_EXTENSIONS, DownloadError)
 
 TEST_DATA_DIR = './tests/data/'
 TEST_XML_DRAFT = 'draft-smoke-signals-00.xml'
@@ -108,10 +108,28 @@ class TestUtilsFile(TestCase):
     def test_get_name_standarded(self):
         names_dictionary = {
             'rfc3333': 'rfc3333',
-            'rfc3333.txt': 'rfc3333.txt',
+            'rfc3333.txt': 'rfc3333',
             'draft-smoke-signals-00.txt': 'draft-smoke-signals',
             'draft-smoke-signals-01': 'draft-smoke-signals',
             'draft-smoke-signals': 'draft-smoke-signals'}
 
         for (filename, name) in names_dictionary.items():
             self.assertEqual(get_name(filename), name)
+
+    @given(text())
+    def test_get_name_with_revision_non_standarded(self, filename):
+        for prefix in ['draft-', 'rfc']:
+            assume(not filename.startswith(prefix))
+
+        self.assertIsNone(get_name_with_revision(filename))
+
+    def test_get_name_with_revision_standarded(self):
+        names_dictionary = {
+            'rfc3333': 'rfc3333',
+            'rfc3333.txt': 'rfc3333',
+            'draft-smoke-signals-00.txt': 'draft-smoke-signals-00',
+            'draft-smoke-signals-01': 'draft-smoke-signals-01',
+            'draft-smoke-signals': 'draft-smoke-signals'}
+
+        for (filename, name) in names_dictionary.items():
+            self.assertEqual(get_name_with_revision(filename), name)

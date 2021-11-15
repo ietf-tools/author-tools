@@ -3,7 +3,8 @@ from flask import (
 
 from at.utils.authentication import require_api_key
 from at.utils.file import (
-        allowed_file, get_file, get_name, save_file_from_url, DownloadError)
+        allowed_file, get_file, get_name, get_name_with_revision,
+        save_file_from_url, DownloadError)
 from at.utils.iddiff import (
         get_id_diff, get_latest, get_text_id, IddiffError, LatestDraftNotFound)
 from at.utils.processor import (
@@ -195,8 +196,10 @@ def id_diff():
         if 'file_2' not in request.files:
             if 'file_1' in request.files:
                 draft_name = get_name(file_1.filename)
+                original_draft = get_name_with_revision(file_1.filename)
             else:
                 draft_name = get_name(id_1)
+                original_draft = get_name_with_revision(id_1)
 
             if draft_name is None:
                 logger.error('Can not determine draft name for {}'.format(
@@ -207,6 +210,7 @@ def id_diff():
                     url = get_latest(
                                     draft_name,
                                     current_app.config['DT_LATEST_DRAFT_URL'],
+                                    original_draft,
                                     logger)
                     dir_path_2, filename_2 = save_file_from_url(
                                             url,
