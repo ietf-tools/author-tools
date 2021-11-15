@@ -3,10 +3,9 @@ from flask import (
 
 from at.utils.authentication import require_api_key
 from at.utils.file import (
-        allowed_file, get_file, get_name, save_file, save_file_from_url,
-        DownloadError)
+        allowed_file, get_file, get_name, save_file_from_url, DownloadError)
 from at.utils.iddiff import (
-        get_id_diff, get_latest, IddiffError, LatestDraftNotFound)
+        get_id_diff, get_latest, get_text_id, IddiffError, LatestDraftNotFound)
 from at.utils.processor import (
         get_html, get_pdf, get_text, get_xml, process_file, KramdownError,
         MmarkError, TextError, XML2RFCError)
@@ -160,10 +159,15 @@ def id_diff():
             return jsonify(
                     error='Filename of first draft missing'), BAD_REQUEST
 
-        if (file_1 and allowed_file(file_1.filename, diff=True)):
-            dir_path_1, filename_1 = save_file(
-                    file=file_1,
-                    upload_dir=current_app.config['UPLOAD_DIR'])
+        if file_1 and allowed_file(file_1.filename):
+            try:
+                dir_path_1, filename_1 = get_text_id(
+                        file=file_1,
+                        upload_dir=current_app.config['UPLOAD_DIR'])
+            except IddiffError as e:
+                error = 'Error converting first draft to text: {}' \
+                        .format(str(e))
+                return jsonify(error=error), BAD_REQUEST
         else:
             logger.info('File format not supportted: {}'.format(
                                                             file_1.filename))
@@ -220,10 +224,15 @@ def id_diff():
                 return jsonify(
                         error='Filename of second draft missing'), BAD_REQUEST
 
-            if (file_2 and allowed_file(file_2.filename, diff=True)):
-                dir_path_2, filename_2 = save_file(
-                        file=file_2,
-                        upload_dir=current_app.config['UPLOAD_DIR'])
+            if file_2 and allowed_file(file_2.filename):
+                try:
+                    dir_path_2, filename_2 = get_text_id(
+                            file=file_2,
+                            upload_dir=current_app.config['UPLOAD_DIR'])
+                except IddiffError as e:
+                    error = 'Error converting second draft to text: {}' \
+                            .format(str(e))
+                    return jsonify(error=error), BAD_REQUEST
             else:
                 logger.info('File format not supportted: {}'.format(
                                                             file_2.filename))

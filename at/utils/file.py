@@ -8,7 +8,6 @@ from requests.exceptions import ConnectionError, Timeout
 from werkzeug.utils import secure_filename
 
 ALLOWED_EXTENSIONS = ('txt', 'xml', 'md', 'mkd',)
-ALLOWED_DIFF_EXTENSIONS = ('txt',)
 DIR_MODE = 0o770
 DRAFT_VERSION = re_compile(r'-\d+(.txt)?$')
 OK = 200
@@ -20,13 +19,11 @@ class DownloadError(Exception):
     pass
 
 
-def allowed_file(filename, diff=False):
+def allowed_file(filename):
     '''Return true if file extension in allowed list'''
 
-    extensions = ALLOWED_DIFF_EXTENSIONS if diff else ALLOWED_EXTENSIONS
-
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in extensions
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def get_extension(filename):
