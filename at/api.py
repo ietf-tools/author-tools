@@ -13,7 +13,7 @@ from at.utils.processor import (
 from at.utils.validation import validate_xml
 from at.utils.version import (
         get_aasvg_version, get_goat_version, get_idnits_version,
-        get_id2xml_version, get_mmark_version,
+        get_id2xml_version, get_iddiff_version, get_mmark_version,
         get_kramdown_rfc2629_version, get_weasyprint_version,
         get_xml2rfc_version)
 
@@ -288,6 +288,7 @@ def version():
             'id2xml': get_id2xml_version(logger),
             'weasyprint': get_weasyprint_version(),
             'idnits': get_idnits_version(logger),
+            'iddiff': get_iddiff_version(logger),
             'aasvg': get_aasvg_version(logger),
             'goat': get_goat_version(logger)}
 
