@@ -13,6 +13,7 @@ VERSION_LABELS = (
     'id2xml',
     'weasyprint',
     'idnits',
+    'iddiff',
     'aasvg',
     'goat')
 

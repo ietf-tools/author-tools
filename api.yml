@@ -288,6 +288,9 @@ paths:
                       idnits:
                         type: string
                         description: idnits version
+                      iddiff:
+                        type: string
+                        description: iddiff version
                       aasvg:
                         type: string
                         description: aasvg version

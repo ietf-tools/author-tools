@@ -104,3 +104,17 @@ def get_aasvg_version(logger=getLogger()):
         logger.info('aasvg error: {}'.format(
             output.stderr.decode('utf-8')))
         return None
+
+
+def get_iddiff_version(logger=getLogger()):
+    '''Return iddiff version'''
+
+    output = proc_run(args=['iddiff', '--version'], capture_output=True)
+
+    try:
+        output.check_returncode()
+        return output.stdout.decode('utf-8').replace('iddiff', '').strip()
+    except CalledProcessError:
+        logger.info('iddiff error: {}'.format(
+            output.stderr.decode('utf-8')))
+        return None
