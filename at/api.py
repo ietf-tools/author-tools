@@ -148,6 +148,11 @@ def id_diff():
     id_1 = request.values.get('id_1', None)
     id_2 = request.values.get('id_2', None)
 
+    if request.values.get('table', False):
+        table = True
+    else:
+        table = False
+
     if id_1 is None:
         if 'file_1' not in request.files:
             logger.info('missing first draft')
@@ -256,7 +261,10 @@ def id_diff():
                                             logger)
 
     try:
-        iddiff = get_id_diff(filename_1, filename_2, logger=logger)
+        iddiff = get_id_diff(filename_1=filename_1,
+                             filename_2=filename_2,
+                             table=table,
+                             logger=logger)
         for dir_path in (dir_path_1, dir_path_2):
             iddiff = iddiff.replace('{}/'.format(dir_path), '')
         return iddiff

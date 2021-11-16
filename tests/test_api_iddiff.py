@@ -338,3 +338,28 @@ class TestApiIddiff(TestCase):
                 self.assertEqual(result.status_code, 200)
                 self.assertIn(b'<html lang="en">', data)
                 self.assertIn(str.encode(XML_DRAFT.split('.')[0]), data)
+
+    def test_iddiff_with_table_only(self):
+        labels = [
+            'draft-ietf-quic-http-23',
+            'draft-ietf-quic-http-23.txt',
+            'rfc8226',
+            'rfc8226.txt']
+
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                for id in labels:
+                    result = client.post(
+                            '/api/iddiff',
+                            data={
+                                'id_1': id,
+                                'table': 1,
+                                'apikey': VALID_API_KEY})
+
+                    data = result.get_data()
+
+                    self.assertEqual(result.status_code, 200)
+                    self.assertNotIn(b'<html lang="en">', data)
+                    self.assertIn(b'<table', data)
+                    self.assertIn(b'</table>', data)
+                    self.assertIn(str.encode(id), data)
