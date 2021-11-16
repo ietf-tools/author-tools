@@ -51,6 +51,17 @@ class TestUtilsIddiff(TestCase):
         self.assertIn(DRAFT_A, id_diff)
         self.assertIn(DRAFT_B, id_diff)
 
+    def test_get_id_diff_with_table_only(self):
+        id_diff = get_id_diff(''.join([TEST_DATA_DIR, DRAFT_A]),
+                              ''.join([TEST_DATA_DIR, DRAFT_B]),
+                              table=True)
+
+        self.assertNotIn('<html lang="en">', id_diff)
+        self.assertIn('<table', id_diff)
+        self.assertIn('</table>', id_diff)
+        self.assertIn(DRAFT_A, id_diff)
+        self.assertIn(DRAFT_B, id_diff)
+
     def test_get_latest_not_found_error(self):
         with self.assertRaises(LatestDraftNotFound) as error:
             get_latest('foobar-foobar', DT_LATEST_DRAFT_URL)
