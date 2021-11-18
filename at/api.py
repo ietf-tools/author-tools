@@ -145,15 +145,15 @@ def id_diff():
 
     logger = current_app.logger
 
-    id_1 = request.values.get('id_1', None)
-    id_2 = request.values.get('id_2', None)
+    id_1 = request.values.get('id_1', '').strip()
+    id_2 = request.values.get('id_2', '').strip()
 
     if request.values.get('table', False):
         table = True
     else:
         table = False
 
-    if id_1 is None:
+    if not id_1:
         if 'file_1' not in request.files:
             logger.info('missing first draft')
             return jsonify(error='Missing first draft'), BAD_REQUEST
@@ -197,7 +197,7 @@ def id_diff():
         except DownloadError as e:
             return jsonify(error=str(e)), BAD_REQUEST
 
-    if id_2 is None:
+    if not id_2:
         if 'file_2' not in request.files:
             if 'file_1' in request.files:
                 draft_name = get_name(file_1.filename)
