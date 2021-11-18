@@ -2,7 +2,7 @@
 openapi: "3.0.0"
 info:
   title: IETF Author Tools API
-  version: 0.2.1
+  version: 0.3.0
 servers:
   - url: https://author-tools.ietf.org
     description: Alpha server
@@ -233,6 +233,63 @@ paths:
                   idnits:
                     type: string
                     description: idnits output
+        '400':
+          description: Error has occured.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
+        '401':
+          description: Failed to authenticate.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
+  /api/iddiff:
+    post:
+      summary: Validates the draft
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file_1:
+                  type: string
+                  format: binary
+                  description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                file_2:
+                  type: string
+                  format: binary
+                  description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt). This is optional. If file_2 and id_2 are not provided, second draft will be identified based on the first draft or first draft file name.
+                id_1:
+                  type: string
+                  description: First draft name unless file_1 is provided.
+                id_2:
+                  type: string
+                  description: Second draft name unless file_2 is provided. This is optional. If file_2 and id_2 are not provided, second draft will be identified based on the first draft or first draft file name.
+                table:
+                  type: string
+                  description: If this property is set, HTML table is returned.
+                apikey:
+                  type: string
+                  description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well.
+      responses:
+        '200':
+          description: Returns iddiff as HTML.
+          content:
+            text/html:
+              schema:
+                type: string
         '400':
           description: Error has occured.
           content:

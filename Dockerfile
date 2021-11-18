@@ -27,8 +27,9 @@ ENV PATH=$PATH:./node_modules/.bin
 
 # install idnits
 RUN apt-get install -y gawk
-RUN wget https://tools.ietf.org/tools/idnits/idnits-2.17.00.tgz
-RUN tar xv --strip-components=1 -C /bin -f idnits-2.17.00.tgz
+RUN wget https://raw.githubusercontent.com/ietf-tools/idnits-mirror/main/idnits
+RUN cp idnits /bin
+RUN chmod +x /bin/idnits
 
 RUN pip3 install -r requirements.txt
 RUN gem install bundler
@@ -43,7 +44,7 @@ RUN unzip -q roboto-mono.zip -d ~/.fonts/opentype/
 
 RUN mkdir -p tmp
 RUN echo "UPLOAD_DIR = '$PWD/tmp'" > at/config.py
-RUN echo "VERSION = '0.2.1'" >> at/config.py
+RUN echo "VERSION = '0.3.0'" >> at/config.py
 RUN echo "DT_APPAUTH_URL = 'https://datatracker.ietf.org/api/appauth/authortools'" >> at/config.py
 RUN echo "DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/doc/rfcdiff-latest-json'" >> at/config.py
 
