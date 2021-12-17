@@ -261,8 +261,8 @@ def id_diff():
                                             logger)
 
     try:
-        iddiff = get_id_diff(filename_1=filename_1,
-                             filename_2=filename_2,
+        iddiff = get_id_diff(old_draft=filename_2,
+                             new_draft=filename_1,
                              table=table,
                              logger=logger)
         for dir_path in (dir_path_1, dir_path_2):

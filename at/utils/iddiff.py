@@ -22,16 +22,16 @@ class LatestDraftNotFound(Exception):
     pass
 
 
-def get_id_diff(filename_1, filename_2, table=False, logger=getLogger()):
+def get_id_diff(old_draft, new_draft, table=False, logger=getLogger()):
     '''Returns iddiff output'''
 
     logger.debug('running iddiff')
 
     if table:
-        output = proc_run(args=['iddiff', '-t', '-c', filename_1, filename_2],
+        output = proc_run(args=['iddiff', '-t', '-c', old_draft, new_draft],
                           capture_output=True)
     else:
-        output = proc_run(args=['iddiff', '-c', filename_1, filename_2],
+        output = proc_run(args=['iddiff', '-c', old_draft, new_draft],
                           capture_output=True)
 
     try:
