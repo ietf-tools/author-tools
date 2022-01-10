@@ -147,6 +147,7 @@ def id_diff():
 
     id_1 = request.values.get('id_1', '').strip()
     id_2 = request.values.get('id_2', '').strip()
+    single_draft = False
 
     if request.values.get('table', False):
         table = True
@@ -221,6 +222,7 @@ def id_diff():
                                             url,
                                             current_app.config['UPLOAD_DIR'],
                                             logger)
+                    single_draft = True
                 except LatestDraftNotFound as e:
                     return jsonify(error=str(e)), BAD_REQUEST
                 except DownloadError as e:
@@ -261,8 +263,14 @@ def id_diff():
                                             logger)
 
     try:
-        iddiff = get_id_diff(old_draft=filename_2,
-                             new_draft=filename_1,
+        if single_draft:
+            old_draft = filename_2
+            new_draft = filename_1
+        else:
+            old_draft = filename_1
+            new_draft = filename_2
+        iddiff = get_id_diff(old_draft=old_draft,
+                             new_draft=new_draft,
                              table=table,
                              logger=logger)
         for dir_path in (dir_path_1, dir_path_2):
