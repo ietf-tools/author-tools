@@ -16,6 +16,6 @@
   },
   "homepage": "https://github.com/kesara/ietf-at#readme",
   "dependencies": {
-    "aasvg": "^0.1.5"
+    "aasvg": "^0.1.7"
   }
 }
