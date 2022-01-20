@@ -3,6 +3,7 @@ from os.path import abspath
 from pathlib import Path
 from shutil import rmtree
 from unittest import TestCase
+from urllib.parse import urlencode
 
 import responses
 
@@ -70,6 +71,17 @@ class TestApiIddiff(TestCase):
                 result = client.post(
                         '/api/iddiff',
                         data={'apikey': VALID_API_KEY})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                self.assertEqual(json_data['error'], 'Missing first draft')
+
+    def test_get_no_label(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.get(
+                        '/api/iddiff',
+                        headers={'X-API-KEY': VALID_API_KEY})
                 json_data = result.get_json()
 
                 self.assertEqual(result.status_code, 400)
@@ -236,6 +248,29 @@ class TestApiIddiff(TestCase):
                     self.assertIn(str.encode(id_1), data)
                     self.assertIn(str.encode(id_2), data)
 
+    def test_iddiff_get_with_two_labels(self):
+        pairs = [
+            ('draft-ietf-quic-http-23', 'draft-ietf-quic-http-24'),
+            ('draft-ietf-quic-http-23.txt', 'draft-ietf-quic-http-24.txt'),
+            ('rfc8226', 'draft-ietf-stir-certificates-18'),
+            ('rfc8226.txt', 'draft-ietf-stir-certificates-18.txt')]
+
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                for (id_1, id_2) in pairs:
+                    result = client.get(
+                            '/api/iddiff?' + urlencode({
+                                'id_1': id_1,
+                                'id_2': id_2}),
+                            headers={'X-API-KEY': VALID_API_KEY})
+
+                    data = result.get_data()
+
+                    self.assertEqual(result.status_code, 200)
+                    self.assertIn(b'<html lang="en">', data)
+                    self.assertIn(str.encode(id_1), data)
+                    self.assertIn(str.encode(id_2), data)
+
     def test_iddiff_with_one_file(self):
         with self.app.test_client() as client:
             with self.app.app_context():
@@ -270,6 +305,26 @@ class TestApiIddiff(TestCase):
                             data={
                                 'id_1': id,
                                 'apikey': VALID_API_KEY})
+
+                    data = result.get_data()
+
+                    self.assertEqual(result.status_code, 200)
+                    self.assertIn(b'<html lang="en">', data)
+                    self.assertIn(str.encode(id), data)
+
+    def test_iddiff_get_with_one_label(self):
+        labels = [
+            'draft-ietf-quic-http-23',
+            'draft-ietf-quic-http-23.txt',
+            'rfc8226',
+            'rfc8226.txt']
+
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                for id in labels:
+                    result = client.get(
+                            '/api/iddiff?' + urlencode({'id_1': id}),
+                            headers={'X-API-KEY': VALID_API_KEY})
 
                     data = result.get_data()
 
