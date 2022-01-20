@@ -136,7 +136,7 @@ def validate():
         return jsonify(error='Input file format not supported'), BAD_REQUEST
 
 
-@bp.route('/iddiff', methods=('POST',))
+@bp.route('/iddiff', methods=('POST', 'GET'))
 @require_api_key
 def id_diff():
     '''POST: /iddiff API call

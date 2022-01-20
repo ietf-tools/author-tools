@@ -310,6 +310,52 @@ paths:
                   error:
                     type: string
                     description: Error description
+    get:
+      summary: Validates the draft
+      parameters:
+        - in: query
+          name: id_1
+          schema:
+            type: string
+          description: First draft name unless file_1 is provided.
+          required: true
+        - in: query
+          name: id_2
+          schema:
+            type: string
+          description: Second draft name unless file_2 is provided. This is optional. If file_2 and id_2 are not provided, second draft will be identified based on the first draft or first draft file name.
+        - in: query
+          name: table
+          schema:
+            type: string
+          description: If this property is set, HTML table is returned.
+      responses:
+        '200':
+          description: Returns iddiff as HTML.
+          content:
+            text/html:
+              schema:
+                type: string
+        '400':
+          description: Error has occured.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
+        '401':
+          description: Failed to authenticate.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
   /api/version:
     get:
       summary: Returns version information.
