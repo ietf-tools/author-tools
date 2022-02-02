@@ -7,15 +7,15 @@
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kesara/ietf-at.git"
+    "url": "git+https://github.com/ietf-tools/ietf-at.git"
   },
   "author": "Kesara Rathnayake",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
-    "url": "https://github.com/kesara/ietf-at/issues"
+    "url": "https://github.com/ietf-tools/ietf-at/issues"
   },
-  "homepage": "https://github.com/kesara/ietf-at#readme",
+  "homepage": "https://github.com/ietf-tools/ietf-at#readme",
   "dependencies": {
-    "aasvg": "^0.1.7"
+    "aasvg": "^0.1.8"
   }
 }
