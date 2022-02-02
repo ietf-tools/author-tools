@@ -37,7 +37,7 @@ jobs:
         grep -v xml2rfc requirements.txt > requirements2.txt
         pip install -r requirements2.txt
         pip uninstall -y jinja2
-        pip install xml2rfc==3.9.1
+        pip install xml2rfc==3.12.1
         pip install -r requirements.dev.txt
     # Ruby
     - name: Set up Ruby

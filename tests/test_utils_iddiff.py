@@ -1,13 +1,15 @@
 from logging import disable as set_logger, INFO, CRITICAL
 from pathlib import Path
-from shutil import rmtree
+from shutil import copy, rmtree
 from unittest import TestCase
 
 import responses
 from werkzeug.datastructures import FileStorage
 
 from at.utils.iddiff import (
-        get_id_diff, get_latest, get_text_id, IddiffError, LatestDraftNotFound)
+        get_id_diff, get_latest, get_text_id, get_text_id_from_file,
+        get_text_id_from_url, is_valid_url, IddiffError, InvalidURL,
+        LatestDraftNotFound)
 
 TEST_DATA_DIR = './tests/data/'
 DRAFT_A = 'draft-smoke-signals-00.txt'
@@ -118,17 +120,81 @@ class TestUtilsIddiff(TestCase):
 
     def test_get_text_id(self):
         for filename in TEST_DATA:
+            original = ''.join([TEST_DATA_DIR, filename])
+            new = ''.join([TEMPORARY_DATA_DIR, filename])
+            copy(original, new)
+            (dir_path, file_path) = get_text_id(TEMPORARY_DATA_DIR, new)
+            self.assertTrue(Path(dir_path).exists())
+            self.assertTrue(Path(file_path).exists())
+            self.assertEqual(Path(file_path).suffix, '.txt')
+
+    def test_get_text_id_error(self):
+        filename = TEST_XML_ERROR
+        original = ''.join([TEST_DATA_DIR, filename])
+        new = ''.join([TEMPORARY_DATA_DIR, filename])
+        copy(original, new)
+
+        with self.assertRaises(IddiffError):
+            get_text_id(TEMPORARY_DATA_DIR, new)
+
+    def test_get_text_id_from_file(self):
+        for filename in TEST_DATA:
             with open(''.join([TEST_DATA_DIR, filename]), 'rb') as file:
                 file_object = FileStorage(file, filename=filename)
-                (dir_path, file_path) = get_text_id(file_object,
-                                                    TEMPORARY_DATA_DIR)
+                (dir_path, file_path) = get_text_id_from_file(
+                                            file_object, TEMPORARY_DATA_DIR)
                 self.assertTrue(Path(dir_path).exists())
                 self.assertTrue(Path(file_path).exists())
                 self.assertEqual(Path(file_path).suffix, '.txt')
 
-    def test_get_text_id_error(self):
+    def test_get_text_id_from_file_error(self):
         filename = TEST_XML_ERROR
         with open(''.join([TEST_DATA_DIR, filename]), 'rb') as file:
             file_object = FileStorage(file, filename=filename)
             with self.assertRaises(IddiffError):
-                get_text_id(file_object, TEMPORARY_DATA_DIR)
+                get_text_id_from_file(file_object, TEMPORARY_DATA_DIR)
+
+    def test_get_text_id_from_url(self):
+        url = 'https://www.ietf.org/archive/id/draft-iab-xml2rfcv2-01.xml'
+        (dir_path, file_path) = get_text_id_from_url(url, TEMPORARY_DATA_DIR)
+        self.assertTrue(Path(dir_path).exists())
+        self.assertTrue(Path(file_path).exists())
+        self.assertEqual(Path(file_path).suffix, '.txt')
+
+    def test_get_text_id_from_url_error(self):
+        url = 'https://author-tools.ietf.org/sitemap.xml'
+        with self.assertRaises(IddiffError):
+            get_text_id_from_url(url, TEMPORARY_DATA_DIR)
+
+    def test_invalid_urls(self):
+        allowed_domains = ['example.com', ]
+        urls = [
+                'ftp://example.com/',
+                'file://example.com/',
+                'example.com',
+                '/etc/passwd',
+                '../requirements.txt',
+                'https://127.0.0.1',
+                'https://127.0.0.1:80',
+                'https://example.com:80',
+                'https://example.com[/',
+                'https://example.org']
+
+        for url in urls:
+            with self.assertRaises(InvalidURL):
+                is_valid_url(url, allowed_domains=allowed_domains)
+
+    def test_valid_url(self):
+        allowed_domains = ['example.com', ]
+        urls = [
+                'http://example.com/',
+                'https://example.com/',
+                'https://example.com/example.xml',
+                'https://example.com/example/example.xml',
+                'http://www.example.com/',
+                'https://www.example.com/',
+                'https://www.example.com/example.xml',
+                'https://www.example.com/example/example.xml']
+
+        for url in urls:
+            self.assertTrue(is_valid_url(url, allowed_domains=allowed_domains))
