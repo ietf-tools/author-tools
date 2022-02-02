@@ -4,9 +4,10 @@ from flask import (
 from at.utils.authentication import require_api_key
 from at.utils.file import (
         allowed_file, get_file, get_name, get_name_with_revision,
-        save_file_from_url, DownloadError)
+        DownloadError)
 from at.utils.iddiff import (
-        get_id_diff, get_latest, get_text_id, IddiffError, LatestDraftNotFound)
+        get_id_diff, get_latest, get_text_id_from_file, get_text_id_from_url,
+        is_valid_url, IddiffError, InvalidURL, LatestDraftNotFound)
 from at.utils.processor import (
         get_html, get_pdf, get_text, get_xml, process_file, KramdownError,
         MmarkError, TextError, XML2RFCError)
@@ -147,6 +148,9 @@ def id_diff():
 
     id_1 = request.values.get('id_1', '').strip()
     id_2 = request.values.get('id_2', '').strip()
+    url_1 = request.values.get('url_1', '').strip()
+    url_2 = request.values.get('url_2', '').strip()
+
     single_draft = False
 
     if request.values.get('table', False):
@@ -154,7 +158,7 @@ def id_diff():
     else:
         table = False
 
-    if not id_1:
+    if not id_1 and not url_1:
         if 'file_1' not in request.files:
             logger.info('missing first draft')
             return jsonify(error='Missing first draft'), BAD_REQUEST
@@ -168,7 +172,7 @@ def id_diff():
 
         if file_1 and allowed_file(file_1.filename):
             try:
-                dir_path_1, filename_1 = get_text_id(
+                dir_path_1, filename_1 = get_text_id_from_file(
                         file=file_1,
                         upload_dir=current_app.config['UPLOAD_DIR'])
             except IddiffError as e:
@@ -180,7 +184,7 @@ def id_diff():
                                                             file_1.filename))
             return jsonify(
                         error='First file format not supported'), BAD_REQUEST
-    else:
+    elif id_1:
         try:
             url = get_latest(id_1,
                              current_app.config['DT_LATEST_DRAFT_URL'],
@@ -191,21 +195,38 @@ def id_diff():
             return jsonify(error=str(e)), BAD_REQUEST
 
         try:
-            dir_path_1, filename_1 = save_file_from_url(
+            dir_path_1, filename_1 = get_text_id_from_url(
                                             url,
                                             current_app.config['UPLOAD_DIR'],
                                             logger)
         except DownloadError as e:
             return jsonify(error=str(e)), BAD_REQUEST
+    else:
+        try:
+            if is_valid_url(url_1,
+                            current_app.config['IDDIFF_ALLOWED_DOMAINS'],
+                            logger):
+                dir_path_1, filename_1 = get_text_id_from_url(
+                                            url_1,
+                                            current_app.config['UPLOAD_DIR'],
+                                            logger)
+        except InvalidURL as e:
+            return jsonify(error=str(e)), BAD_REQUEST
+        except DownloadError as e:
+            return jsonify(error=str(e)), BAD_REQUEST
 
-    if not id_2:
+    if not id_2 and not url_2:
         if 'file_2' not in request.files:
             if 'file_1' in request.files:
                 draft_name = get_name(file_1.filename)
                 original_draft = get_name_with_revision(file_1.filename)
-            else:
+            elif id_1:
                 draft_name = get_name(id_1)
                 original_draft = get_name_with_revision(id_1)
+            else:
+                filename = filename_1.split('/')[-1]
+                draft_name = get_name(filename)
+                original_draft = get_name_with_revision(filename)
 
             if draft_name is None:
                 logger.error('Can not determine draft name for {}'.format(
@@ -218,7 +239,7 @@ def id_diff():
                                     current_app.config['DT_LATEST_DRAFT_URL'],
                                     original_draft,
                                     logger)
-                    dir_path_2, filename_2 = save_file_from_url(
+                    dir_path_2, filename_2 = get_text_id_from_url(
                                             url,
                                             current_app.config['UPLOAD_DIR'],
                                             logger)
@@ -237,7 +258,7 @@ def id_diff():
 
             if file_2 and allowed_file(file_2.filename):
                 try:
-                    dir_path_2, filename_2 = get_text_id(
+                    dir_path_2, filename_2 = get_text_id_from_file(
                             file=file_2,
                             upload_dir=current_app.config['UPLOAD_DIR'])
                 except IddiffError as e:
@@ -249,7 +270,7 @@ def id_diff():
                                                             file_2.filename))
                 return jsonify(
                         error='Second file format not supported'), BAD_REQUEST
-    else:
+    elif id_2:
         try:
             url = get_latest(id_2,
                              current_app.config['DT_LATEST_DRAFT_URL'],
@@ -257,10 +278,26 @@ def id_diff():
         except LatestDraftNotFound as e:
             return jsonify(error=str(e)), BAD_REQUEST
 
-        dir_path_2, filename_2 = save_file_from_url(
+        try:
+            dir_path_2, filename_2 = get_text_id_from_url(
                                             url,
                                             current_app.config['UPLOAD_DIR'],
                                             logger)
+        except DownloadError as e:
+            return jsonify(error=str(e)), BAD_REQUEST
+    else:
+        try:
+            if is_valid_url(url_2,
+                            current_app.config['IDDIFF_ALLOWED_DOMAINS'],
+                            logger):
+                dir_path_2, filename_2 = get_text_id_from_url(
+                                            url_2,
+                                            current_app.config['UPLOAD_DIR'],
+                                            logger)
+        except InvalidURL as e:
+            return jsonify(error=str(e)), BAD_REQUEST
+        except DownloadError as e:
+            return jsonify(error=str(e)), BAD_REQUEST
 
     try:
         if single_draft:

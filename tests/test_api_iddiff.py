@@ -23,6 +23,7 @@ ALLOWED_URLS = [
         'https://datatracker.ietf.org/',
         'https://www.ietf.org/',
         'https://www.rfc-editor.org/']
+IDDIFF_ALLOWED_DOMAINS = ['ietf.org', ]
 
 
 def get_path(filename):
@@ -42,7 +43,8 @@ class TestApiIddiff(TestCase):
         config = {
                 'UPLOAD_DIR': abspath(TEMPORARY_DATA_DIR),
                 'DT_APPAUTH_URL': DT_APPAUTH_URL,
-                'DT_LATEST_DRAFT_URL': DT_LATEST_DRAFT_URL}
+                'DT_LATEST_DRAFT_URL': DT_LATEST_DRAFT_URL,
+                'IDDIFF_ALLOWED_DOMAINS': IDDIFF_ALLOWED_DOMAINS}
 
         # mock datatracker api response
         self.responses = responses.RequestsMock()
@@ -418,3 +420,120 @@ class TestApiIddiff(TestCase):
                     self.assertIn(b'<table', data)
                     self.assertIn(b'</table>', data)
                     self.assertIn(str.encode(id), data)
+
+    def test_iddiff_with_invalid_first_url(self):
+        urls = [
+            'https://www.rfc-editor.org/rfc/rfc9000.xml',
+            'https://www.ietf.org/archive/id/invalid',
+            '/etc/password',
+            'file:///etc/password']
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                for url in urls:
+                    result = client.post(
+                                '/api/iddiff',
+                                data={
+                                    'url_1': url,
+                                    'apikey': VALID_API_KEY})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                self.assertIn('error', json_data)
+
+    def test_iddiff_with_invalid_second_url(self):
+        valid = 'https://www.ietf.org/archive/id/draft-iab-xml2rfcv2-02.xml'
+        urls = [
+            'https://www.rfc-editor.org/rfc/rfc9000.xml',
+            'https://www.ietf.org/archive/id/invalid',
+            '/etc/password',
+            'file:///etc/password']
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                for url in urls:
+                    result = client.post(
+                                '/api/iddiff',
+                                data={
+                                    'url_1': valid,
+                                    'url_2': url,
+                                    'apikey': VALID_API_KEY})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                self.assertIn('error', json_data)
+
+    def test_iddiff_with_one_url(self):
+        valid = 'https://www.ietf.org/archive/id/draft-iab-xml2rfcv2-02.xml'
+        id = 'draft-iab-xml2rfcv2-02'
+
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post(
+                            '/api/iddiff',
+                            data={
+                                'url_1': valid,
+                                'apikey': VALID_API_KEY})
+
+                data = result.get_data()
+
+                self.assertEqual(result.status_code, 200)
+                self.assertIn(b'<html lang="en">', data)
+                self.assertIn(str.encode(id), data)
+
+    def test_iddiff_get_with_one_url(self):
+        valid = 'https://www.ietf.org/archive/id/draft-iab-xml2rfcv2-02.xml'
+        id = 'draft-iab-xml2rfcv2-02'
+
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.get(
+                            '/api/iddiff?' + urlencode({'url_1': valid}),
+                            headers={'X-API-KEY': VALID_API_KEY})
+
+                data = result.get_data()
+
+                self.assertEqual(result.status_code, 200)
+                self.assertIn(b'<html lang="en">', data)
+                self.assertIn(str.encode(id), data)
+
+    def test_iddiff_with_two_urls(self):
+        url_1 = 'https://www.ietf.org/archive/id/draft-iab-xml2rfcv2-01.xml'
+        url_2 = 'https://www.ietf.org/archive/id/draft-iab-xml2rfcv2-02.xml'
+        id_1 = 'draft-iab-xml2rfcv2-01'
+        id_2 = 'draft-iab-xml2rfcv2-01'
+
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post(
+                            '/api/iddiff',
+                            data={
+                                'url_1': url_1,
+                                'url_2': url_2,
+                                'apikey': VALID_API_KEY})
+
+                data = result.get_data()
+
+                self.assertEqual(result.status_code, 200)
+                self.assertIn(b'<html lang="en">', data)
+                self.assertIn(str.encode(id_1), data)
+                self.assertIn(str.encode(id_2), data)
+
+    def test_iddiff_get_with_two_urls(self):
+        url_1 = 'https://www.ietf.org/archive/id/draft-iab-xml2rfcv2-01.xml'
+        url_2 = 'https://www.ietf.org/archive/id/draft-iab-xml2rfcv2-02.xml'
+        id_1 = 'draft-iab-xml2rfcv2-01'
+        id_2 = 'draft-iab-xml2rfcv2-01'
+
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.get(
+                            '/api/iddiff?' + urlencode({
+                                'url_1': url_1,
+                                'url_2': url_2}),
+                            headers={'X-API-KEY': VALID_API_KEY})
+
+                data = result.get_data()
+
+                self.assertEqual(result.status_code, 200)
+                self.assertIn(b'<html lang="en">', data)
+                self.assertIn(str.encode(id_1), data)
+                self.assertIn(str.encode(id_2), data)

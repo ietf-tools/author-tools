@@ -1,14 +1,16 @@
 from logging import getLogger
 from subprocess import run as proc_run, CalledProcessError
+from urllib.parse import urlsplit
 
 from requests import get
 
-from at.utils.file import get_extension, save_file
+from at.utils.file import get_extension, save_file, save_file_from_url
 from at.utils.processor import (
         get_text, get_xml, md2xml, KramdownError, MmarkError, XML2RFCError)
 
 
 OK = 200
+ALLOWED_SCHEMES = ['http', 'https']
 
 
 # Exceptions
@@ -20,6 +22,32 @@ class IddiffError(Exception):
 class LatestDraftNotFound(Exception):
     '''Error class for latest draft not found error'''
     pass
+
+
+class InvalidURL(Exception):
+    '''Error class for invalid URLs'''
+    pass
+
+
+def is_valid_url(url, allowed_domains=None, logger=getLogger()):
+    '''Checks if provided URL is valid and allowed URL'''
+
+    try:
+        url_parts = urlsplit(url)
+        if url_parts.scheme not in ALLOWED_SCHEMES:
+            logger.info('URL: {} scheme is not allowed.')
+            raise InvalidURL('{} scheme is not allowed.'.format(
+                url_parts.scheme))
+        if '.'.join(url_parts.netloc.split('.')[-2:]) not in allowed_domains:
+            logger.info('URL: {} domain is not allowed.')
+            raise InvalidURL('{} domain is not allowed.'.format(
+                url_parts.netloc))
+    except ValueError as e:
+        logger.info('invalid URL: {url} error: {error}'.format(
+            url=url, error=str(e)))
+        raise InvalidURL('Invalid URL: {}'.format(url))
+
+    return True
 
 
 def get_id_diff(old_draft, new_draft, table=False, logger=getLogger()):
@@ -76,10 +104,24 @@ def get_latest(draft, dt_latest_url, original_draft=None, logger=getLogger()):
     return latest_draft
 
 
-def get_text_id(file, upload_dir, logger=getLogger()):
-    '''Returns text draft'''
+def get_text_id_from_file(file, upload_dir, logger=getLogger()):
+    '''Save file and returns text draft'''
 
     (dir_path, filename) = save_file(file, upload_dir)
+
+    return get_text_id(dir_path, filename, logger)
+
+
+def get_text_id_from_url(url, upload_dir, logger=getLogger()):
+    '''Save file from URL and returns text draft'''
+
+    (dir_path, filename) = save_file_from_url(url, upload_dir)
+
+    return get_text_id(dir_path, filename, logger)
+
+
+def get_text_id(dir_path, filename, logger=getLogger()):
+    '''Returns text draft'''
     file_ext = get_extension(filename)
 
     if file_ext.lower() != '.txt':
