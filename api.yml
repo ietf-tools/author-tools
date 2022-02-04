@@ -270,19 +270,19 @@ paths:
                 file_2:
                   type: string
                   format: binary
-                  description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt). This is optional. If file_2, id_2 or url_2 is not provided, second draft will be identified based on the first draft or first draft file name.
-                id_1:
+                  description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt). This is optional. If file_2, doc_2 or url_2 is not provided, second draft will be identified based on the first draft or first draft file name.
+                doc_1:
                   type: string
                   description: First draft name unless file_1 is provided.
-                id_2:
+                doc_2:
                   type: string
-                  description: Second draft name unless file_2 is provided. This is optional. If file_2, id_2 or url_2 is not provided, second draft will be identified based on the first draft or first draft file name.
+                  description: Second draft name unless file_2 is provided. This is optional. If file_2, doc_2 or url_2 is not provided, second draft will be identified based on the first draft or first draft file name.
                 url_1:
                   type: string
-                  description: First draft URL unless file_1 or id_1 is provided.
+                  description: First draft URL unless file_1 or doc_1 is provided.
                 url_2:
                   type: string
-                  description: Second draft URL unless file_2 or id_2 is provided. This is optional. If file_2, id_2 or url_2 is not provided, second draft will be identified based on the first draft or first draft file name.
+                  description: Second draft URL unless file_2 or doc_2 is provided. This is optional. If file_2, doc_2 or url_2 is not provided, second draft will be identified based on the first draft or first draft file name.
                 table:
                   type: string
                   description: If this property is set, HTML table is returned.
@@ -320,25 +320,25 @@ paths:
       summary: Validates the draft
       parameters:
         - in: query
-          name: id_1
+          name: doc_1
           schema:
             type: string
-          description: First draft name unless id_1 is provided.
+          description: First draft name unless doc_1 is provided.
         - in: query
-          name: id_2
+          name: doc_2
           schema:
             type: string
-          description: Second draft name unless url_2 is provided. This is optional. If id_2 and url_2 are not provided, second draft will be identified based on the first draft or first draft file name.
+          description: Second draft name unless url_2 is provided. This is optional. If doc_2 and url_2 are not provided, second draft will be identified based on the first draft or first draft file name.
         - in: query
           name: url_1
           schema:
             type: string
-          description: First draft URL unless id_1 is provided.
+          description: First draft URL unless doc_1 is provided.
         - in: query
           name: url_2
           schema:
             type: string
-          description: Second draft URL unless id_2 is provided. This is optional. If id_2 and url_2 are not provided, second draft will be identified based on the first draft or first draft file name.
+          description: Second draft URL unless doc_2 is provided. This is optional. If doc_2 and url_2 are not provided, second draft will be identified based on the first draft or first draft file name.
         - in: query
           name: table
           schema:

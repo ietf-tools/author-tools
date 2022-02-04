@@ -146,8 +146,8 @@ def id_diff():
 
     logger = current_app.logger
 
-    id_1 = request.values.get('id_1', '').strip()
-    id_2 = request.values.get('id_2', '').strip()
+    doc_1 = request.values.get('doc_1', '').strip()
+    doc_2 = request.values.get('doc_2', '').strip()
     url_1 = request.values.get('url_1', '').strip()
     url_2 = request.values.get('url_2', '').strip()
 
@@ -158,7 +158,7 @@ def id_diff():
     else:
         table = False
 
-    if not id_1 and not url_1:
+    if not doc_1 and not url_1:
         if 'file_1' not in request.files:
             logger.info('missing first draft')
             return jsonify(error='Missing first draft'), BAD_REQUEST
@@ -184,9 +184,9 @@ def id_diff():
                                                             file_1.filename))
             return jsonify(
                         error='First file format not supported'), BAD_REQUEST
-    elif id_1:
+    elif doc_1:
         try:
-            url = get_latest(id_1,
+            url = get_latest(doc_1,
                              current_app.config['DT_LATEST_DRAFT_URL'],
                              logger)
         except LatestDraftNotFound as e:
@@ -215,14 +215,14 @@ def id_diff():
         except DownloadError as e:
             return jsonify(error=str(e)), BAD_REQUEST
 
-    if not id_2 and not url_2:
+    if not doc_2 and not url_2:
         if 'file_2' not in request.files:
             if 'file_1' in request.files:
                 draft_name = get_name(file_1.filename)
                 original_draft = get_name_with_revision(file_1.filename)
-            elif id_1:
-                draft_name = get_name(id_1)
-                original_draft = get_name_with_revision(id_1)
+            elif doc_1:
+                draft_name = get_name(doc_1)
+                original_draft = get_name_with_revision(doc_1)
             else:
                 filename = filename_1.split('/')[-1]
                 draft_name = get_name(filename)
@@ -270,9 +270,9 @@ def id_diff():
                                                             file_2.filename))
                 return jsonify(
                         error='Second file format not supported'), BAD_REQUEST
-    elif id_2:
+    elif doc_2:
         try:
-            url = get_latest(id_2,
+            url = get_latest(doc_2,
                              current_app.config['DT_LATEST_DRAFT_URL'],
                              logger)
         except LatestDraftNotFound as e:

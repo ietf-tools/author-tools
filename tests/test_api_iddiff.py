@@ -235,20 +235,20 @@ class TestApiIddiff(TestCase):
 
         with self.app.test_client() as client:
             with self.app.app_context():
-                for (id_1, id_2) in pairs:
+                for (doc_1, doc_2) in pairs:
                     result = client.post(
                             '/api/iddiff',
                             data={
-                                'id_1': id_1,
-                                'id_2': id_2,
+                                'doc_1': doc_1,
+                                'doc_2': doc_2,
                                 'apikey': VALID_API_KEY})
 
                     data = result.get_data()
 
                     self.assertEqual(result.status_code, 200)
                     self.assertIn(b'<html lang="en">', data)
-                    self.assertIn(str.encode(id_1), data)
-                    self.assertIn(str.encode(id_2), data)
+                    self.assertIn(str.encode(doc_1), data)
+                    self.assertIn(str.encode(doc_2), data)
 
     def test_iddiff_get_with_two_labels(self):
         pairs = [
@@ -259,19 +259,19 @@ class TestApiIddiff(TestCase):
 
         with self.app.test_client() as client:
             with self.app.app_context():
-                for (id_1, id_2) in pairs:
+                for (doc_1, doc_2) in pairs:
                     result = client.get(
                             '/api/iddiff?' + urlencode({
-                                'id_1': id_1,
-                                'id_2': id_2}),
+                                'doc_1': doc_1,
+                                'doc_2': doc_2}),
                             headers={'X-API-KEY': VALID_API_KEY})
 
                     data = result.get_data()
 
                     self.assertEqual(result.status_code, 200)
                     self.assertIn(b'<html lang="en">', data)
-                    self.assertIn(str.encode(id_1), data)
-                    self.assertIn(str.encode(id_2), data)
+                    self.assertIn(str.encode(doc_1), data)
+                    self.assertIn(str.encode(doc_2), data)
 
     def test_iddiff_with_one_file(self):
         with self.app.test_client() as client:
@@ -305,7 +305,7 @@ class TestApiIddiff(TestCase):
                     result = client.post(
                             '/api/iddiff',
                             data={
-                                'id_1': id,
+                                'doc_1': id,
                                 'apikey': VALID_API_KEY})
 
                     data = result.get_data()
@@ -325,7 +325,7 @@ class TestApiIddiff(TestCase):
             with self.app.app_context():
                 for id in labels:
                     result = client.get(
-                            '/api/iddiff?' + urlencode({'id_1': id}),
+                            '/api/iddiff?' + urlencode({'doc_1': id}),
                             headers={'X-API-KEY': VALID_API_KEY})
 
                     data = result.get_data()
@@ -345,7 +345,7 @@ class TestApiIddiff(TestCase):
                             'file_1': (
                                 open(get_path(DRAFT_A), 'rb'),
                                 DRAFT_A),
-                            'id_2': draft_name,
+                            'doc_2': draft_name,
                             'apikey': VALID_API_KEY})
 
                 data = result.get_data()
@@ -363,7 +363,7 @@ class TestApiIddiff(TestCase):
                 result = client.post(
                         '/api/iddiff',
                         data={
-                            'id_1': draft_name,
+                            'doc_1': draft_name,
                             'file_2': (
                                 open(get_path(DRAFT_A), 'rb'),
                                 DRAFT_A),
@@ -409,7 +409,7 @@ class TestApiIddiff(TestCase):
                     result = client.post(
                             '/api/iddiff',
                             data={
-                                'id_1': id,
+                                'doc_1': id,
                                 'table': 1,
                                 'apikey': VALID_API_KEY})
 
@@ -498,8 +498,8 @@ class TestApiIddiff(TestCase):
     def test_iddiff_with_two_urls(self):
         url_1 = 'https://www.ietf.org/archive/id/draft-iab-xml2rfcv2-01.xml'
         url_2 = 'https://www.ietf.org/archive/id/draft-iab-xml2rfcv2-02.xml'
-        id_1 = 'draft-iab-xml2rfcv2-01'
-        id_2 = 'draft-iab-xml2rfcv2-01'
+        doc_1 = 'draft-iab-xml2rfcv2-01'
+        doc_2 = 'draft-iab-xml2rfcv2-01'
 
         with self.app.test_client() as client:
             with self.app.app_context():
@@ -514,14 +514,14 @@ class TestApiIddiff(TestCase):
 
                 self.assertEqual(result.status_code, 200)
                 self.assertIn(b'<html lang="en">', data)
-                self.assertIn(str.encode(id_1), data)
-                self.assertIn(str.encode(id_2), data)
+                self.assertIn(str.encode(doc_1), data)
+                self.assertIn(str.encode(doc_2), data)
 
     def test_iddiff_get_with_two_urls(self):
         url_1 = 'https://www.ietf.org/archive/id/draft-iab-xml2rfcv2-01.xml'
         url_2 = 'https://www.ietf.org/archive/id/draft-iab-xml2rfcv2-02.xml'
-        id_1 = 'draft-iab-xml2rfcv2-01'
-        id_2 = 'draft-iab-xml2rfcv2-01'
+        doc_1 = 'draft-iab-xml2rfcv2-01'
+        doc_2 = 'draft-iab-xml2rfcv2-01'
 
         with self.app.test_client() as client:
             with self.app.app_context():
@@ -535,5 +535,5 @@ class TestApiIddiff(TestCase):
 
                 self.assertEqual(result.status_code, 200)
                 self.assertIn(b'<html lang="en">', data)
-                self.assertIn(str.encode(id_1), data)
-                self.assertIn(str.encode(id_2), data)
+                self.assertIn(str.encode(doc_1), data)
+                self.assertIn(str.encode(doc_2), data)
