@@ -151,6 +151,15 @@ def id_diff():
     url_1 = request.values.get('url_1', '').strip()
     url_2 = request.values.get('url_2', '').strip()
 
+    # allow single parameters for doc_? and url_?
+    if 'file_1' not in request.files and not doc_1 and not url_1:
+        if doc_2:
+            doc_1 = doc_2
+            doc_2 = ''
+        elif url_2:
+            url_1 = url_2
+            url_2 = ''
+
     single_draft = False
 
     if request.values.get('table', False):
@@ -160,8 +169,8 @@ def id_diff():
 
     if not doc_1 and not url_1:
         if 'file_1' not in request.files:
-            logger.info('missing first draft')
-            return jsonify(error='Missing first draft'), BAD_REQUEST
+            logger.info('no documents to compare')
+            return jsonify(error='No documents to compare'), BAD_REQUEST
         else:
             file_1 = request.files['file_1']
 
