@@ -2,6 +2,7 @@ from logging import getLogger
 from subprocess import run as proc_run, CalledProcessError
 
 from xml2rfc import XmlRfcParser
+from xml2rfc.parser import XmlRfcError
 from lxml.etree import XMLSyntaxError
 
 from at.utils.file import get_extension, get_filename, save_file
@@ -175,8 +176,7 @@ def get_xml(filename, logger=getLogger()):
 
         if xml2rfc_version == '2':
             filename = convert_v2v3(filename, logger)
-
-    except XMLSyntaxError as e:
+    except (XmlRfcError, XMLSyntaxError) as e:
         logger.info('xml2rfc error: {}'.format(str(e)))
         raise XML2RFCError(e)
 
