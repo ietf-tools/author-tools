@@ -65,7 +65,7 @@ def kramdown2xml(filename, logger=getLogger()):
     logger.debug('processing kramdown-rfc2629 file')
 
     output = proc_run(
-                args=['kramdown-rfc2629', filename],
+                args=['kramdown-rfc2629', '--v3', filename],
                 capture_output=True)
 
     try:
