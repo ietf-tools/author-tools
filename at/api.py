@@ -15,7 +15,7 @@ from at.utils.validation import validate_xml
 from at.utils.version import (
         get_aasvg_version, get_goat_version, get_idnits_version,
         get_id2xml_version, get_iddiff_version, get_mmark_version,
-        get_kramdown_rfc2629_version, get_weasyprint_version,
+        get_kramdown_rfc_version, get_weasyprint_version,
         get_xml2rfc_version)
 
 BAD_REQUEST = 400
@@ -50,7 +50,7 @@ def render(format):
                     logger=logger)
         except KramdownError as e:
             return jsonify(
-                    error='kramdown-rfc2629 error: {}'.format(e)), BAD_REQUEST
+                    error='kramdown-rfc error: {}'.format(e)), BAD_REQUEST
         except MmarkError as e:
             return jsonify(
                     error='mmark error: {}'.format(e)), BAD_REQUEST
@@ -119,7 +119,7 @@ def validate():
                     logger=logger)
         except KramdownError as e:
             return jsonify(
-                    error='kramdown-rfc2629 error: {}'.format(e)), BAD_REQUEST
+                    error='kramdown-rfc error: {}'.format(e)), BAD_REQUEST
         except MmarkError as e:
             return jsonify(
                     error='mmark error: {}'.format(e)), BAD_REQUEST
@@ -337,7 +337,7 @@ def version():
     version_information = {
             'author_tools_api': current_app.config['VERSION'],
             'xml2rfc': get_xml2rfc_version(),
-            'kramdown-rfc2629': get_kramdown_rfc2629_version(logger),
+            'kramdown-rfc': get_kramdown_rfc_version(logger),
             'mmark': get_mmark_version(logger),
             'id2xml': get_id2xml_version(logger),
             'weasyprint': get_weasyprint_version(),

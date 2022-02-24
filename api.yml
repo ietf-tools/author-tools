@@ -29,7 +29,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                  description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
                   description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well.
@@ -73,7 +73,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                  description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
                   description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well.
@@ -117,7 +117,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                  description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
                   description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well.
@@ -161,7 +161,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                  description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
                   description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well.
@@ -206,7 +206,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                  description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
                   description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well.
@@ -266,11 +266,11 @@ paths:
                 file_1:
                   type: string
                   format: binary
-                  description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                  description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 file_2:
                   type: string
                   format: binary
-                  description: kramdown-rfc2629/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt). This is optional. If file_2, doc_2 or url_2 is not provided, second draft will be identified based on the first draft or first draft file name.
+                  description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt). This is optional. If file_2, doc_2 or url_2 is not provided, second draft will be identified based on the first draft or first draft file name.
                 doc_1:
                   type: string
                   description: First draft name unless file_1 is provided.
@@ -391,9 +391,9 @@ paths:
                       xml2rfc:
                         type: string
                         description: xml2rfc version
-                      kramdown-rfc2629:
+                      kramdown-rfc:
                         type: string
-                        description: kramdown-rfc2629 version
+                        description: kramdown-rfc version
                       mmark:
                         type: string
                         description: mmark version

@@ -5,19 +5,19 @@ from weasyprint import __version__ as weasyprint_version
 from xml2rfc import __version__ as xml2rfc_version
 
 
-def get_kramdown_rfc2629_version(logger=getLogger()):
-    '''Return kramdown-rfc2629 version'''
+def get_kramdown_rfc_version(logger=getLogger()):
+    '''Return kramdown-rfc version'''
 
     output = proc_run(
-                args=['kramdown-rfc2629', '--version'],
+                args=['kramdown-rfc', '--version'],
                 capture_output=True)
 
     try:
         output.check_returncode()
         return output.stdout.decode('utf-8').replace(
-                'kramdown-rfc2629', '').strip()
+                'kramdown-rfc', '').strip()
     except CalledProcessError:
-        logger.info('kramdown-rfc2629 error: {}'.format(
+        logger.info('kramdown-rfc error: {}'.format(
             output.stderr.decode('utf-8')))
         return None
 
