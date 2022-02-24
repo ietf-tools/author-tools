@@ -8,7 +8,7 @@ DT_APPAUTH_URL = 'https://example.com/'
 VERSION_LABELS = (
     'author_tools_api',
     'xml2rfc',
-    'kramdown-rfc2629',
+    'kramdown-rfc',
     'mmark',
     'id2xml',
     'weasyprint',

@@ -192,7 +192,7 @@ class TestApiRender(TestCase):
 
                 self.assertEqual(result.status_code, 400)
                 self.assertTrue(json_data['error'].startswith(
-                    'kramdown-rfc2629 error:'))
+                    'kramdown-rfc error:'))
 
     def test_text_error(self):
         with self.app.test_client() as client:

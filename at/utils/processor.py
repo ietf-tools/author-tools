@@ -16,7 +16,7 @@ class XML2RFCError(Exception):
 
 
 class KramdownError(Exception):
-    '''Error class for kramdown-rfc2629 errors'''
+    '''Error class for kramdown-rfc errors'''
     pass
 
 
@@ -60,18 +60,18 @@ def md2xml(filename, logger=getLogger()):
 
 
 def kramdown2xml(filename, logger=getLogger()):
-    '''Convert kramdown-rfc2629 markdown file to XML'''
+    '''Convert kramdown-rfc markdown file to XML'''
 
-    logger.debug('processing kramdown-rfc2629 file')
+    logger.debug('processing kramdown-rfc file')
 
     output = proc_run(
-                args=['kramdown-rfc2629', '--v3', filename],
+                args=['kramdown-rfc', '--v3', filename],
                 capture_output=True)
 
     try:
         output.check_returncode()
     except CalledProcessError:
-        logger.info('kramdown-rfc2629 error: {}'.format(
+        logger.info('kramdown-rfc error: {}'.format(
             output.stderr.decode('utf-8')))
         raise KramdownError(output.stderr.decode('utf-8'))
 
