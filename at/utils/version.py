@@ -15,7 +15,7 @@ def get_kramdown_rfc_version(logger=getLogger()):
     try:
         output.check_returncode()
         return output.stdout.decode('utf-8').replace(
-                'kramdown-rfc', '').strip()
+                'kramdown-rfc2629', '').strip()
     except CalledProcessError:
         logger.info('kramdown-rfc error: {}'.format(
             output.stderr.decode('utf-8')))
