@@ -17,7 +17,7 @@ ENV GOPATH=/
 
 # install mmark
 RUN go get github.com/mmarkdown/mmark
-# install goat (kramdown-rfc2629 dependency)
+# install goat (kramdown-rfc dependency)
 RUN go get github.com/blampe/goat
 
 # install npm dependencies
@@ -41,6 +41,9 @@ RUN wget -q https://noto-website-2.storage.googleapis.com/pkgs/Noto-unhinted.zip
 RUN unzip -q Noto-unhinted.zip -d ~/.fonts/opentype/
 RUN wget -q https://fonts.google.com/download?family=Roboto%20Mono -O roboto-mono.zip
 RUN unzip -q roboto-mono.zip -d ~/.fonts/opentype/
+
+# Disable local file read for kramdown-rfc
+ENV KRAMDOWN_SAFE=1
 
 RUN mkdir -p tmp
 RUN echo "UPLOAD_DIR = '$PWD/tmp'" > at/config.py
