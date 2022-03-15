@@ -13,10 +13,9 @@ from at.utils.processor import (
         MmarkError, TextError, XML2RFCError)
 from at.utils.validation import validate_xml
 from at.utils.version import (
-        get_aasvg_version, get_goat_version, get_idnits_version,
-        get_id2xml_version, get_iddiff_version, get_mmark_version,
-        get_kramdown_rfc_version, get_weasyprint_version,
-        get_xml2rfc_version)
+        get_aasvg_version, get_idnits_version, get_id2xml_version,
+        get_iddiff_version, get_mmark_version, get_kramdown_rfc_version,
+        get_weasyprint_version, get_xml2rfc_version)
 
 BAD_REQUEST = 400
 
@@ -343,7 +342,6 @@ def version():
             'weasyprint': get_weasyprint_version(),
             'idnits': get_idnits_version(logger),
             'iddiff': get_iddiff_version(logger),
-            'aasvg': get_aasvg_version(logger),
-            'goat': get_goat_version(logger)}
+            'aasvg': get_aasvg_version(logger)}
 
     return jsonify(versions=version_information)

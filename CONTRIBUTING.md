@@ -48,13 +48,6 @@ pip install -r requirements.txt
 * To use kramdown-rfc2629 and mmark, you need to have
 [ruby](https://www.ruby-lang.org/) and [go](https://golang.org/) installed.
 
-* Install kramdown-rfc2629 dependencies
-
-    Install [GoAT](https://github.com/blampe/goat).
-    ```
-    go get github.com/blampe/goat
-    ```
-
 * Install npm dependencies
 ```
 npm install

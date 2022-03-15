@@ -14,8 +14,7 @@ VERSION_LABELS = (
     'weasyprint',
     'idnits',
     'iddiff',
-    'aasvg',
-    'goat')
+    'aasvg')
 
 
 class TestApiVersion(TestCase):
