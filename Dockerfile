@@ -17,8 +17,6 @@ ENV GOPATH=/
 
 # install mmark
 RUN go get github.com/mmarkdown/mmark
-# install goat (kramdown-rfc dependency)
-RUN go get github.com/blampe/goat
 
 # install npm dependencies
 RUN apt-get install -y npm

@@ -62,22 +62,6 @@ def get_weasyprint_version():
     return weasyprint_version
 
 
-def get_goat_version(logger=getLogger()):
-    '''Return goat version'''
-
-    output = proc_run(args=['goat', '--version'], capture_output=True)
-
-    try:
-        output.check_returncode()
-        version = output.stdout.decode('utf-8').strip()
-        if not version:
-            return output.stderr.decode('utf-8').strip()
-    except CalledProcessError:
-        logger.info('goat error: {}'.format(
-            output.stderr.decode('utf-8')))
-        return None
-
-
 def get_idnits_version(logger=getLogger()):
     '''Return idnits version'''
 
