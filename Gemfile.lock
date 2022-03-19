@@ -3,13 +3,13 @@ GEM
   specs:
     certified (1.0.0)
     json_pure (2.6.1)
-    kramdown (2.3.1)
+    kramdown (2.3.2)
       rexml
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
-    kramdown-rfc (1.6.2)
-      kramdown-rfc2629 (= 1.6.2)
-    kramdown-rfc2629 (1.6.2)
+    kramdown-rfc (1.6.5)
+      kramdown-rfc2629 (= 1.6.5)
+    kramdown-rfc2629 (1.6.5)
       certified (~> 1.0)
       json_pure (~> 2.0)
       kramdown (~> 2.3.0)
