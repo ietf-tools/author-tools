@@ -11,12 +11,11 @@ RUN apt-get install -y ruby python3.8 python3-pip
 # xml2rfc (Weasyprint) dependencies
 RUN apt-get install -y python3-cffi python3-brotli libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0 libcairo2-dev libpangocairo-1.0-0
 
-# install Go lang
-RUN apt-get install -y golang git
-ENV GOPATH=/
-
 # install mmark
-RUN go get github.com/mmarkdown/mmark
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
+    wget "https://github.com/mmarkdown/mmark/releases/download/v2.2.25/mmark_2.2.25_linux_$arch.tgz"
+RUN tar zxf mmark_*.tgz -C /bin/
 
 # install npm dependencies
 RUN apt-get install -y npm
