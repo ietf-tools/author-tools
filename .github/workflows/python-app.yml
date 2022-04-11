@@ -27,7 +27,7 @@ jobs:
         sudo chmod +x /bin/idnits
         arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)
         wget "https://github.com/mmarkdown/mmark/releases/download/v2.2.25/mmark_2.2.25_linux_$arch.tgz"
-        tar zxf mmark_*.tgz -C /bin/
+        sudo tar zxf mmark_*.tgz -C /bin/
     # Python
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
