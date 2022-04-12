@@ -294,6 +294,8 @@ class TestApiIddiff(TestCase):
 
     def test_iddiff_with_one_label(self):
         labels = [
+            'draft-ietf-quic-http',
+            'draft-ietf-stir-certificates',
             'draft-ietf-quic-http-23',
             'draft-ietf-quic-http-23.txt',
             'rfc8226',
@@ -313,6 +315,7 @@ class TestApiIddiff(TestCase):
 
                         self.assertEqual(result.status_code, 200)
                         self.assertIn(b'<html lang="en">', data)
+                        self.assertIn(b'<td class="lblock">', data)
                         self.assertIn(str.encode(id), data)
 
     def test_iddiff_get_with_one_label(self):
