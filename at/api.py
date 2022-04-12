@@ -225,16 +225,9 @@ def id_diff():
 
     if not doc_2 and not url_2:
         if 'file_2' not in request.files:
-            if 'file_1' in request.files:
-                draft_name = get_name(file_1.filename)
-                original_draft = get_name_with_revision(file_1.filename)
-            elif doc_1:
-                draft_name = get_name(doc_1)
-                original_draft = get_name_with_revision(doc_1)
-            else:
-                filename = filename_1.split('/')[-1]
-                draft_name = get_name(filename)
-                original_draft = get_name_with_revision(filename)
+            filename = filename_1.split('/')[-1]
+            draft_name = get_name(filename)
+            original_draft = get_name_with_revision(filename)
 
             if draft_name is None:
                 logger.error('Can not determine draft name for {}'.format(
