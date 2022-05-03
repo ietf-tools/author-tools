@@ -4,7 +4,6 @@ from unittest import TestCase
 from at import create_app
 
 AUTHOR_TOOLS_API_TEST_VERSION = '0.0.1'
-DT_APPAUTH_URL = 'https://example.com/'
 VERSION_LABELS = (
     'author_tools_api',
     'xml2rfc',
@@ -25,7 +24,7 @@ class TestApiVersion(TestCase):
         set_logger(CRITICAL)
 
         config = {
-                'DT_APPAUTH_URL': DT_APPAUTH_URL,
+                'REQUIRE_AUTH': False,
                 'VERSION': AUTHOR_TOOLS_API_TEST_VERSION}
 
         self.app = create_app(config)
