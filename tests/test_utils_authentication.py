@@ -35,6 +35,7 @@ class TestUtilsAuthentication(TestCase):
         config = {
                 'UPLOAD_DIR': abspath(TEMPORARY_DATA_DIR),
                 'DT_APPAUTH_URL': DT_APPAUTH_URL,
+                'REQUIRE_AUTH': True,
                 'VERSION': AUTHOR_TOOLS_API_TEST_VERSION}
 
         self.app = create_app(config)
@@ -140,3 +141,21 @@ class TestUtilsAuthentication(TestCase):
 
                 self.assertEqual(result.status_code, 401)
                 self.assertEqual(json_data['error'], 'API key is invalid')
+
+    def test_authentication_disabled(self):
+        config = {
+                'UPLOAD_DIR': abspath(TEMPORARY_DATA_DIR),
+                'REQUIRE_AUTH': False,
+                'VERSION': AUTHOR_TOOLS_API_TEST_VERSION}
+
+        app = create_app(config)
+        with app.test_client() as client:
+            with app.app_context():
+                filename = get_path(TEST_XML_DRAFT)
+                result = client.post(
+                            '/api/render/xml',
+                            data={
+                                'file': (open(filename, 'rb'), filename),
+                                'apikey': VALID_API_KEY})
+
+                self.assertEqual(result.status_code, 200)

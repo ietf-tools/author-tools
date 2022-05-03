@@ -12,7 +12,7 @@ components:
       type: apiKey
       in: header
       name: X-API-KEY
-      description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey).
+      description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). (optional)
 security:
   - apiKeyAuth: []
 paths:
@@ -32,7 +32,7 @@ paths:
                   description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
-                  description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well.
+                  description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)
       responses:
         '200':
           description: Returns draft in requested format.
@@ -76,7 +76,7 @@ paths:
                   description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
-                  description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well.
+                  description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)
       responses:
         '200':
           description: Returns draft in requested format.
@@ -120,7 +120,7 @@ paths:
                   description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
-                  description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well.
+                  description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)
       responses:
         '200':
           description: Returns draft in requested format.
@@ -164,7 +164,7 @@ paths:
                   description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
-                  description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well.
+                  description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)
       responses:
         '200':
           description: Returns draft in requested format.
@@ -209,7 +209,7 @@ paths:
                   description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
                 apikey:
                   type: string
-                  description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well.
+                  description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)
       responses:
         '200':
           description: Returns errors, warnings and idnits output
@@ -288,7 +288,7 @@ paths:
                   description: If this property is set, HTML table is returned.
                 apikey:
                   type: string
-                  description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well.
+                  description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)
       responses:
         '200':
           description: Returns iddiff as HTML.

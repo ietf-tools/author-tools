@@ -4,8 +4,6 @@ from pathlib import Path
 from shutil import rmtree
 from unittest import TestCase
 
-import responses
-
 from at import create_app
 
 TEST_DATA_DIR = './tests/data/'
@@ -22,7 +20,6 @@ TEST_DATA = [
         TEST_XML_DRAFT, TEST_XML_V2_DRAFT, TEST_TEXT_DRAFT,
         TEST_KRAMDOWN_DRAFT, TEST_MMARK_DRAFT]
 TEMPORARY_DATA_DIR = './tests/tmp/'
-DT_APPAUTH_URL = 'https://example.com/'
 VALID_API_KEY = 'foobar'
 
 
@@ -42,18 +39,7 @@ class TestApiRender(TestCase):
 
         config = {
                 'UPLOAD_DIR': abspath(TEMPORARY_DATA_DIR),
-                'DT_APPAUTH_URL': DT_APPAUTH_URL}
-
-        # mock datatracker api response
-        self.responses = responses.RequestsMock()
-        self.responses.start()
-        self.responses.add(
-                responses.POST,
-                DT_APPAUTH_URL,
-                json={'success': True},
-                status=200)
-        self.addCleanup(self.responses.stop)
-        self.addCleanup(self.responses.reset)
+                'REQUIRE_AUTH': False}
 
         self.app = create_app(config)
 

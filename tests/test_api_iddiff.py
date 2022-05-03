@@ -5,8 +5,6 @@ from shutil import rmtree
 from unittest import TestCase
 from urllib.parse import urlencode
 
-import responses
-
 from at import create_app
 
 TEST_DATA_DIR = './tests/data/'
@@ -16,7 +14,6 @@ XML_DRAFT = 'draft-smoke-signals-00.xml'
 TEST_UNSUPPORTED_FORMAT = 'draft-smoke-signals-00.odt'
 TEST_XML_ERROR = 'draft-smoke-signals-00.error.xml'
 TEMPORARY_DATA_DIR = './tests/tmp/'
-DT_APPAUTH_URL = 'https://example.com/'
 DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/doc/rfcdiff-latest-json'
 VALID_API_KEY = 'foobar'
 ALLOWED_URLS = [
@@ -42,22 +39,9 @@ class TestApiIddiff(TestCase):
 
         config = {
                 'UPLOAD_DIR': abspath(TEMPORARY_DATA_DIR),
-                'DT_APPAUTH_URL': DT_APPAUTH_URL,
+                'REQUIRE_AUTH': False,
                 'DT_LATEST_DRAFT_URL': DT_LATEST_DRAFT_URL,
                 'IDDIFF_ALLOWED_DOMAINS': IDDIFF_ALLOWED_DOMAINS}
-
-        # mock datatracker api response
-        self.responses = responses.RequestsMock()
-        self.responses.start()
-        self.responses.add(
-                responses.POST,
-                DT_APPAUTH_URL,
-                json={'success': True},
-                status=200)
-        for url in ALLOWED_URLS:
-            self.responses.add_passthru(url)
-        self.addCleanup(self.responses.stop)
-        self.addCleanup(self.responses.reset)
 
         self.app = create_app(config)
 
