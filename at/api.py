@@ -166,6 +166,11 @@ def id_diff():
     else:
         table = False
 
+    if request.values.get('wdiff', False):
+        wdiff = True
+    else:
+        wdiff = False
+
     if not doc_1 and not url_1:
         if 'file_1' not in request.files:
             logger.info('no documents to compare')
@@ -310,6 +315,7 @@ def id_diff():
         iddiff = get_id_diff(old_draft=old_draft,
                              new_draft=new_draft,
                              table=table,
+                             wdiff=wdiff,
                              logger=logger)
         for dir_path in (dir_path_1, dir_path_2):
             iddiff = iddiff.replace('{}/'.format(dir_path), '')

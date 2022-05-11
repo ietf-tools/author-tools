@@ -283,9 +283,12 @@ paths:
                 url_2:
                   type: string
                   description: Second draft URL unless file_2 or doc_2 is provided. This is optional. If file_2, doc_2 or url_2 is not provided, second draft will be identified based on the first draft or first draft file name.
+                wdiff:
+                  type: string
+                  description: If this property is set, HTML wdiff is returned.
                 table:
                   type: string
-                  description: If this property is set, HTML table is returned.
+                  description: If this property is set, HTML table is returned. (ignored if wdiff is set)
                 apikey:
                   type: string
                   description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)
@@ -340,10 +343,15 @@ paths:
             type: string
           description: Second draft URL unless doc_2 is provided. This is optional. If doc_2 and url_2 are not provided, second draft will be identified based on the first draft or first draft file name.
         - in: query
+          name: wdiff
+          schema:
+            type: string
+          description: If this property is set, HTML wdiff is returned.
+        - in: query
           name: table
           schema:
             type: string
-          description: If this property is set, HTML table is returned.
+          description: If this property is set, HTML table is returned. (ignored if wdiff is set)
       responses:
         '200':
           description: Returns iddiff as HTML.

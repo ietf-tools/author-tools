@@ -50,12 +50,16 @@ def is_valid_url(url, allowed_domains=None, logger=getLogger()):
     return True
 
 
-def get_id_diff(old_draft, new_draft, table=False, logger=getLogger()):
+def get_id_diff(old_draft, new_draft, table=False, wdiff=False,
+                logger=getLogger()):
     '''Returns iddiff output'''
 
     logger.debug('running iddiff')
 
-    if table:
+    if wdiff:
+        output = proc_run(args=['iddiff', '-w', old_draft, new_draft],
+                          capture_output=True)
+    elif table:
         output = proc_run(args=['iddiff', '-t', '-c', old_draft, new_draft],
                           capture_output=True)
     else:
