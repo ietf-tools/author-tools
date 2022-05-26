@@ -255,7 +255,7 @@ paths:
                     description: Error description
   /api/iddiff:
     post:
-      summary: Validates the draft
+      summary: Compare two drafts with iddiff
       requestBody:
         required: true
         content:
@@ -320,7 +320,7 @@ paths:
                     type: string
                     description: Error description
     get:
-      summary: Validates the draft
+      summary: Compare two drafts with iddiff
       parameters:
         - in: query
           name: doc_1
@@ -357,6 +357,42 @@ paths:
           description: Returns iddiff as HTML.
           content:
             text/html:
+              schema:
+                type: string
+        '400':
+          description: Error has occured.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
+        '401':
+          description: Failed to authenticate.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
+  /api/idnits:
+    get:
+      summary: Get idnits output
+      parameters:
+        - in: query
+          name: url
+          schema:
+            type: string
+          description: Draft URL
+      responses:
+        '200':
+          description: Returns idnits output
+          content:
+            text/plain:
               schema:
                 type: string
         '400':

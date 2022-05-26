@@ -20,7 +20,7 @@ ALLOWED_URLS = [
         'https://datatracker.ietf.org/',
         'https://www.ietf.org/',
         'https://www.rfc-editor.org/']
-IDDIFF_ALLOWED_DOMAINS = ['ietf.org', ]
+ALLOWED_DOMAINS = ['ietf.org', ]
 
 
 def get_path(filename):
@@ -41,7 +41,7 @@ class TestApiIddiff(TestCase):
                 'UPLOAD_DIR': abspath(TEMPORARY_DATA_DIR),
                 'REQUIRE_AUTH': False,
                 'DT_LATEST_DRAFT_URL': DT_LATEST_DRAFT_URL,
-                'IDDIFF_ALLOWED_DOMAINS': IDDIFF_ALLOWED_DOMAINS}
+                'ALLOWED_DOMAINS': ALLOWED_DOMAINS}
 
         self.app = create_app(config)
 
