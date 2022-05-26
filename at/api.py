@@ -5,12 +5,14 @@ from at.utils.authentication import require_api_key
 from at.utils.file import (
         allowed_file, get_file, get_name, get_name_with_revision,
         DownloadError)
-from at.utils.iddiff import (
-        get_id_diff, get_latest, get_text_id_from_file, get_text_id_from_url,
-        is_valid_url, IddiffError, InvalidURL, LatestDraftNotFound)
+from at.utils.iddiff import get_id_diff, IddiffError
+from at.utils.net import (
+        is_valid_url, get_latest, InvalidURL, LatestDraftNotFound)
 from at.utils.processor import (
         get_html, get_pdf, get_text, get_xml, process_file, KramdownError,
         MmarkError, TextError, XML2RFCError)
+from at.utils.text import (
+        get_text_id_from_file, get_text_id_from_url, TextProcessingError)
 from at.utils.validation import validate_xml
 from at.utils.version import (
         get_aasvg_version, get_idnits_version, get_id2xml_version,
@@ -188,7 +190,7 @@ def id_diff():
                 dir_path_1, filename_1 = get_text_id_from_file(
                         file=file_1,
                         upload_dir=current_app.config['UPLOAD_DIR'])
-            except IddiffError as e:
+            except TextProcessingError as e:
                 error = 'Error converting first draft to text: {}' \
                         .format(str(e))
                 return jsonify(error=error), BAD_REQUEST
@@ -267,7 +269,7 @@ def id_diff():
                     dir_path_2, filename_2 = get_text_id_from_file(
                             file=file_2,
                             upload_dir=current_app.config['UPLOAD_DIR'])
-                except IddiffError as e:
+                except TextProcessingError as e:
                     error = 'Error converting second draft to text: {}' \
                             .format(str(e))
                     return jsonify(error=error), BAD_REQUEST
