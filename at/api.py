@@ -1,5 +1,6 @@
 from flask import (
-        Blueprint, current_app, jsonify, request, send_from_directory)
+        Blueprint, current_app, jsonify, make_response, request,
+        send_from_directory)
 
 from at.utils.authentication import require_api_key
 from at.utils.file import (
@@ -13,7 +14,7 @@ from at.utils.processor import (
         MmarkError, TextError, XML2RFCError)
 from at.utils.text import (
         get_text_id_from_file, get_text_id_from_url, TextProcessingError)
-from at.utils.validation import validate_xml
+from at.utils.validation import validate_xml, idnits as get_idnits
 from at.utils.version import (
         get_aasvg_version, get_idnits_version, get_id2xml_version,
         get_iddiff_version, get_mmark_version, get_kramdown_rfc_version,
@@ -138,6 +139,43 @@ def validate():
         return jsonify(error='Input file format not supported'), BAD_REQUEST
 
 
+@bp.route('/idnits', methods=('GET',))
+@require_api_key
+def idnits():
+    '''GET: /idnits API call
+    Returns idnits output'''
+
+    logger = current_app.logger
+
+    url = request.values.get('url', '').strip()
+
+    if url == '':
+        logger.info('URL is missing')
+        return jsonify(error='URL is missing'), BAD_REQUEST
+    else:
+        try:
+            if is_valid_url(url,
+                            current_app.config['ALLOWED_DOMAINS'],
+                            logger):
+                dir_path, filename = get_text_id_from_url(
+                                            url,
+                                            current_app.config['UPLOAD_DIR'],
+                                            logger)
+        except TextProcessingError as e:
+            return jsonify(error=str(e)), BAD_REQUEST
+        except InvalidURL as e:
+            return jsonify(error=str(e)), BAD_REQUEST
+        except DownloadError as e:
+            return jsonify(error=str(e)), BAD_REQUEST
+
+        output = get_idnits(filename, logger=logger)
+
+        response = make_response(output)
+        response.headers['Content-Type'] = 'text/plain; charset=UTF-8'
+
+        return response
+
+
 @bp.route('/iddiff', methods=('POST', 'GET'))
 @require_api_key
 def id_diff():
@@ -219,7 +257,7 @@ def id_diff():
     else:
         try:
             if is_valid_url(url_1,
-                            current_app.config['IDDIFF_ALLOWED_DOMAINS'],
+                            current_app.config['ALLOWED_DOMAINS'],
                             logger):
                 dir_path_1, filename_1 = get_text_id_from_url(
                                             url_1,
@@ -296,7 +334,7 @@ def id_diff():
     else:
         try:
             if is_valid_url(url_2,
-                            current_app.config['IDDIFF_ALLOWED_DOMAINS'],
+                            current_app.config['ALLOWED_DOMAINS'],
                             logger):
                 dir_path_2, filename_2 = get_text_id_from_url(
                                             url_2,
