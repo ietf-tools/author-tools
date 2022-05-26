@@ -155,7 +155,7 @@ def idnits():
     else:
         try:
             if is_valid_url(url,
-                            current_app.config['IDDIFF_ALLOWED_DOMAINS'],
+                            current_app.config['ALLOWED_DOMAINS'],
                             logger):
                 dir_path, filename = get_text_id_from_url(
                                             url,
@@ -257,7 +257,7 @@ def id_diff():
     else:
         try:
             if is_valid_url(url_1,
-                            current_app.config['IDDIFF_ALLOWED_DOMAINS'],
+                            current_app.config['ALLOWED_DOMAINS'],
                             logger):
                 dir_path_1, filename_1 = get_text_id_from_url(
                                             url_1,
@@ -334,7 +334,7 @@ def id_diff():
     else:
         try:
             if is_valid_url(url_2,
-                            current_app.config['IDDIFF_ALLOWED_DOMAINS'],
+                            current_app.config['ALLOWED_DOMAINS'],
                             logger):
                 dir_path_2, filename_2 = get_text_id_from_url(
                                             url_2,

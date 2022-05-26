@@ -8,7 +8,7 @@ from urllib.parse import urlencode
 from at import create_app
 
 TEMPORARY_DATA_DIR = './tests/tmp/'
-IDDIFF_ALLOWED_DOMAINS = ['ietf.org', 'datatracker.ietf.org']
+ALLOWED_DOMAINS = ['ietf.org', 'datatracker.ietf.org']
 
 
 class TestApiIdnits(TestCase):
@@ -23,7 +23,7 @@ class TestApiIdnits(TestCase):
         config = {
                 'UPLOAD_DIR': abspath(TEMPORARY_DATA_DIR),
                 'REQUIRE_AUTH': False,
-                'IDDIFF_ALLOWED_DOMAINS': IDDIFF_ALLOWED_DOMAINS}
+                'ALLOWED_DOMAINS': ALLOWED_DOMAINS}
 
         self.app = create_app(config)
 
