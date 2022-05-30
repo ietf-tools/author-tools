@@ -96,13 +96,33 @@ def convert_v2v3(filename, logger=getLogger()):
     return xml_file, output
 
 
-def idnits(filename, logger=getLogger()):
+def idnits(filename,
+           logger=getLogger(),
+           verbose='1',
+           show_text=False,
+           year=False,
+           submit_check=False):
     '''Running idnits and return output'''
 
     logger.debug('running idnits')
 
+    args = ['idnits']
+    if verbose == '1':
+        args.append('--verbose')
+    elif verbose == '2':
+        args.append('--verbose')
+        args.append('--verbose')    # add --verbose twice
+    if show_text:
+        args.append('--showtext')
+    if year:
+        args.append('--year')
+        args.append(str(year))
+    if submit_check:
+        args.append('--submitcheck')
+    args.append(filename)
+
     output = proc_run(
-                args=['idnits', '--verbose', filename],
+                args=args,
                 capture_output=True)
     error = None
 

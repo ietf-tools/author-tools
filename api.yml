@@ -387,7 +387,31 @@ paths:
           name: url
           schema:
             type: string
+          required: true
           description: Draft URL
+        - in: query
+          name: verbose
+          schema:
+            type: integer
+            minimum: 0
+            default: 1
+            maximum: 2
+          description: Sets verbose level
+        - in: query
+          name: hidetext
+          schema:
+            type: string
+          description: Set this to remove draft text from output
+        - in: query
+          name: year
+          schema:
+            type: integer
+          description: Use the given year in the boilerplate (instead of the current year)
+        - in: query
+          name: submitcheck
+          schema:
+            type: string
+          description: Set this to do submission checks
       responses:
         '200':
           description: Returns idnits output

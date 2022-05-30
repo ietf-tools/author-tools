@@ -95,3 +95,57 @@ class TestApiIdnits(TestCase):
                 self.assertIn(id, data)
                 self.assertIn('warnings', data)
                 self.assertIn('idnits', data)
+                # verbose
+                self.assertNotIn('Run idnits with the --verbose', data)
+                # showtext
+                self.assertIn('Internet-Drafts are working documents', data)
+                # submission check
+                self.assertNotIn('Running in submission checking mode', data)
+                # year
+                self.assertIn('The copyright year in the IETF', data)
+
+    def test_idnits_options(self):
+        url = 'https://www.ietf.org/archive/id/draft-iab-xml2rfcv2-02.txt'
+        id = 'draft-iab-xml2rfcv2-02'
+        params = {
+                'url': url,
+                'verbose': 0,
+                'hidetext': True,
+                'year': 2015}
+
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.get(
+                            '/api/idnits?' + urlencode(params))
+                data = result.get_data(as_text=True)
+
+                self.assertEqual(result.status_code, 200)
+                self.assertIn(id, data)
+                self.assertIn('warnings', data)
+                self.assertIn('idnits', data)
+                # verbose
+                self.assertIn('Run idnits with the --verbose', data)
+                # showtext
+                self.assertNotIn('Internet-Drafts are working documents', data)
+                # submission check
+                self.assertNotIn('Running in submission checking mode', data)
+                # year
+                self.assertNotIn('The copyright year in the IETF', data)
+
+    def test_idnits_submission_check(self):
+        url = 'https://www.ietf.org/archive/id/draft-iab-xml2rfcv2-02.txt'
+        id = 'draft-iab-xml2rfcv2-02'
+        params = {'url': url, 'submitcheck': True}
+
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.get(
+                            '/api/idnits?' + urlencode(params))
+                data = result.get_data(as_text=True)
+
+                self.assertEqual(result.status_code, 200)
+                self.assertIn(id, data)
+                self.assertIn('warnings', data)
+                self.assertIn('idnits', data)
+                # submission check
+                self.assertIn('Running in submission checking mode', data)
