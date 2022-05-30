@@ -24,8 +24,9 @@ ENV PATH=$PATH:./node_modules/.bin
 
 # install idnits
 RUN apt-get install -y gawk
-RUN wget https://raw.githubusercontent.com/ietf-tools/idnits-mirror/main/idnits
-RUN cp idnits /bin
+RUN wget https://github.com/ietf-tools/idnits/archive/refs/tags/2.17.1.zip
+RUN unzip -q 2.17.1.zip -d ~/idnits
+RUN cp ~/idnits/idnits-2.17.1/idnits /bin
 RUN chmod +x /bin/idnits
 
 RUN pip3 install -r requirements.txt
