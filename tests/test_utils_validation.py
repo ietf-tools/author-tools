@@ -77,3 +77,65 @@ class TestUtilsValidation(TestCase):
 
         self.assertIsNotNone(idnits_log)
         self.assertGreater(len(idnits_log), 0)
+        self.assertNotIn('The copyright year in the IETF', idnits_log)
+        self.assertNotIn('draft documents valid for a maximum of six months',
+                         idnits_log)
+        self.assertNotIn('Running in submission checking mode', idnits_log)
+
+    def test_idnits_non_verbose(self):
+        output, text_file = xml2rfc_validation(
+                                ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
+        idnits_log = idnits(text_file, verbose='0')
+
+        self.assertIsNotNone(idnits_log)
+        self.assertGreater(len(idnits_log), 0)
+        self.assertIn('Run idnits with the --verbose', idnits_log)
+        self.assertNotIn('-->', idnits_log)
+
+    def test_idnits_verbose(self):
+        output, text_file = xml2rfc_validation(
+                                ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
+        idnits_log = idnits(text_file)
+
+        self.assertIsNotNone(idnits_log)
+        self.assertGreater(len(idnits_log), 0)
+        self.assertNotIn('Run idnits with the --verbose', idnits_log)
+        self.assertNotIn('-->', idnits_log)
+
+    def test_idnits_very_verbose(self):
+        output, text_file = xml2rfc_validation(
+                                ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
+        idnits_log = idnits(text_file, verbose='2')
+
+        self.assertIsNotNone(idnits_log)
+        self.assertGreater(len(idnits_log), 0)
+        self.assertNotIn('Run idnits with the --verbose', idnits_log)
+        self.assertIn('-->', idnits_log)
+
+    def test_idnits_show_text(self):
+        output, text_file = xml2rfc_validation(
+                                ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
+        idnits_log = idnits(text_file, show_text=True)
+
+        self.assertIsNotNone(idnits_log)
+        self.assertGreater(len(idnits_log), 0)
+        self.assertIn('draft documents valid for a maximum of six months',
+                      idnits_log)
+
+    def test_idnits_year(self):
+        output, text_file = xml2rfc_validation(
+                                ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
+        idnits_log = idnits(text_file, year=2000)
+
+        self.assertIsNotNone(idnits_log)
+        self.assertGreater(len(idnits_log), 0)
+        self.assertIn('The copyright year in the IETF', idnits_log)
+
+    def test_idnits_submit_check(self):
+        output, text_file = xml2rfc_validation(
+                                ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
+        idnits_log = idnits(text_file, submit_check=True)
+
+        self.assertIsNotNone(idnits_log)
+        self.assertGreater(len(idnits_log), 0)
+        self.assertIn('Running in submission checking mode', idnits_log)

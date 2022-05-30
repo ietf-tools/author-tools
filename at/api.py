@@ -148,6 +148,16 @@ def idnits():
     logger = current_app.logger
 
     url = request.values.get('url', '').strip()
+    verbose = request.values.get('verbose', '1').strip()
+    if request.values.get('hidetext', False):
+        show_text = False
+    else:
+        show_text = True
+    year = request.values.get('year', '').strip()
+    if request.values.get('submitcheck', False):
+        submit_check = True
+    else:
+        submit_check = False
 
     if url == '':
         logger.info('URL is missing')
@@ -168,7 +178,12 @@ def idnits():
         except DownloadError as e:
             return jsonify(error=str(e)), BAD_REQUEST
 
-        output = get_idnits(filename, logger=logger)
+        output = get_idnits(filename,
+                            logger=logger,
+                            verbose=verbose,
+                            show_text=show_text,
+                            year=year,
+                            submit_check=submit_check)
 
         response = make_response(output)
         response.headers['Content-Type'] = 'text/plain; charset=UTF-8'
