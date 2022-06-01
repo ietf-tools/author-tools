@@ -1,4 +1,5 @@
 from logging import getLogger
+from os.path import dirname
 from subprocess import run as proc_run, CalledProcessError
 
 from xml2rfc import XmlRfcParser
@@ -137,6 +138,7 @@ def idnits(filename,
             logger.info('idnits error: no stderr output')
 
     if output.stdout:
-        return output.stdout.decode('utf-8', errors='ignore')
+        stdout = output.stdout.decode('utf-8', errors='ignore')
+        return stdout.replace(dirname(filename), '')
     else:
         return error
