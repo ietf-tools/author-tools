@@ -394,19 +394,19 @@ paths:
           schema:
             type: integer
             minimum: 0
-            default: 1
+            default: 0
             maximum: 2
-          description: Sets verbose level
+          description: Sets verbose level from 0 to 2.
         - in: query
           name: hidetext
           schema:
             type: string
-          description: Set this to remove draft text from output
+          description: Set this to remove draft text from output.
         - in: query
           name: year
           schema:
             type: integer
-          description: Use the given year in the boilerplate (instead of the current year)
+          description: Use the given year in the boilerplate (instead of the current year).
         - in: query
           name: submitcheck
           schema:

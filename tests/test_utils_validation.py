@@ -85,7 +85,7 @@ class TestUtilsValidation(TestCase):
     def test_idnits_non_verbose(self):
         output, text_file = xml2rfc_validation(
                                 ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
-        idnits_log = idnits(text_file, verbose='0')
+        idnits_log = idnits(text_file)
 
         self.assertIsNotNone(idnits_log)
         self.assertGreater(len(idnits_log), 0)
@@ -95,7 +95,7 @@ class TestUtilsValidation(TestCase):
     def test_idnits_verbose(self):
         output, text_file = xml2rfc_validation(
                                 ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
-        idnits_log = idnits(text_file)
+        idnits_log = idnits(text_file, verbose='1')
 
         self.assertIsNotNone(idnits_log)
         self.assertGreater(len(idnits_log), 0)
