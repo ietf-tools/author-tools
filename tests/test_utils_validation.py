@@ -139,3 +139,10 @@ class TestUtilsValidation(TestCase):
         self.assertIsNotNone(idnits_log)
         self.assertGreater(len(idnits_log), 0)
         self.assertIn('Running in submission checking mode', idnits_log)
+
+    def test_idnits_no_internal_paths(self):
+        output, text_file = xml2rfc_validation(
+                                ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
+        idnits_log = idnits(text_file, verbose='2')
+
+        self.assertNotIn(TEMPORARY_DATA_DIR, idnits_log)
