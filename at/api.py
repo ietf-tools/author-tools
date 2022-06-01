@@ -148,7 +148,7 @@ def idnits():
     logger = current_app.logger
 
     url = request.values.get('url', '').strip()
-    verbose = request.values.get('verbose', '1').strip()
+    verbose = request.values.get('verbose', '0').strip()
     if request.values.get('hidetext', False):
         show_text = False
     else:

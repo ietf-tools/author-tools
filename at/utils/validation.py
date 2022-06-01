@@ -98,7 +98,7 @@ def convert_v2v3(filename, logger=getLogger()):
 
 def idnits(filename,
            logger=getLogger(),
-           verbose='1',
+           verbose='0',
            show_text=False,
            year=False,
            submit_check=False):

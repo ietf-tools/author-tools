@@ -96,7 +96,7 @@ class TestApiIdnits(TestCase):
                 self.assertIn('warnings', data)
                 self.assertIn('idnits', data)
                 # verbose
-                self.assertNotIn('Run idnits with the --verbose', data)
+                self.assertIn('Run idnits with the --verbose', data)
                 # showtext
                 self.assertIn('Internet-Drafts are working documents', data)
                 # submission check
