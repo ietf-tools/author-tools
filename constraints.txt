@@ -40,4 +40,4 @@ urllib3==1.26.8
 WeasyPrint==52.5
 webencodings==0.5.1
 Werkzeug==2.0.3
-xml2rfc==3.12.8
+xml2rfc==3.12.10
