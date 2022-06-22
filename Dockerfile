@@ -6,8 +6,13 @@ WORKDIR /usr/src/app
 COPY . .
 
 RUN apt-get update
-RUN apt-get install -y software-properties-common gcc wget
-RUN apt-get install -y ruby python3.8 python3-pip
+RUN apt-get install -y \
+    software-properties-common \
+    gcc \
+    wget \
+    ruby \
+    python3.8 \
+    python3-pip
 
 # xml2rfc (Weasyprint) dependencies
 RUN apt-get install -y \
@@ -59,7 +64,7 @@ ENV XML_RESOURCE_ORG_HOST=bib.ietf.org
 RUN pip3 install waitress
 
 # Clean up other packages
-RUN apt-get remove --purge -y software-properties-common gcc wget python3-pip
+RUN apt-get remove --purge -y software-properties-common gcc python3-pip
 RUN apt-get autoclean
 RUN apt-get clean
 
