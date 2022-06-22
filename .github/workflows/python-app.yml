@@ -36,12 +36,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        # fix xml2rfc Jinja2 resetriction issue
-        grep -v xml2rfc requirements.txt > requirements2.txt
-        grep xml2rfc requirements.txt > xml2rfc.txt
-        pip install -r requirements2.txt
-        pip uninstall -y jinja2
-        pip install -r xml2rfc.txt
+        pip install -r requirements.txt
         pip install -r requirements.dev.txt
     # Ruby
     - name: Set up Ruby
