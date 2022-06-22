@@ -1,6 +1,8 @@
 FROM ubuntu:focal
 LABEL maintainer="Kesara Rathnayake <kesara@staff.ietf.org>"
 
+ENV DEBIAN_FRONTEND noninteractive
+
 WORKDIR /usr/src/app
 
 COPY . .
