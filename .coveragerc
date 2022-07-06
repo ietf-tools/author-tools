@@ -1,6 +1,0 @@
-[run]
-source=at
-omit = tests/*
-
-[report]
-show_missing = true
