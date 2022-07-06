@@ -59,9 +59,6 @@ RUN rm roboto-mono.zip
 # Disable local file read for kramdown-rfc
 ENV KRAMDOWN_SAFE=1
 
-# Set default XML resource host for kramdown-rfc
-ENV XML_RESOURCE_ORG_HOST=bib.ietf.org
-
 # Install waitress
 RUN pip3 install waitress
 
