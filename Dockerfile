@@ -43,7 +43,7 @@ RUN cp ~/idnits/idnits-2.17.1/idnits /bin
 RUN chmod +x /bin/idnits
 RUN rm -rf ~/idnit 2.17.1.zip
 
-RUN pip3 install -r requirements.txt
+RUN pip3 install -r requirements.txt -c constraints.txt
 RUN gem install bundler
 RUN bundle install
 
