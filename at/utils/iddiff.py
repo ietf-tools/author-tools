@@ -22,10 +22,10 @@ def get_id_diff(old_draft, new_draft, table=False, wdiff=False,
         output = proc_run(args=['iddiff', '-w', old_draft, new_draft],
                           capture_output=True)
     elif table:
-        output = proc_run(args=['iddiff', '-t', '-c', old_draft, new_draft],
+        output = proc_run(args=['iddiff', '-t', old_draft, new_draft],
                           capture_output=True)
     else:
-        output = proc_run(args=['iddiff', '-c', old_draft, new_draft],
+        output = proc_run(args=['iddiff', old_draft, new_draft],
                           capture_output=True)
 
     try:
