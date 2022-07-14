@@ -5,7 +5,17 @@ ENV DEBIAN_FRONTEND noninteractive
 
 WORKDIR /usr/src/app
 
-COPY . .
+COPY Gemfile .
+COPY Gemfile.lock .
+COPY LICENSE .
+COPY README.md .
+COPY api.yml .
+COPY at ./at
+COPY constraints.txt .
+COPY package-lock.json .
+COPY package.json .
+COPY requirements.txt .
+COPY serve.py .
 
 RUN apt-get update
 RUN apt-get install -y \
