@@ -51,7 +51,20 @@ RUN wget https://github.com/ietf-tools/idnits/archive/refs/tags/2.17.1.zip
 RUN unzip -q 2.17.1.zip -d ~/idnits
 RUN cp ~/idnits/idnits-2.17.1/idnits /bin
 RUN chmod +x /bin/idnits
-RUN rm -rf ~/idnit 2.17.1.zip
+RUN rm -rf ~/idnits/idnits-2.17.1/idnits idnit 2.17.1.zip
+
+# install bap
+RUN apt-get install -y bison flex
+RUN wget https://github.com/ietf-tools/bap/archive/refs/heads/master.zip
+RUN unzip -q master.zip -d /tmp/bap
+WORKDIR /tmp/bap/bap-master/
+RUN ./configure
+RUN make
+RUN cp aex bap /bin
+WORKDIR /usr/src/app
+RUN rm -rf /tmp/bap master.zip
+
+WORKDIR /usr/src/app
 
 RUN pip3 install -r requirements.txt -c constraints.txt
 RUN gem install bundler

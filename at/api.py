@@ -2,6 +2,7 @@ from flask import (
         Blueprint, current_app, jsonify, make_response, request,
         send_from_directory)
 
+from at.utils.abnf import extract_abnf
 from at.utils.authentication import require_api_key
 from at.utils.file import (
         allowed_file, get_file, get_name, get_name_with_revision,
@@ -379,6 +380,54 @@ def id_diff():
         return jsonify(error='iddiff error: {}'.format(e)), BAD_REQUEST
 
 
+@bp.route('/abnf/extract', methods=('GET',))
+@require_api_key
+def abnf_extract():
+    '''GET: /abnf/extract API call
+    Returns abnf extract'''
+
+    logger = current_app.logger
+
+    url = request.values.get('url', '').strip()
+    doc = request.values.get('doc', '').strip()
+
+    try:
+        if url != '':
+            if is_valid_url(url,
+                            current_app.config['ALLOWED_DOMAINS'],
+                            logger):
+                pass
+        elif doc != '':
+            url = get_latest(doc,
+                             current_app.config['DT_LATEST_DRAFT_URL'],
+                             logger)
+        else:
+            logger.info('URL/document is missing')
+            return jsonify(
+                    error='URL/document name must be provided'), BAD_REQUEST
+
+        dir_path, filename = get_text_id_from_url(
+                                            url,
+                                            current_app.config['UPLOAD_DIR'],
+                                            logger)
+
+        output = extract_abnf(filename, logger=logger)
+
+        response = make_response(output)
+        response.headers['Content-Type'] = 'text/plain; charset=UTF-8'
+
+        return response
+
+    except LatestDraftNotFound as e:
+        return jsonify(error=str(e)), BAD_REQUEST
+    except DownloadError as e:
+        return jsonify(error=str(e)), BAD_REQUEST
+    except TextProcessingError as e:
+        return jsonify(error=str(e)), BAD_REQUEST
+    except InvalidURL as e:
+        return jsonify(error=str(e)), BAD_REQUEST
+
+
 @bp.route('/version', methods=('GET',))
 def version():
     '''GET: /version API call
@@ -396,6 +445,7 @@ def version():
             'weasyprint': get_weasyprint_version(),
             'idnits': get_idnits_version(logger),
             'iddiff': get_iddiff_version(logger),
-            'aasvg': get_aasvg_version(logger)}
+            'aasvg': get_aasvg_version(logger),
+            'bap': '1.4'}   # bap does not provide a switch to get version
 
     return jsonify(versions=version_information)

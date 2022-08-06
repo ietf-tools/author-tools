@@ -28,6 +28,17 @@ jobs:
         arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)
         wget "https://github.com/mmarkdown/mmark/releases/download/v2.2.25/mmark_2.2.25_linux_$arch.tgz"
         sudo tar zxf mmark_*.tgz -C /bin/
+        wget https://github.com/ietf-tools/bap/archive/refs/heads/master.zip
+        unzip -q master.zip -d /tmp/bap
+
+    - name: Build bap
+      working-directory: /tmp/bap/bap-master/
+      run: |
+        sudo apt-get install -y bison flex libfl-dev
+        sudo ./configure
+        sudo make
+        sudo cp aex bap /bin
+
     # Python
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
