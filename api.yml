@@ -439,6 +439,47 @@ paths:
                   error:
                     type: string
                     description: Error description
+  /api/abnf/extract:
+    get:
+      summary: Extract ABNF using BAP aex
+      parameters:
+        - in: query
+          name: url
+          schema:
+            type: string
+          description: Document URL
+        - in: query
+          name: doc
+          schema:
+            type: string
+          description: Document name
+      responses:
+        '200':
+          description: Returns bap aex output
+          content:
+            text/plain:
+              schema:
+                type: string
+        '400':
+          description: Error has occured.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
+        '401':
+          description: Failed to authenticate.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
   /api/version:
     get:
       summary: Returns version information.
@@ -480,3 +521,6 @@ paths:
                       aasvg:
                         type: string
                         description: aasvg version
+                      bap:
+                        type: string
+                        description: bap version

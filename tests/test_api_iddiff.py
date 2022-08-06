@@ -16,10 +16,6 @@ TEST_XML_ERROR = 'draft-smoke-signals-00.error.xml'
 TEMPORARY_DATA_DIR = './tests/tmp/'
 DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/doc/rfcdiff-latest-json'
 VALID_API_KEY = 'foobar'
-ALLOWED_URLS = [
-        'https://datatracker.ietf.org/',
-        'https://www.ietf.org/',
-        'https://www.rfc-editor.org/']
 ALLOWED_DOMAINS = ['ietf.org', ]
 
 
