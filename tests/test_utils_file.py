@@ -10,7 +10,8 @@ from werkzeug.datastructures import FileStorage
 
 from at.utils.file import (
         allowed_file, get_file, get_filename, get_name, get_name_with_revision,
-        save_file, save_file_from_url, ALLOWED_EXTENSIONS, DownloadError)
+        save_file, save_file_from_text, save_file_from_url, ALLOWED_EXTENSIONS,
+        DownloadError)
 
 TEST_DATA_DIR = './tests/data/'
 TEST_XML_DRAFT = 'draft-smoke-signals-00.xml'
@@ -77,6 +78,16 @@ class TestUtilsFile(TestCase):
                                                   TEMPORARY_DATA_DIR)
                 self.assertTrue(Path(dir_path).exists())
                 self.assertTrue(Path(file_path).exists())
+
+    @given(text())
+    def test_save_file_from_text(self, text):
+        dir_path,  file_path = save_file_from_text(text, TEMPORARY_DATA_DIR)
+
+        self.assertTrue(Path(dir_path).exists())
+        self.assertTrue(Path(file_path).exists())
+
+        with open(file_path, 'r', newline='') as file:
+            self.assertEqual(text, ''.join(file.readlines()))
 
     def test_save_file_from_url_connection_error(self):
         with self.assertRaises(DownloadError) as error:

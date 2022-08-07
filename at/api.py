@@ -2,11 +2,11 @@ from flask import (
         Blueprint, current_app, jsonify, make_response, request,
         send_from_directory)
 
-from at.utils.abnf import extract_abnf
+from at.utils.abnf import extract_abnf, parse_abnf
 from at.utils.authentication import require_api_key
 from at.utils.file import (
         allowed_file, get_file, get_name, get_name_with_revision,
-        DownloadError)
+        save_file_from_text, DownloadError)
 from at.utils.iddiff import get_id_diff, IddiffError
 from at.utils.net import (
         is_valid_url, get_latest, InvalidURL, LatestDraftNotFound)
@@ -406,7 +406,7 @@ def abnf_extract():
             return jsonify(
                     error='URL/document name must be provided'), BAD_REQUEST
 
-        dir_path, filename = get_text_id_from_url(
+        _, filename = get_text_id_from_url(
                                             url,
                                             current_app.config['UPLOAD_DIR'],
                                             logger)
@@ -426,6 +426,26 @@ def abnf_extract():
         return jsonify(error=str(e)), BAD_REQUEST
     except InvalidURL as e:
         return jsonify(error=str(e)), BAD_REQUEST
+
+
+@bp.route('/abnf/parse', methods=('POST',))
+@require_api_key
+def abnf_parse():
+    '''GET: /abnf/parse API call
+    Parse ABNF input and returns results'''
+
+    logger = current_app.logger
+
+    input = request.values.get('input', '')
+    _, filename = save_file_from_text(input,
+                                      current_app.config['UPLOAD_DIR'])
+
+    logger.error(filename)
+    errors, abnf = parse_abnf(filename, logger=logger)
+
+    return jsonify({
+        'errors': errors,
+        'abnf': abnf})
 
 
 @bp.route('/version', methods=('GET',))
