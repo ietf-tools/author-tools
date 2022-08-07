@@ -1,0 +1,4 @@
+; name rules
+name       = first-name last-name
+first-name = *ALPHA
+last-name  = *ALPHA

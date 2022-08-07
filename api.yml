@@ -480,6 +480,53 @@ paths:
                   error:
                     type: string
                     description: Error description
+  /api/abnf/parse:
+    post:
+      summary: Parse ABNF using BAP
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                input:
+                  type: string
+                  description: ABNF input
+      responses:
+        '200':
+          description: Returns bap output
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: string
+                    description: BAP errors
+                  abnf:
+                    type: string
+                    description: Parsed ABNF from BAP
+        '400':
+          description: Error has occured.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
+        '401':
+          description: Failed to authenticate.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
   /api/version:
     get:
       summary: Returns version information.

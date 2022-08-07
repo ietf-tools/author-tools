@@ -1,0 +1,5 @@
+; name rules that generate errors
+name       = first-name middle-name last-name
+first-name = *ALPHA
+first-name = HEXDIG
+last-name  = *ALPHA

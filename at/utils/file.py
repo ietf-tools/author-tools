@@ -59,6 +59,21 @@ def save_file(file, upload_dir):
     return (dir_path, filename)
 
 
+def save_file_from_text(text, upload_dir):
+    '''Save given text to file and returns path'''
+    dir_path = path.join(upload_dir, str(uuid4()))
+    mkdir(dir_path, mode=DIR_MODE)
+
+    filename = path.join(
+            dir_path,
+            secure_filename('.'.join([str(uuid4()), 'txt'])))
+
+    with open(filename, 'w') as file:
+        file.write(text)
+
+    return (dir_path, filename)
+
+
 def save_file_from_url(url, upload_dir, logger=getLogger()):
     '''Download and save the file from given URL and returns path'''
     dir_path = path.join(upload_dir, str(uuid4()))

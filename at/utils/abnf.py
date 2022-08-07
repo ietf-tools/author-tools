@@ -21,3 +21,21 @@ def extract_abnf(filename, logger=getLogger()):
         result = 'No output from BAP aex.'
 
     return result
+
+
+def parse_abnf(filename, logger=getLogger()):
+    '''Parse ABNF using BAP'''
+    logger.debug('running bap')
+
+    output = proc_run(args=['bap', filename], capture_output=True)
+
+    errors = ''
+    abnf = ''
+
+    if output.stderr:
+        errors = output.stderr.decode('utf-8').replace(filename, '')
+
+    if output.stdout:
+        abnf = output.stdout.decode('utf-8', errors='ignore')
+
+    return (errors, abnf)
