@@ -16,8 +16,7 @@ from at.utils.processor import (
 from at.utils.text import (
         get_text_id_from_file, get_text_id_from_url, TextProcessingError)
 from at.utils.validation import (
-        idnits as get_idnits, svgcheck as get_svgcheck, validate_xml,
-        SvgCheckError)
+        idnits as get_idnits, svgcheck as get_svgcheck, validate_xml)
 from at.utils.version import (
         get_aasvg_version, get_idnits_version, get_id2xml_version,
         get_iddiff_version, get_mmark_version, get_kramdown_rfc_version,
@@ -468,16 +467,14 @@ def svgcheck():
         return jsonify(error='Filename is missing'), BAD_REQUEST
 
     if file and allowed_file(file.filename, process='svgcheck'):
-        try:
-            _, filename = save_file(file, current_app.config['UPLOAD_DIR'])
+        _, filename = save_file(file, current_app.config['UPLOAD_DIR'])
 
-            svg, result = get_svgcheck(filename, logger=logger)
+        svg, result, errors = get_svgcheck(filename, logger=logger)
 
-            return jsonify({
-                            'svgcheck': result,
-                            'svg': svg})
-        except SvgCheckError as e:
-            return jsonify(error=str(e)), BAD_REQUEST
+        return jsonify({
+                        'svgcheck': result,
+                        'errors': errors,
+                        'svg': svg})
     else:
         logger.info('File format not supportted: {}'.format(file.filename))
         return jsonify(error='Input file format not supported'), BAD_REQUEST

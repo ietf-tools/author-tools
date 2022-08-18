@@ -186,3 +186,8 @@ class TestUtilsFile(TestCase):
         self.assertIn(filename, result)
         self.assertNotIn(rel_dir, result)
         self.assertNotIn(abs_dir, result)
+
+    def test_cleanup_output_when_none(self):
+        output = cleanup_output(None, None)
+
+        self.assertIsNone(output)

@@ -9,12 +9,6 @@ from at.utils.logs import process_xml2rfc_log
 from at.utils.processor import XML2RFCError
 
 
-# Exceptions
-class SvgCheckError(Exception):
-    '''Error class for svgcheck errors'''
-    pass
-
-
 def validate_xml(filename, logger=getLogger()):
     '''Validate XML2RFC
     NOTE: if file is XML2RFC v2 that will get converted to v3'''
@@ -158,26 +152,28 @@ def svgcheck(filename, logger=getLogger()):
     args = ['svgcheck', '--no-network', '--always-emit', '--repair',
             '--out', parsed_svg_file, filename]
     output = proc_run(args=args, capture_output=True)
-    result = ''
+    result = None
+    errors = None
+    parsed_svg = None
 
     try:
         output.check_returncode()
     except CalledProcessError:
         if output.stderr:
-            error = output.stderr.decode('utf-8')
-            logger.info('svgcheck error: {}'.format(error))
+            errors = output.stderr.decode('utf-8')
+            logger.info('svgcheck error: {}'.format(errors))
         else:
-            error = 'Error occured while running svgcheck'
+            errors = 'Error occured while running svgcheck'
             logger.info('svgcheck error: no stderr output')
-        raise SvgCheckError(error)
 
-    if output.stdout:
-        result += output.stdout.decode('utf-8', errors='ignore')
+    if not errors:
+        if output.stderr:
+            # svgcheck writes to stderr
+            result = output.stderr.decode('utf-8', errors='ignore')
 
-    if output.stderr:
-        result += output.stderr.decode('utf-8', errors='ignore')
+        with open(parsed_svg_file) as file:
+            parsed_svg = '\n'.join(file.readlines())
 
-    with open(parsed_svg_file) as file:
-        parsed_svg = '\n'.join(file.readlines())
-
-    return parsed_svg, cleanup_output(filename, result)
+    return (parsed_svg,
+            cleanup_output(filename, result),
+            cleanup_output(filename, errors))
