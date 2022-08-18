@@ -9,8 +9,9 @@ from hypothesis.strategies import text
 from werkzeug.datastructures import FileStorage
 
 from at.utils.file import (
-        allowed_file, get_file, get_filename, get_name, get_name_with_revision,
-        save_file, save_file_from_text, save_file_from_url, ALLOWED_EXTENSIONS,
+        allowed_file, cleanup_output, get_file, get_filename, get_name,
+        get_name_with_revision, save_file, save_file_from_text,
+        save_file_from_url, ALLOWED_EXTENSIONS, ALLOWED_EXTENSIONS_BY_PROCESS,
         DownloadError)
 
 TEST_DATA_DIR = './tests/data/'
@@ -54,6 +55,21 @@ class TestUtilsFile(TestCase):
             filename = self.faker.file_name(extension=extension)
 
             self.assertTrue(allowed_file(filename))
+
+    @given(text())
+    def test_allowed_file_for_non_supported_with_process(self, filename):
+        for process in ALLOWED_EXTENSIONS_BY_PROCESS.keys():
+            for extension in ALLOWED_EXTENSIONS_BY_PROCESS[process]:
+                assume(not filename.endswith(extension))
+
+            self.assertFalse(allowed_file(filename, process=process))
+
+    def test_allowed_file_for_supported_with_process(self):
+        for process in ALLOWED_EXTENSIONS_BY_PROCESS.keys():
+            for extension in ALLOWED_EXTENSIONS_BY_PROCESS[process]:
+                filename = self.faker.file_name(extension=extension)
+
+                self.assertTrue(allowed_file(filename, process=process))
 
     def test_get_filename(self):
         for extension in ALLOWED_EXTENSIONS:
@@ -144,3 +160,29 @@ class TestUtilsFile(TestCase):
 
         for (filename, name) in names_dictionary.items():
             self.assertEqual(get_name_with_revision(filename), name)
+
+    def test_cleanup_output(self):
+        rel_dir = TEST_DATA_DIR
+        filename = TEST_XML_DRAFT
+        rel_path = ''.join((TEST_DATA_DIR, TEST_XML_DRAFT))
+        abs_path = Path.resolve(Path(rel_path))
+        abs_dir = str(abs_path.parent)
+        output_0 = 'foobar-0'
+        output_1 = 'foobar-1'
+        output_2 = 'foobar-2'
+        output_3 = 'foobar-3'
+
+        log_output = '\n'.join((
+                            output_0,
+                            ':'.join((filename, output_1)),
+                            ':'.join((rel_path, output_2)),
+                            ':'.join((str(abs_path), output_3))))
+
+        result = cleanup_output(abs_path, log_output)
+
+        for output in (output_0, output_1, output_2, output_3):
+            self.assertIn(output, result)
+
+        self.assertIn(filename, result)
+        self.assertNotIn(rel_dir, result)
+        self.assertNotIn(abs_dir, result)

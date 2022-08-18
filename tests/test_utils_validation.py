@@ -5,13 +5,15 @@ from subprocess import CompletedProcess
 from unittest import TestCase
 
 from at.utils.validation import (
-        convert_v2v3, idnits, validate_xml, xml2rfc_validation)
+        convert_v2v3, idnits, svgcheck, validate_xml, xml2rfc_validation,
+        SvgCheckError)
 
 TEST_DATA_DIR = './tests/data/'
 TEST_XML_DRAFT = 'draft-smoke-signals-00.xml'
 TEST_XML_INVALID = 'draft-smoke-signals-00.invalid.xml'
 TEST_XML_V2_DRAFT = 'draft-smoke-signals-00.v2.xml'
-TEST_DATA = [TEST_XML_DRAFT, TEST_XML_INVALID, TEST_XML_V2_DRAFT]
+TEST_SVG = 'ietf.svg'
+TEST_DATA = [TEST_XML_DRAFT, TEST_XML_INVALID, TEST_XML_V2_DRAFT, TEST_SVG]
 TEMPORARY_DATA_DIR = './tests/tmp/'
 
 
@@ -146,3 +148,15 @@ class TestUtilsValidation(TestCase):
         idnits_log = idnits(text_file, verbose='2')
 
         self.assertNotIn(TEMPORARY_DATA_DIR, idnits_log)
+
+    def test_svgcheck_error(self):
+        with self.assertRaises(SvgCheckError) as error:
+            svgcheck('abc.svg')
+
+            self.assertIn('No such file', error.exception)
+
+    def test_svgcheck(self):
+        svg, logs = svgcheck(''.join((TEMPORARY_DATA_DIR, TEST_SVG)))
+
+        self.assertIn('</svg>', svg)
+        self.assertIn('Parsing file', logs)

@@ -1,13 +1,18 @@
 from logging import getLogger
-from os.path import dirname
 from subprocess import run as proc_run, CalledProcessError
 
 from xml2rfc import XmlRfcParser
 from lxml.etree import XMLSyntaxError
 
-from at.utils.file import get_filename
+from at.utils.file import cleanup_output, get_filename
 from at.utils.logs import process_xml2rfc_log
 from at.utils.processor import XML2RFCError
+
+
+# Exceptions
+class SvgCheckError(Exception):
+    '''Error class for svgcheck errors'''
+    pass
 
 
 def validate_xml(filename, logger=getLogger()):
@@ -103,7 +108,7 @@ def idnits(filename,
            show_text=False,
            year=False,
            submit_check=False):
-    '''Running idnits and return output'''
+    '''Run idnits and return output'''
 
     logger.debug('running idnits')
 
@@ -139,6 +144,40 @@ def idnits(filename,
 
     if output.stdout:
         stdout = output.stdout.decode('utf-8', errors='ignore')
-        return stdout.replace(dirname(filename), '')
+        return cleanup_output(filename, stdout)
     else:
         return error
+
+
+def svgcheck(filename, logger=getLogger()):
+    '''Run svgcheck and return output'''
+
+    logger.debug('running svgcheck')
+
+    parsed_svg_file = get_filename(filename, 'parsed.svg')
+    args = ['svgcheck', '--no-network', '--always-emit', '--repair',
+            '--out', parsed_svg_file, filename]
+    output = proc_run(args=args, capture_output=True)
+    result = ''
+
+    try:
+        output.check_returncode()
+    except CalledProcessError:
+        if output.stderr:
+            error = output.stderr.decode('utf-8')
+            logger.info('svgcheck error: {}'.format(error))
+        else:
+            error = 'Error occured while running svgcheck'
+            logger.info('svgcheck error: no stderr output')
+        raise SvgCheckError(error)
+
+    if output.stdout:
+        result += output.stdout.decode('utf-8', errors='ignore')
+
+    if output.stderr:
+        result += output.stderr.decode('utf-8', errors='ignore')
+
+    with open(parsed_svg_file) as file:
+        parsed_svg = '\n'.join(file.readlines())
+
+    return parsed_svg, cleanup_output(filename, result)
