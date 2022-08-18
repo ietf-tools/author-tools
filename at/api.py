@@ -6,7 +6,7 @@ from at.utils.abnf import extract_abnf, parse_abnf
 from at.utils.authentication import require_api_key
 from at.utils.file import (
         allowed_file, get_file, get_name, get_name_with_revision,
-        save_file_from_text, DownloadError)
+        save_file, save_file_from_text, DownloadError)
 from at.utils.iddiff import get_id_diff, IddiffError
 from at.utils.net import (
         is_valid_url, get_latest, InvalidURL, LatestDraftNotFound)
@@ -15,11 +15,13 @@ from at.utils.processor import (
         MmarkError, TextError, XML2RFCError)
 from at.utils.text import (
         get_text_id_from_file, get_text_id_from_url, TextProcessingError)
-from at.utils.validation import validate_xml, idnits as get_idnits
+from at.utils.validation import (
+        idnits as get_idnits, svgcheck as get_svgcheck, validate_xml,
+        SvgCheckError)
 from at.utils.version import (
         get_aasvg_version, get_idnits_version, get_id2xml_version,
         get_iddiff_version, get_mmark_version, get_kramdown_rfc_version,
-        get_weasyprint_version, get_xml2rfc_version)
+        get_svgcheck_version, get_weasyprint_version, get_xml2rfc_version)
 
 BAD_REQUEST = 400
 
@@ -440,12 +442,45 @@ def abnf_parse():
     _, filename = save_file_from_text(input,
                                       current_app.config['UPLOAD_DIR'])
 
-    logger.error(filename)
     errors, abnf = parse_abnf(filename, logger=logger)
 
     return jsonify({
         'errors': errors,
         'abnf': abnf})
+
+
+@bp.route('/svgcheck', methods=('POST',))
+@require_api_key
+def svgcheck():
+    '''GET: /svgcheck API call
+    Check SVG content and return results'''
+
+    logger = current_app.logger
+
+    if 'file' not in request.files:
+        logger.info('no input file')
+        return jsonify(error='No file'), BAD_REQUEST
+
+    file = request.files['file']
+
+    if file.filename == '':
+        logger.info('filename missing')
+        return jsonify(error='Filename is missing'), BAD_REQUEST
+
+    if file and allowed_file(file.filename, process='svgcheck'):
+        try:
+            _, filename = save_file(file, current_app.config['UPLOAD_DIR'])
+
+            svg, result = get_svgcheck(filename, logger=logger)
+
+            return jsonify({
+                            'svgcheck': result,
+                            'svg': svg})
+        except SvgCheckError as e:
+            return jsonify(error=str(e)), BAD_REQUEST
+    else:
+        logger.info('File format not supportted: {}'.format(file.filename))
+        return jsonify(error='Input file format not supported'), BAD_REQUEST
 
 
 @bp.route('/version', methods=('GET',))
@@ -466,6 +501,7 @@ def version():
             'idnits': get_idnits_version(logger),
             'iddiff': get_iddiff_version(logger),
             'aasvg': get_aasvg_version(logger),
+            'svgcheck': get_svgcheck_version(logger),
             'bap': '1.4'}   # bap does not provide a switch to get version
 
     return jsonify(versions=version_information)

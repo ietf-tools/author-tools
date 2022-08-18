@@ -8,6 +8,7 @@ from requests.exceptions import ConnectionError, Timeout
 from werkzeug.utils import secure_filename
 
 ALLOWED_EXTENSIONS = ('txt', 'xml', 'md', 'mkd',)
+ALLOWED_EXTENSIONS_BY_PROCESS = {'svgcheck': ('svg', )}
 DIR_MODE = 0o770
 DRAFT_NAME = re_compile(r'(-\d+)?(\..*)?$')
 DRAFT_NAME_WITH_REVISION = re_compile(r'\..*$')
@@ -20,11 +21,17 @@ class DownloadError(Exception):
     pass
 
 
-def allowed_file(filename):
+def allowed_file(filename, process=None):
     '''Return true if file extension in allowed list'''
 
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    if '.' in filename:
+        ext = filename.rsplit('.', 1)[1].lower()
+        if process:
+            return ext in ALLOWED_EXTENSIONS_BY_PROCESS[process]
+        else:
+            return ext in ALLOWED_EXTENSIONS
+    else:
+        return False
 
 
 def get_extension(filename):
@@ -122,3 +129,10 @@ def get_name_with_revision(filename):
         name = DRAFT_NAME_WITH_REVISION.sub('', filename.lower(), count=1)
 
     return name
+
+
+def cleanup_output(filename, output):
+    '''Return output without directory information'''
+
+    return output.replace(path.dirname(filename) + '/', '') \
+                 .replace(path.dirname(path.relpath(filename)) + '/', '')

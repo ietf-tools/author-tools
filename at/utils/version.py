@@ -102,3 +102,18 @@ def get_iddiff_version(logger=getLogger()):
         logger.info('iddiff error: {}'.format(
             output.stderr.decode('utf-8')))
         return None
+
+
+def get_svgcheck_version(logger=getLogger()):
+    '''Return svgcheck version'''
+
+    output = proc_run(args=['svgcheck', '--version'], capture_output=True)
+
+    try:
+        output.check_returncode()
+        return output.stdout.decode('utf-8').split('\n')[0] \
+                            .replace('svgcheck =', '').strip()
+    except CalledProcessError:
+        logger.info('svgcheck error: {}'.format(
+            output.stderr.decode('utf-8')))
+        return None

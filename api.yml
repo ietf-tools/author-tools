@@ -527,6 +527,57 @@ paths:
                   error:
                     type: string
                     description: Error description
+  /api/svgcheck:
+    post:
+      summary: Returns svgcheck output with parsed SVG
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: SVG file with .svg extension
+                apikey:
+                  type: string
+                  description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)
+      responses:
+        '200':
+          description: Returns draft in requested format.
+          content:
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  svg:
+                    type: string
+                    description: Parsed SVG outpu
+                  svgcheck:
+                    type: string
+                    description: svgcheck output logs
+        '400':
+          description: Error has occured.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
+        '401':
+          description: Failed to authenticate.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
   /api/version:
     get:
       summary: Returns version information.
@@ -571,3 +622,6 @@ paths:
                       bap:
                         type: string
                         description: bap version
+                      svgcheck:
+                        type: string
+                        description: svgcheck version
