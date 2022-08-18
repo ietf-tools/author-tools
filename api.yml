@@ -558,6 +558,9 @@ paths:
                   svgcheck:
                     type: string
                     description: svgcheck output logs
+                  errors:
+                    type: string
+                    description: svgcheck errors
         '400':
           description: Error has occured.
           content:

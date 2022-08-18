@@ -5,8 +5,7 @@ from subprocess import CompletedProcess
 from unittest import TestCase
 
 from at.utils.validation import (
-        convert_v2v3, idnits, svgcheck, validate_xml, xml2rfc_validation,
-        SvgCheckError)
+        convert_v2v3, idnits, svgcheck, validate_xml, xml2rfc_validation)
 
 TEST_DATA_DIR = './tests/data/'
 TEST_XML_DRAFT = 'draft-smoke-signals-00.xml'
@@ -150,13 +149,15 @@ class TestUtilsValidation(TestCase):
         self.assertNotIn(TEMPORARY_DATA_DIR, idnits_log)
 
     def test_svgcheck_error(self):
-        with self.assertRaises(SvgCheckError) as error:
-            svgcheck('abc.svg')
+        svg, logs, errors = svgcheck('foobar.svg')
 
-            self.assertIn('No such file', error.exception)
+        self.assertIsNone(svg)
+        self.assertIsNone(logs)
+        self.assertIn('No such file', errors)
 
     def test_svgcheck(self):
-        svg, logs = svgcheck(''.join((TEMPORARY_DATA_DIR, TEST_SVG)))
+        svg, logs, errors = svgcheck(''.join((TEMPORARY_DATA_DIR, TEST_SVG)))
 
         self.assertIn('</svg>', svg)
         self.assertIn('Parsing file', logs)
+        self.assertIsNone(errors)

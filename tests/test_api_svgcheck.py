@@ -10,6 +10,7 @@ API = '/api/svgcheck'
 TEMPORARY_DATA_DIR = './tests/tmp/'
 TEST_DATA_DIR = './tests/data/'
 TEST_SVG = 'ietf.svg'
+TEST_INVALID_SVG = 'invalid.svg'
 TEST_UNSUPPORTED_FORMAT = 'draft-smoke-signals-00.md'
 
 
@@ -92,6 +93,7 @@ class TestApiSvgcheck(TestCase):
                 self.assertEqual(result.status_code, 200)
                 self.assertIn('</svg>', json_data['svg'])
                 self.assertIn('Parsing file', json_data['svgcheck'])
+                self.assertIsNone(json_data['errors'])
 
     def test_svgcheck_error(self):
         with self.app.test_client() as client:
@@ -100,11 +102,13 @@ class TestApiSvgcheck(TestCase):
                         API,
                         data={
                             'file': (
-                                open(get_path(TEST_UNSUPPORTED_FORMAT), 'rb'),
-                                TEST_SVG)})
+                                open(get_path(TEST_INVALID_SVG), 'rb'),
+                                TEST_INVALID_SVG)})
                 json_data = result.get_json()
 
-                self.assertEqual(result.status_code, 400)
+                self.assertEqual(result.status_code, 200)
+                self.assertIsNone(json_data['svg'])
+                self.assertIsNone(json_data['svgcheck'])
                 self.assertIn(
-                        'ERROR: Unable to parse the XML document',
-                        json_data['error'])
+                        'ERROR: File does not conform to SVG requirements',
+                        json_data['errors'])

@@ -134,5 +134,8 @@ def get_name_with_revision(filename):
 def cleanup_output(filename, output):
     '''Return output without directory information'''
 
-    return output.replace(path.dirname(filename) + '/', '') \
+    if output:
+        return output.replace(path.dirname(filename) + '/', '') \
                  .replace(path.dirname(path.relpath(filename)) + '/', '')
+    else:
+        return None
