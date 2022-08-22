@@ -61,7 +61,7 @@ RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
 COPY Gemfile Gemfile.lock LICENSE README.md api.yml constraints.txt package-lock.json package.json requirements.txt serve.py .
 COPY at ./at
 
-# Install JavaScrip dependencies
+# Install JavaScript dependencies
 RUN npm install
 
 # Install Python dependencies
@@ -72,7 +72,7 @@ RUN gem install bundler && bundle install
 
 RUN mkdir -p tmp && \
     echo "UPLOAD_DIR = '$PWD/tmp'" > at/config.py && \
-    echo "VERSION = '0.9.2'" >> at/config.py && \
+    echo "VERSION = '0.9.3'" >> at/config.py && \
     echo "REQUIRE_AUTH = False" >> at/config.py && \
     echo "DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/doc/rfcdiff-latest-json'" >> at/config.py && \
     echo "ALLOWED_DOMAINS = ['ietf.org', 'rfc-editor.org', 'github.com', 'githubusercontent.com', 'github.io', 'gitlab.com']" >> at/config.py
