@@ -61,7 +61,7 @@ RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
 COPY Gemfile Gemfile.lock LICENSE README.md api.yml constraints.txt package-lock.json package.json requirements.txt serve.py .
 COPY at ./at
 
-# Install JavaScrip dependencies
+# Install JavaScript dependencies
 RUN npm install
 
 # Install Python dependencies
