@@ -3,7 +3,7 @@ from pathlib import Path
 from shutil import copy, rmtree
 from unittest import TestCase
 
-from at.utils.logs import process_xml2rfc_log, get_errors
+from at.utils.logs import get_errors, process_xml2rfc_log, update_logs
 from at.utils.validation import xml2rfc_validation
 
 TEST_DATA_DIR = './tests/data/'
@@ -65,3 +65,24 @@ class TestUtilsLogs(TestCase):
         self.assertIsNotNone(errors)
         self.assertIsInstance(errors, str)
         self.assertGreater(len(errors), 0)
+
+    def test_update_logs(self):
+        logs = {
+                'errors': ['foo', ],
+                'warnings': ['bar', ]}
+
+        new_entries = {
+                'errors': ['foobar_error', 'foobar_error_1', ],
+                'warnings': ['foobar_warning', 'foobar_warning_1', ]}
+
+        updated_logs = update_logs(logs, new_entries)
+
+        for (key, entries) in logs.items():
+            self.assertIn(key, updated_logs.keys())
+            for entry in entries:
+                self.assertIn(entry, updated_logs[key])
+
+        for (key, entries) in new_entries.items():
+            self.assertIn(key, updated_logs.keys())
+            for entry in entries:
+                self.assertIn(entry, updated_logs[key])

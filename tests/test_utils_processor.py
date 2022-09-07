@@ -86,37 +86,54 @@ class TestUtilsProcessor(TestCase):
         self.assertEqual(Path(saved_file).suffix, '.xml')
 
     def test_convert_v2v3(self):
-        saved_file = convert_v2v3(
+        saved_file, logs = convert_v2v3(
                 ''.join([TEMPORARY_DATA_DIR, TEST_XML_V2_DRAFT]))
 
         self.assertTrue(Path(saved_file).exists())
         self.assertEqual(Path(saved_file).suffix, '.xml')
+        self.assertIn('errors', logs.keys())
+        self.assertIn('warnings', logs.keys())
 
     def test_get_xml(self):
-        for file in [TEST_XML_DRAFT, TEST_XML_V2_DRAFT]:
-            saved_file = get_xml(
-                    ''.join([TEMPORARY_DATA_DIR, file]))
+        saved_file, logs = get_xml(
+                ''.join([TEMPORARY_DATA_DIR, TEST_XML_V2_DRAFT]))
 
-            self.assertTrue(Path(saved_file).exists())
-            self.assertEqual(Path(saved_file).suffix, '.xml')
+        self.assertTrue(Path(saved_file).exists())
+        self.assertEqual(Path(saved_file).suffix, '.xml')
+        self.assertIn('errors', logs.keys())
+        self.assertIn('warnings', logs.keys())
+
+    def test_get_xml_v3(self):
+        saved_file, logs = get_xml(
+                ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
+
+        self.assertTrue(Path(saved_file).exists())
+        self.assertEqual(Path(saved_file).suffix, '.xml')
+        self.assertIsNone(logs)
 
     def test_get_html(self):
-        saved_file = get_html(
+        saved_file, logs = get_html(
                 ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
 
         self.assertTrue(Path(saved_file).exists())
         self.assertEqual(Path(saved_file).suffix, '.html')
+        self.assertIn('errors', logs.keys())
+        self.assertIn('warnings', logs.keys())
 
     def test_get_text(self):
-        saved_file = get_text(
+        saved_file, logs = get_text(
                 ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
 
         self.assertTrue(Path(saved_file).exists())
         self.assertEqual(Path(saved_file).suffix, '.txt')
+        self.assertIn('errors', logs.keys())
+        self.assertIn('warnings', logs.keys())
 
     def test_get_pdf(self):
-        saved_file = get_pdf(
+        saved_file, logs = get_pdf(
                 ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
 
         self.assertTrue(Path(saved_file).exists())
         self.assertEqual(Path(saved_file).suffix, '.pdf')
+        self.assertIn('errors', logs.keys())
+        self.assertIn('warnings', logs.keys())

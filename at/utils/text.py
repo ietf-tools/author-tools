@@ -37,8 +37,8 @@ def get_text_id(dir_path, filename, logger=getLogger()):
         try:
             if file_ext.lower() in ['.md', '.mkd']:
                 filename = md2xml(filename, logger)
-            xml_file = get_xml(filename, logger=logger)
-            filename = get_text(xml_file, logger=logger)
+            xml_file, _ = get_xml(filename, logger=logger)
+            filename, _ = get_text(xml_file, logger=logger)
         except (KramdownError, MmarkError, XML2RFCError) as e:
             logger.error(
                     'error processing non text file: {}'.format(filename))

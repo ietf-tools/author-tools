@@ -79,7 +79,7 @@ echo "ALLOWED_DOMAINS = ['ietf.org', 'ietf.org', 'rfc-editor.org']" >> at/config
 
 * Run flask server.
 ```
-FLASK_APP=at FLASK_ENV=development flask run
+SITE_URL='http://localhost:5000' PATH=$PATH:./node_modules/.bin/ FLASK_APP=at FLASK_DEBUG=True flask run
 ```
 
 ## Running tests
@@ -90,5 +90,5 @@ pip install -r requirements.dev.txt
 
 * Run unit tests.
 ```
-python -m unittest discover tests
+PATH=$PATH:./node_modules/.bin/ python -m unittest discover tests
 ```

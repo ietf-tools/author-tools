@@ -1,7 +1,7 @@
 from re import compile as re_compile, IGNORECASE
 
-XML2RFC_ERROR_REGEX = re_compile(r'^.* Error: (?P<message>.*)$', IGNORECASE)
-XML2RFC_WARN_REGEX = re_compile(r'^.* Warning: (?P<message>.*)$', IGNORECASE)
+XML2RFC_ERROR_REGEX = re_compile(r'^.*Error: (?P<message>.*)$', IGNORECASE)
+XML2RFC_WARN_REGEX = re_compile(r'^.*Warning: (?P<message>.*)$', IGNORECASE)
 
 
 def process_xml2rfc_log(output):
@@ -10,10 +10,8 @@ def process_xml2rfc_log(output):
     errors = []
     warnings = []
 
-    if output.stdout:
-        log += output.stdout.decode('utf-8', errors='ignore').split('\n')
     if output.stderr:
-        log += output.stderr.decode('utf-8', errors='ignore').split('\n')
+        log = output.stderr.decode('utf-8', errors='ignore').split('\n')
 
     for line in log:
         error = XML2RFC_ERROR_REGEX.search(line)
@@ -35,3 +33,12 @@ def get_errors(output):
         return '\n'.join(log['errors'])
     else:
         return None
+
+
+def update_logs(logs, new_entries):
+    '''Adds new entries to logs'''
+    if new_entries:
+        logs['errors'].extend(new_entries['errors'])
+        logs['warnings'].extend(new_entries['warnings'])
+
+    return logs
