@@ -112,6 +112,7 @@ def render(format):
 @bp.route('/export/<dir>/<file>', methods=('GET',))
 @require_api_key
 def export(dir, file):
+    as_attachment = request.values.get('download', False)
     dir = dir.replace('.', '')
     dir = dir.replace('/', '')
     file = file.replace('/', '')
@@ -119,7 +120,7 @@ def export(dir, file):
     return send_from_directory(
                 dir_path,
                 get_file(file),
-                as_attachment=True)
+                as_attachment=as_attachment)
 
 
 @bp.route('/validate', methods=('POST',))
