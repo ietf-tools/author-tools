@@ -24,6 +24,17 @@ from at.utils.version import (
         get_svgcheck_version, get_weasyprint_version, get_xml2rfc_version)
 
 BAD_REQUEST = 400
+VERSION_INFORMATION = {
+        'xml2rfc': get_xml2rfc_version(),
+        'kramdown-rfc': get_kramdown_rfc_version(),
+        'mmark': get_mmark_version(),
+        'id2xml': get_id2xml_version(),
+        'weasyprint': get_weasyprint_version(),
+        'idnits': get_idnits_version(),
+        'iddiff': get_iddiff_version(),
+        'aasvg': get_aasvg_version(),
+        'svgcheck': get_svgcheck_version(),
+        'bap': '1.4'}   # bap does not provide a switch to get version
 
 bp = Blueprint('api', __name__, url_prefix='/api')
 
@@ -513,18 +524,7 @@ def version():
 
     logger = current_app.logger
     logger.debug('version information request')
+    versions = VERSION_INFORMATION
+    versions['author_tools_api'] = current_app.config['VERSION']
 
-    version_information = {
-            'author_tools_api': current_app.config['VERSION'],
-            'xml2rfc': get_xml2rfc_version(),
-            'kramdown-rfc': get_kramdown_rfc_version(logger),
-            'mmark': get_mmark_version(logger),
-            'id2xml': get_id2xml_version(logger),
-            'weasyprint': get_weasyprint_version(),
-            'idnits': get_idnits_version(logger),
-            'iddiff': get_iddiff_version(logger),
-            'aasvg': get_aasvg_version(logger),
-            'svgcheck': get_svgcheck_version(logger),
-            'bap': '1.4'}   # bap does not provide a switch to get version
-
-    return jsonify(versions=version_information)
+    return jsonify(versions=versions)
