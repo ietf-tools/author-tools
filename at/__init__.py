@@ -23,6 +23,15 @@ def create_app(config=None):
 
     SENTRY_DSN = getenv('SENTRY_DSN')
 
+    if site_url := getenv('SITE_URL'):
+        app.logger.info('Using SITE_URL from ENV.')
+        app.config['SITE_URL'] = site_url
+    elif 'SITE_URL' not in app.config.keys():
+        app.logger.info('SITE_URL not set. Using default.')
+        app.config['SITE_URL'] = 'http://localhost'
+
+    app.logger.info('SITE_URL: {}'.format(app.config['SITE_URL']))
+
     if SENTRY_DSN:
         sentry_init(
                 dsn=SENTRY_DSN,

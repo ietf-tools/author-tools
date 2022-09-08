@@ -48,9 +48,9 @@ def get_filename(filename, ext):
 
 
 def get_file(filename):
-    '''Returns the filename part from a file path'''
+    '''Returns the filename and the parent directory'''
 
-    return filename.split('/')[-1]
+    return '/'.join(filename.split('/')[-2:])
 
 
 def save_file(file, upload_dir):

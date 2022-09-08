@@ -21,6 +21,7 @@ TEST_DATA = [
         TEST_KRAMDOWN_DRAFT, TEST_MMARK_DRAFT]
 TEMPORARY_DATA_DIR = './tests/tmp/'
 VALID_API_KEY = 'foobar'
+SITE_URL = 'https://example.org'
 
 
 def get_path(filename):
@@ -39,7 +40,8 @@ class TestApiRender(TestCase):
 
         config = {
                 'UPLOAD_DIR': abspath(TEMPORARY_DATA_DIR),
-                'REQUIRE_AUTH': False}
+                'REQUIRE_AUTH': False,
+                'SITE_URL': SITE_URL}
 
         self.app = create_app(config)
 
@@ -118,9 +120,19 @@ class TestApiRender(TestCase):
                                 'file': (
                                     open(get_path(filename), 'rb'), filename),
                                 'apikey': VALID_API_KEY})
+                    json_data = result.get_json()
 
                     self.assertEqual(result.status_code, 200)
-                    self.assertIsNotNone(result.data)
+                    self.assertTrue(json_data['url'].startswith(
+                                                    '{}/'.format(SITE_URL)))
+                    self.assertIn('errors', json_data['logs'].keys())
+                    self.assertIn('warnings', json_data['logs'].keys())
+
+                    # test export
+                    export_url = json_data['url'].replace(SITE_URL, '')
+                    export = client.get(export_url)
+                    self.assertEqual(export.status_code, 200)
+                    self.assertIsNotNone(export.data)
 
     def test_render_text(self):
         with self.app.test_client() as client:
@@ -132,9 +144,19 @@ class TestApiRender(TestCase):
                                 'file': (
                                     open(get_path(filename), 'rb'), filename),
                                 'apikey': VALID_API_KEY})
+                    json_data = result.get_json()
 
                     self.assertEqual(result.status_code, 200)
-                    self.assertIsNotNone(result.data)
+                    self.assertTrue(json_data['url'].startswith(
+                                                    '{}/'.format(SITE_URL)))
+                    self.assertIn('errors', json_data['logs'].keys())
+                    self.assertIn('warnings', json_data['logs'].keys())
+
+                    # test export
+                    export_url = json_data['url'].replace(SITE_URL, '')
+                    export = client.get(export_url)
+                    self.assertEqual(export.status_code, 200)
+                    self.assertIsNotNone(export.data)
 
     def test_render_html(self):
         with self.app.test_client() as client:
@@ -146,9 +168,19 @@ class TestApiRender(TestCase):
                                 'file': (
                                     open(get_path(filename), 'rb'), filename),
                                 'apikey': VALID_API_KEY})
+                    json_data = result.get_json()
 
                     self.assertEqual(result.status_code, 200)
-                    self.assertIsNotNone(result.data)
+                    self.assertTrue(json_data['url'].startswith(
+                                                    '{}/'.format(SITE_URL)))
+                    self.assertIn('errors', json_data['logs'].keys())
+                    self.assertIn('warnings', json_data['logs'].keys())
+
+                    # test export
+                    export_url = json_data['url'].replace(SITE_URL, '')
+                    export = client.get(export_url)
+                    self.assertEqual(export.status_code, 200)
+                    self.assertIsNotNone(export.data)
 
     def test_render_pdf(self):
         with self.app.test_client() as client:
@@ -160,9 +192,18 @@ class TestApiRender(TestCase):
                                 'file': (
                                     open(get_path(filename), 'rb'), filename),
                                 'apikey': VALID_API_KEY})
+                    json_data = result.get_json()
 
                     self.assertEqual(result.status_code, 200)
-                    self.assertIsNotNone(result.data)
+                    self.assertGreater(len(json_data['url']), 0)
+                    self.assertIn('errors', json_data['logs'].keys())
+                    self.assertIn('warnings', json_data['logs'].keys())
+
+                    # test export
+                    export_url = json_data['url'].replace(SITE_URL, '')
+                    export = client.get(export_url)
+                    self.assertEqual(export.status_code, 200)
+                    self.assertIsNotNone(export.data)
 
     def test_kramdown_error(self):
         with self.app.test_client() as client:
@@ -211,3 +252,10 @@ class TestApiRender(TestCase):
                 self.assertEqual(result.status_code, 400)
                 self.assertTrue(json_data['error'].startswith(
                     'xml2rfc error:'))
+
+    def test_export_error(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                for path in ('foobar.xml', 'foo/bar.xml', 'foo/bar.xml'):
+                    result = client.get('/'.join(('/api/export', path)))
+                    self.assertEqual(result.status_code, 404)

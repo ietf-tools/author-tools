@@ -8,6 +8,7 @@ from at.utils.file import (
         allowed_file, get_file, get_name, get_name_with_revision,
         save_file, save_file_from_text, DownloadError)
 from at.utils.iddiff import get_id_diff, IddiffError
+from at.utils.logs import update_logs
 from at.utils.net import (
         is_valid_url, get_latest, InvalidURL, LatestDraftNotFound)
 from at.utils.processor import (
@@ -42,6 +43,8 @@ def render(format):
 
     file = request.files['file']
 
+    logs = {'errors': [], 'warnings': []}
+
     if file.filename == '':
         logger.info('filename missing')
         return jsonify(error='Filename is missing'), BAD_REQUEST
@@ -62,7 +65,8 @@ def render(format):
             return jsonify(error='id2xml error: {}'.format(e)), BAD_REQUEST
 
         try:
-            xml_file = get_xml(filename, logger=logger)
+            xml_file, _logs = get_xml(filename, logger=logger)
+            logs = update_logs(logs, _logs)
         except XML2RFCError as e:
             return jsonify(error='xml2rfc error: {}'.format(e)), BAD_REQUEST
 
@@ -72,13 +76,16 @@ def render(format):
             if format == 'xml':
                 rendered_filename = get_file(xml_file)
             elif format == 'html':
-                html_file = get_html(xml_file, logger=logger)
+                html_file, _logs = get_html(xml_file, logger=logger)
+                logs = update_logs(logs, _logs)
                 rendered_filename = get_file(html_file)
             elif format == 'text':
-                text_file = get_text(xml_file, logger=logger)
+                text_file, _logs = get_text(xml_file, logger=logger)
+                logs = update_logs(logs, _logs)
                 rendered_filename = get_file(text_file)
             elif format == 'pdf':
-                pdf_file = get_pdf(xml_file, logger=logger)
+                pdf_file, _logs = get_pdf(xml_file, logger=logger)
+                logs = update_logs(logs, _logs)
                 rendered_filename = get_file(pdf_file)
             else:
                 logger.info(
@@ -88,13 +95,32 @@ def render(format):
         except XML2RFCError as e:
             return jsonify(error='xml2rfc error: {}'.format(e)), BAD_REQUEST
 
-        return send_from_directory(
-                dir_path,
-                get_file(rendered_filename),
-                as_attachment=True)
+        if len(rendered_filename) > 0:
+            url = '/'.join((current_app.config['SITE_URL'],
+                            'api',
+                            'export',
+                            rendered_filename))
+
+        return jsonify(
+                    url=url,
+                    logs=logs)
     else:
         logger.info('File format not supportted: {}'.format(file.filename))
         return jsonify(error='Input file format not supported'), BAD_REQUEST
+
+
+@bp.route('/export/<dir>/<file>', methods=('GET',))
+@require_api_key
+def export(dir, file):
+    as_attachment = request.values.get('download', False)
+    dir = dir.replace('.', '')
+    dir = dir.replace('/', '')
+    file = file.replace('/', '')
+    dir_path = '/'.join((current_app.config['UPLOAD_DIR'], dir))
+    return send_from_directory(
+                dir_path,
+                get_file(file),
+                as_attachment=as_attachment)
 
 
 @bp.route('/validate', methods=('POST',))

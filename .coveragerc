@@ -1,6 +1,6 @@
 [run]
 source=at
-omit = tests/*, at/__init__.py
+omit = tests/*, at/__init__.py, at/config.py
 
 [report]
 show_missing = true

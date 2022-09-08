@@ -80,11 +80,12 @@ class TestUtilsFile(TestCase):
 
     def test_get_file(self):
         for extension in ALLOWED_EXTENSIONS:
-            file_path = self.faker.file_path(extension=extension)
+            file_path = self.faker.file_path(extension=extension, depth=3)
             result = get_file(file_path)
 
             self.assertTrue(result.endswith(extension))
-            self.assertNotIn('/', result)
+            self.assertFalse(result.startswith('/'))
+            self.assertTrue(result.count('/'), 1)
 
     def test_save_file(self):
         for filename in TEST_DATA:

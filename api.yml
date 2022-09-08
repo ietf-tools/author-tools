@@ -18,7 +18,7 @@ security:
 paths:
   /api/render/text:
     post:
-      summary: Returns rendered draft in text format.
+      summary: Convert draft to text format.
       requestBody:
         required: true
         content:
@@ -35,11 +35,27 @@ paths:
                   description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)
       responses:
         '200':
-          description: Returns draft in requested format.
+          description: Returns temporary URL to the draft in requested format.
           content:
-            text/plain:
+            application/json:
               schema:
-                type: string
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    description: list of errors
+                    items:
+                      type: string
+                      description: error description
+                  warnings:
+                    type: array
+                    description: list of warnings
+                    items:
+                      type: string
+                      description: warning description
+                  url:
+                    type: string
+                    description: Temporary URL to requested format
         '400':
           description: Error has occured.
           content:
@@ -62,7 +78,7 @@ paths:
                     description: Error description
   /api/render/xml:
     post:
-      summary: Returns rendered draft in xml2rfc v3 format.
+      summary: Convert draft to xml2rfc v3 format.
       requestBody:
         required: true
         content:
@@ -79,11 +95,27 @@ paths:
                   description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)
       responses:
         '200':
-          description: Returns draft in requested format.
+          description: Returns temporary URL to the draft in requested format.
           content:
-            application/xml:
+            application/json:
               schema:
-                type: string
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    description: list of errors
+                    items:
+                      type: string
+                      description: error description
+                  warnings:
+                    type: array
+                    description: list of warnings
+                    items:
+                      type: string
+                      description: warning description
+                  url:
+                    type: string
+                    description: Temporary URL to requested format
         '400':
           description: Error has occured.
           content:
@@ -106,7 +138,7 @@ paths:
                     description: Error description
   /api/render/html:
     post:
-      summary: Returns rendered draft in HTML format.
+      summary: Convert draft to HTML format.
       requestBody:
         required: true
         content:
@@ -123,11 +155,27 @@ paths:
                   description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)
       responses:
         '200':
-          description: Returns draft in requested format.
+          description: Returns temporary URL to the draft in requested format.
           content:
-            text/html:
+            application/json:
               schema:
-                type: string
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    description: list of errors
+                    items:
+                      type: string
+                      description: error description
+                  warnings:
+                    type: array
+                    description: list of warnings
+                    items:
+                      type: string
+                      description: warning description
+                  url:
+                    type: string
+                    description: Temporary URL to requested format
         '400':
           description: Error has occured.
           content:
@@ -150,7 +198,7 @@ paths:
                     description: Error description
   /api/render/pdf:
     post:
-      summary: Returns rendered draft in PDF format.
+      summary: Renders draft to PDF format.
       requestBody:
         required: true
         content:
@@ -167,12 +215,27 @@ paths:
                   description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)
       responses:
         '200':
-          description: Returns draft in requested format.
+          description: Returns temporary URL to the draft in requested format.
           content:
-            application/pdf:
+            application/json:
               schema:
-                type: string
-                format: binary
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    description: list of errors
+                    items:
+                      type: string
+                      description: error description
+                  warnings:
+                    type: array
+                    description: list of warnings
+                    items:
+                      type: string
+                      description: warning description
+                  url:
+                    type: string
+                    description: Temporary URL to requested format
         '400':
           description: Error has occured.
           content:

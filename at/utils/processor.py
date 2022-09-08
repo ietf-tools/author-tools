@@ -6,7 +6,7 @@ from xml2rfc.parser import XmlRfcError
 from lxml.etree import XMLSyntaxError
 
 from at.utils.file import get_extension, get_filename, save_file
-from at.utils.logs import get_errors
+from at.utils.logs import get_errors, process_xml2rfc_log
 
 
 # Exceptions
@@ -158,13 +158,17 @@ def convert_v2v3(filename, logger=getLogger()):
             logger.info('xml2rfc v2v3 error: no error output')
         raise XML2RFCError(errors)
 
+    logs = process_xml2rfc_log(output)
+
     logger.info('new file saved at {}'.format(xml_file))
-    return xml_file
+    return (xml_file, logs)
 
 
 def get_xml(filename, logger=getLogger()):
     '''Convert/parse XML to XML2RFC v3
     NOTE: if file is XML2RFC v2 that will get converted to v3'''
+
+    logs = None
 
     try:
         logger.debug('invoking xml2rfc parser')
@@ -175,13 +179,13 @@ def get_xml(filename, logger=getLogger()):
         xml2rfc_version = xmlroot.get('version', '2')
 
         if xml2rfc_version == '2':
-            filename = convert_v2v3(filename, logger)
+            filename, logs = convert_v2v3(filename, logger)
     except (XmlRfcError, XMLSyntaxError) as e:
         logger.info('xml2rfc error: {}'.format(str(e)))
         raise XML2RFCError(e)
 
     logger.info('new file saved at {}'.format(filename))
-    return filename
+    return (filename, logs)
 
 
 def get_html(filename, logger=getLogger()):
@@ -208,12 +212,10 @@ def get_html(filename, logger=getLogger()):
         raise XML2RFCError(errors)
 
     logger.info('new file saved at {}'.format(html_file))
-    return html_file
+    return (html_file, process_xml2rfc_log(output))
 
 
 def get_text(filename, logger=getLogger()):
-    '''Render text'''
-    logger.debug('running xml2rfc text converter')
 
     text_file = get_filename(filename, 'txt')
 
@@ -235,7 +237,7 @@ def get_text(filename, logger=getLogger()):
         raise XML2RFCError(errors)
 
     logger.info('new file saved at {}'.format(text_file))
-    return text_file
+    return (text_file, process_xml2rfc_log(output))
 
 
 def get_pdf(filename, logger=getLogger()):
@@ -262,4 +264,4 @@ def get_pdf(filename, logger=getLogger()):
         raise XML2RFCError(errors)
 
     logger.info('new file saved at {}'.format(pdf_file))
-    return pdf_file
+    return (pdf_file, process_xml2rfc_log(output))

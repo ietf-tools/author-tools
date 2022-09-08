@@ -3,7 +3,9 @@ from pathlib import Path
 from shutil import copy, rmtree
 from unittest import TestCase
 
-from at.utils.logs import process_xml2rfc_log, get_errors
+from at.utils.logs import (get_errors, process_xml2rfc_log, update_logs,
+                           XML2RFC_ERROR_REGEX, XML2RFC_LINE_NUMBER_REGEX,
+                           XML2RFC_WARN_REGEX)
 from at.utils.validation import xml2rfc_validation
 
 TEST_DATA_DIR = './tests/data/'
@@ -65,3 +67,53 @@ class TestUtilsLogs(TestCase):
         self.assertIsNotNone(errors)
         self.assertIsInstance(errors, str)
         self.assertGreater(len(errors), 0)
+
+    def test_update_logs(self):
+        logs = {
+                'errors': ['foo', ],
+                'warnings': ['bar', ]}
+
+        new_entries = {
+                'errors': ['foobar_error', 'foobar_error_1', ],
+                'warnings': ['foobar_warning', 'foobar_warning_1', ]}
+
+        updated_logs = update_logs(logs, new_entries)
+
+        for (key, entries) in logs.items():
+            self.assertIn(key, updated_logs.keys())
+            for entry in entries:
+                self.assertIn(entry, updated_logs[key])
+
+        for (key, entries) in new_entries.items():
+            self.assertIn(key, updated_logs.keys())
+            for entry in entries:
+                self.assertIn(entry, updated_logs[key])
+
+    def test_error_regex(self):
+        logs = ('/foo/bar.xml(3): Error: foobar',
+                '/foo/bar.xml(3): ERROR: foobar',
+                '/foo/bar.xml: Error: foobar',
+                'Error: foobar',)
+
+        for log in logs:
+            result = XML2RFC_ERROR_REGEX.search(log)
+            self.assertEqual('foobar', result.group('message'))
+
+    def test_warning_regex(self):
+        logs = ('/foo/bar.xml(3): Warning: foobar',
+                '/foo/bar.xml(3): warning: foobar',
+                '/foo/bar.xml: Warning: foobar',
+                'warning: foobar',)
+
+        for log in logs:
+            result = XML2RFC_WARN_REGEX.search(log)
+            self.assertEqual('foobar', result.group('message'))
+
+    def test_line_number_regex(self):
+        logs = ('/foo/bar.xml(f00): Warning: foobar',
+                '/foo/bar.xml(f00): Error: foobar',
+                '(f00): Warning: foobar',)
+
+        for log in logs:
+            result = XML2RFC_LINE_NUMBER_REGEX.search(log)
+            self.assertEqual('f00', result.group('line'))
