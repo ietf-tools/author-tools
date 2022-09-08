@@ -1,9 +1,11 @@
+from logging import ERROR as LOG_ERROR
 from os import getenv
 
 from flask import Flask
 from flask_cors import CORS
 from sentry_sdk import init as sentry_init
 from sentry_sdk.integrations.flask import FlaskIntegration
+from sentry_sdk.integrations.logging import LoggingIntegration
 
 
 def create_app(config=None):
@@ -35,7 +37,11 @@ def create_app(config=None):
     if SENTRY_DSN:
         sentry_init(
                 dsn=SENTRY_DSN,
-                integrations=[FlaskIntegration()],
+                integrations=[
+                    FlaskIntegration(),
+                    LoggingIntegration(
+                        level=LOG_ERROR,
+                        event_level=LOG_ERROR)],
                 traces_sample_rate=1.0)
         app.logger.info('Sentry is enabled.')
     else:
