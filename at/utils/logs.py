@@ -1,7 +1,10 @@
 from re import compile as re_compile, IGNORECASE
 
-XML2RFC_ERROR_REGEX = re_compile(r'^.*Error: (?P<message>.*)$', IGNORECASE)
-XML2RFC_WARN_REGEX = re_compile(r'^.*Warning: (?P<message>.*)$', IGNORECASE)
+XML2RFC_ERROR_REGEX = re_compile(r'^.*?Error: (?P<message>.*)$', IGNORECASE)
+XML2RFC_WARN_REGEX = re_compile(r'^.*?Warning: (?P<message>.*)$', IGNORECASE)
+XML2RFC_LINE_NUMBER_REGEX = re_compile(
+                                r'^.*?\((?P<line>.*?)\): (Error|Warning): ',
+                                IGNORECASE)
 
 
 def process_xml2rfc_log(output):
@@ -13,13 +16,20 @@ def process_xml2rfc_log(output):
     if output.stderr:
         log = output.stderr.decode('utf-8', errors='ignore').split('\n')
 
-    for line in log:
-        error = XML2RFC_ERROR_REGEX.search(line)
-        warning = XML2RFC_WARN_REGEX.search(line)
-        if error and error.group('message'):
-            errors.append(error.group('message'))
-        elif warning and warning.group('message'):
-            warnings.append(warning.group('message'))
+    for entry in log:
+        error = XML2RFC_ERROR_REGEX.search(entry)
+        warning = XML2RFC_WARN_REGEX.search(entry)
+        line = XML2RFC_LINE_NUMBER_REGEX.search(entry)
+        if error and (message := error.group('message')):
+            if line and (line := line.group('line')):
+                errors.append(f'({line}) {message}')
+            else:
+                errors.append(message)
+        elif warning and (message := warning.group('message')):
+            if line and (line := line.group('line')):
+                warnings.append(f'({line}) {message}')
+            else:
+                warnings.append(message)
 
     return {'errors': errors, 'warnings': warnings}
 
