@@ -7,7 +7,7 @@ from werkzeug.datastructures import FileStorage
 
 from at.utils.processor import (
         convert_v2v3, get_html, get_pdf, get_text, get_xml, kramdown2xml,
-        md2xml, mmark2xml, process_file, txt2xml, MmarkError)
+        md2xml, mmark2xml, process_file, txt2xml, MmarkError, XML2RFCError)
 
 TEST_DATA_DIR = './tests/data/'
 TEST_XML_DRAFT = 'draft-smoke-signals-00.xml'
@@ -15,6 +15,7 @@ TEST_XML_V2_DRAFT = 'draft-smoke-signals-00.v2.xml'
 TEST_TEXT_DRAFT = 'draft-smoke-signals-00.txt'
 TEST_KRAMDOWN_DRAFT = 'draft-smoke-signals-00.md'
 TEST_MMARK_DRAFT = 'draft-smoke-signals-00.mmark.md'
+TEST_XML_ERROR = 'draft-smoke-signals-00.error.xml'
 TEST_DATA = [
         TEST_XML_DRAFT, TEST_XML_V2_DRAFT, TEST_TEXT_DRAFT,
         TEST_KRAMDOWN_DRAFT, TEST_MMARK_DRAFT]
@@ -94,6 +95,11 @@ class TestUtilsProcessor(TestCase):
         self.assertIn('errors', logs.keys())
         self.assertIn('warnings', logs.keys())
 
+    def test_convert_v2v3_error(self):
+        with self.assertRaises(XML2RFCError):
+            saved_file, logs = convert_v2v3(
+                    ''.join([TEMPORARY_DATA_DIR, TEST_XML_ERROR]))
+
     def test_get_xml(self):
         saved_file, logs = get_xml(
                 ''.join([TEMPORARY_DATA_DIR, TEST_XML_V2_DRAFT]))
@@ -120,6 +126,11 @@ class TestUtilsProcessor(TestCase):
         self.assertIn('errors', logs.keys())
         self.assertIn('warnings', logs.keys())
 
+    def test_get_html_error(self):
+        with self.assertRaises(XML2RFCError):
+            saved_file, logs = get_html(
+                    ''.join([TEMPORARY_DATA_DIR, TEST_XML_ERROR]))
+
     def test_get_text(self):
         saved_file, logs = get_text(
                 ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
@@ -129,6 +140,11 @@ class TestUtilsProcessor(TestCase):
         self.assertIn('errors', logs.keys())
         self.assertIn('warnings', logs.keys())
 
+    def test_get_text_error(self):
+        with self.assertRaises(XML2RFCError):
+            saved_file, logs = get_text(
+                    ''.join([TEMPORARY_DATA_DIR, TEST_XML_ERROR]))
+
     def test_get_pdf(self):
         saved_file, logs = get_pdf(
                 ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
@@ -137,3 +153,8 @@ class TestUtilsProcessor(TestCase):
         self.assertEqual(Path(saved_file).suffix, '.pdf')
         self.assertIn('errors', logs.keys())
         self.assertIn('warnings', logs.keys())
+
+    def test_get_pdf_error(self):
+        with self.assertRaises(XML2RFCError):
+            saved_file, logs = get_pdf(
+                    ''.join([TEMPORARY_DATA_DIR, TEST_XML_ERROR]))

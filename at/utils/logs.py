@@ -1,5 +1,7 @@
 from re import compile as re_compile, IGNORECASE
 
+from at.utils.file import cleanup_output
+
 XML2RFC_ERROR_REGEX = re_compile(r'^.*?Error: (?P<message>.*)$', IGNORECASE)
 XML2RFC_WARN_REGEX = re_compile(r'^.*?Warning: (?P<message>.*)$', IGNORECASE)
 XML2RFC_LINE_NUMBER_REGEX = re_compile(
@@ -7,14 +9,16 @@ XML2RFC_LINE_NUMBER_REGEX = re_compile(
                                 IGNORECASE)
 
 
-def process_xml2rfc_log(output):
+def process_xml2rfc_log(output, filename):
     '''Process xml2rfc output and return dictionary of errors and warnings'''
     log = []
     errors = []
     warnings = []
 
     if output.stderr:
-        log = output.stderr.decode('utf-8', errors='ignore').split('\n')
+        log = cleanup_output(filename,
+                             output.stderr.decode(
+                                 'utf-8', errors='ignore')).split('\n')
 
     for entry in log:
         error = XML2RFC_ERROR_REGEX.search(entry)
@@ -34,10 +38,10 @@ def process_xml2rfc_log(output):
     return {'errors': errors, 'warnings': warnings}
 
 
-def get_errors(output):
+def get_errors(output, filename):
     '''Returns errors as a string'''
 
-    log = process_xml2rfc_log(output)
+    log = process_xml2rfc_log(output, filename)
 
     if len(log['errors']) > 0:
         return '\n'.join(log['errors'])

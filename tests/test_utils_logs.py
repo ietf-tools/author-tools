@@ -38,8 +38,9 @@ class TestUtilsLogs(TestCase):
 
     def test_process_xml2rfc_log(self):
         for file in TEST_DATA:
-            output, _ = xml2rfc_validation(''.join([TEMPORARY_DATA_DIR, file]))
-            log = process_xml2rfc_log(output)
+            filename = ''.join([TEMPORARY_DATA_DIR, file])
+            output, _ = xml2rfc_validation(filename)
+            log = process_xml2rfc_log(output, filename)
 
             self.assertIn('errors', log.keys())
             self.assertIn('warnings', log.keys())
@@ -53,16 +54,16 @@ class TestUtilsLogs(TestCase):
                 self.assertNotRegex(r'Warning:', warning)
 
     def test_get_errors_valid(self):
-        output, _ = xml2rfc_validation(
-                        ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
-        errors = get_errors(output)
+        filename = ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT])
+        output, _ = xml2rfc_validation(filename)
+        errors = get_errors(output, filename)
 
         self.assertIsNone(errors)
 
     def test_get_errors_invalid(self):
-        output, _ = xml2rfc_validation(
-                        ''.join([TEMPORARY_DATA_DIR, TEST_XML_INVALID]))
-        errors = get_errors(output)
+        filename = ''.join([TEMPORARY_DATA_DIR, TEST_XML_INVALID])
+        output, _ = xml2rfc_validation(filename)
+        errors = get_errors(output, filename)
 
         self.assertIsNotNone(errors)
         self.assertIsInstance(errors, str)

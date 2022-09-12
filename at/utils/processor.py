@@ -143,14 +143,14 @@ def convert_v2v3(filename, logger=getLogger()):
 
     output = proc_run(
                 args=[
-                    'xml2rfc', '--v2v3', '--quiet', '--out', xml_file,
+                    'xml2rfc', '--v2v3', '--out', xml_file,
                     filename],
                 capture_output=True)
 
     try:
         output.check_returncode()
     except CalledProcessError:
-        errors = get_errors(output)
+        errors = get_errors(output, filename)
         if errors:
             logger.info('xml2rfc v2v3 error: {}'.format(errors))
         else:
@@ -158,7 +158,7 @@ def convert_v2v3(filename, logger=getLogger()):
             logger.info('xml2rfc v2v3 error: no error output')
         raise XML2RFCError(errors)
 
-    logs = process_xml2rfc_log(output)
+    logs = process_xml2rfc_log(output, filename)
 
     logger.info('new file saved at {}'.format(xml_file))
     return (xml_file, logs)
@@ -173,8 +173,8 @@ def get_xml(filename, logger=getLogger()):
     try:
         logger.debug('invoking xml2rfc parser')
 
-        parser = XmlRfcParser(filename, quiet=True)
-        xmltree = parser.parse(remove_comments=False, quiet=True)
+        parser = XmlRfcParser(filename)
+        xmltree = parser.parse(remove_comments=False)
         xmlroot = xmltree.getroot()
         xml2rfc_version = xmlroot.get('version', '2')
 
@@ -196,14 +196,14 @@ def get_html(filename, logger=getLogger()):
 
     output = proc_run(
                 args=[
-                    'xml2rfc', '--html', '--quiet', '--out', html_file,
+                    'xml2rfc', '--html', '--out', html_file,
                     filename],
                 capture_output=True)
 
     try:
         output.check_returncode()
     except CalledProcessError:
-        errors = get_errors(output)
+        errors = get_errors(output, filename)
         if errors:
             logger.info('xml2rfc html error: {}'.format(errors))
         else:
@@ -212,7 +212,7 @@ def get_html(filename, logger=getLogger()):
         raise XML2RFCError(errors)
 
     logger.info('new file saved at {}'.format(html_file))
-    return (html_file, process_xml2rfc_log(output))
+    return (html_file, process_xml2rfc_log(output, filename))
 
 
 def get_text(filename, logger=getLogger()):
@@ -221,14 +221,14 @@ def get_text(filename, logger=getLogger()):
 
     output = proc_run(
                 args=[
-                    'xml2rfc', '--text', '--quiet', '--out', text_file,
+                    'xml2rfc', '--text', '--out', text_file,
                     filename],
                 capture_output=True)
 
     try:
         output.check_returncode()
     except CalledProcessError:
-        errors = get_errors(output)
+        errors = get_errors(output, filename)
         if errors:
             logger.info('xml2rfc text error: {}'.format(errors))
         else:
@@ -237,7 +237,7 @@ def get_text(filename, logger=getLogger()):
         raise XML2RFCError(errors)
 
     logger.info('new file saved at {}'.format(text_file))
-    return (text_file, process_xml2rfc_log(output))
+    return (text_file, process_xml2rfc_log(output, filename))
 
 
 def get_pdf(filename, logger=getLogger()):
@@ -248,14 +248,14 @@ def get_pdf(filename, logger=getLogger()):
 
     output = proc_run(
                 args=[
-                    'xml2rfc', '--pdf', '--quiet', '--out', pdf_file,
+                    'xml2rfc', '--pdf', '--out', pdf_file,
                     filename],
                 capture_output=True)
 
     try:
         output.check_returncode()
     except CalledProcessError:
-        errors = get_errors(output)
+        errors = get_errors(output, filename)
         if errors:
             logger.info('xml2rfc pdf error: {}'.format(errors))
         else:
@@ -264,4 +264,4 @@ def get_pdf(filename, logger=getLogger()):
         raise XML2RFCError(errors)
 
     logger.info('new file saved at {}'.format(pdf_file))
-    return (pdf_file, process_xml2rfc_log(output))
+    return (pdf_file, process_xml2rfc_log(output, filename))
