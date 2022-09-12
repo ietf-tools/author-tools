@@ -26,7 +26,7 @@ def validate_xml(filename, logger=getLogger()):
 
         if xml2rfc_version == '2':
             filename, output = convert_v2v3(filename, logger)
-            v2_processed_log = process_xml2rfc_log(output)
+            v2_processed_log = process_xml2rfc_log(output, filename)
 
     except XMLSyntaxError as e:
         logger.info('xml2rfc error: {}'.format(str(e)))
@@ -35,7 +35,7 @@ def validate_xml(filename, logger=getLogger()):
     logger.info('new file saved at {}'.format(filename))
 
     log, text_file = xml2rfc_validation(filename, logger)
-    processed_log = process_xml2rfc_log(log)
+    processed_log = process_xml2rfc_log(log, filename)
 
     idnits_log = idnits(text_file, logger)
 
