@@ -26,7 +26,7 @@ jobs:
         sudo cp idnits /bin
         sudo chmod +x /bin/idnits
         arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)
-        wget "https://github.com/mmarkdown/mmark/releases/download/v2.2.28/mmark_2.2.28_linux_$arch.tgz"
+        wget "https://github.com/mmarkdown/mmark/releases/download/v2.2.30/mmark_2.2.30_linux_$arch.tgz"
         sudo tar zxf mmark_*.tgz -C /bin/
         wget https://github.com/ietf-tools/bap/archive/refs/heads/master.zip
         unzip -q master.zip -d /tmp/bap
