@@ -122,6 +122,7 @@ class TestUtilsNet(TestCase):
 
     def test_is_urls_false(self):
         strings = [
+                'http://example.com[/',
                 'example.com',
                 '/etc/passwd',
                 '../requirements.txt',
