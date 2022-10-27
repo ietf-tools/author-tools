@@ -10,7 +10,7 @@ from at.utils.file import (
 from at.utils.iddiff import get_id_diff, IddiffError
 from at.utils.logs import update_logs
 from at.utils.net import (
-        is_valid_url, get_latest, InvalidURL, LatestDraftNotFound)
+        get_latest, is_valid_url, is_url, InvalidURL, LatestDraftNotFound)
 from at.utils.processor import (
         get_html, get_pdf, get_text, get_xml, process_file, KramdownError,
         MmarkError, TextError, XML2RFCError)
@@ -244,6 +244,36 @@ def id_diff():
     url_1 = request.values.get('url_1', '').strip()
     url_2 = request.values.get('url_2', '').strip()
 
+    if request.values.get('table', False):
+        table = True
+    else:
+        table = False
+
+    if request.values.get('wdiff', False):
+        wdiff = True
+    else:
+        wdiff = False
+
+    # rfcdiff compantibility
+    url1 = request.values.get('url1', '').strip()
+    url2 = request.values.get('url2', '').strip()
+    difftype = request.values.get('difftype', '').strip()
+
+    if len(url1) > 0:
+        if is_url(url1):
+            url_1 = url1
+        else:
+            doc_1 = url1
+
+    if len(url2) > 0:
+        if is_url(url2):
+            url_2 = url2
+        else:
+            doc_2 = url2
+
+    if len(difftype) > 0 and 'wdiff' in difftype:
+        wdiff = True
+
     # allow single parameters for doc_? and url_?
     if 'file_1' not in request.files and not doc_1 and not url_1:
         if doc_2:
@@ -254,16 +284,6 @@ def id_diff():
             url_2 = ''
 
     single_draft = False
-
-    if request.values.get('table', False):
-        table = True
-    else:
-        table = False
-
-    if request.values.get('wdiff', False):
-        wdiff = True
-    else:
-        wdiff = False
 
     if not doc_1 and not url_1:
         if 'file_1' not in request.files:

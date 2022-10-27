@@ -71,3 +71,12 @@ def get_latest(draft, dt_latest_url, original_draft=None, logger=getLogger()):
                 'Can not find the latest draft on datatracker')
 
     return latest_draft
+
+
+def is_url(string):
+    '''Returns True if string is an URL'''
+    try:
+        url_parts = urlsplit(string)
+        return all([url_parts.scheme, url_parts.netloc])
+    except ValueError:
+        return False

@@ -4,7 +4,7 @@ from unittest import TestCase
 import responses
 
 from at.utils.net import (
-        get_latest, is_valid_url, InvalidURL, LatestDraftNotFound)
+        get_latest, is_valid_url, is_url, InvalidURL, LatestDraftNotFound)
 
 DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/doc/rfcdiff-latest-json'
 
@@ -105,3 +105,28 @@ class TestUtilsNet(TestCase):
 
         for url in urls:
             self.assertTrue(is_valid_url(url, allowed_domains=allowed_domains))
+
+    def test_is_url_true(self):
+        strings = [
+                'http://example.com/',
+                'https://example.com/',
+                'https://example.com/example.xml',
+                'https://example.com/example/example.xml',
+                'http://www.example.com/',
+                'https://www.example.com/',
+                'https://www.example.com/example.xml',
+                'https://www.example.com/example/example.xml']
+
+        for string in strings:
+            self.assertTrue(is_url(string))
+
+    def test_is_urls_false(self):
+        strings = [
+                'example.com',
+                '/etc/passwd',
+                '../requirements.txt',
+                'rfc9000',
+                'draft-ietf-httpbis-p2-semantics-26']
+
+        for string in strings:
+            self.assertFalse(is_url(string))

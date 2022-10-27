@@ -352,6 +352,15 @@ paths:
                 table:
                   type: string
                   description: If this property is set, HTML table is returned. (ignored if wdiff is set)
+                url1:
+                  type: string
+                  description: (rfcdiff compatibility parameter) First draft URL or document name.
+                url2:
+                  type: string
+                  description: (rfcdiff compatibility parameter) Second draft URL or document name.
+                difftype:
+                  type: string
+                  description: (rfcdiff compatibility parameter) Diff type; if `wdiff` is in the string, HTML wdiff is returned.
                 apikey:
                   type: string
                   description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)

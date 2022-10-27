@@ -548,3 +548,65 @@ class TestApiIddiff(TestCase):
                 self.assertIn(b'<html lang="en">', data)
                 self.assertIn(str.encode(doc_1), data)
                 self.assertIn(str.encode(doc_2), data)
+
+    def test_iddiff_rfcdiff_compatibility_url(self):
+        valid = 'https://www.ietf.org/archive/id/draft-iab-xml2rfcv2-02.xml'
+        id = 'draft-iab-xml2rfcv2-02'
+
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                for param in ('url1', 'url2'):
+                    result = client.get(
+                                '/api/iddiff?' + urlencode({param: valid}),
+                                headers={'X-API-KEY': VALID_API_KEY})
+
+                    data = result.get_data()
+
+                    self.assertEqual(result.status_code, 200)
+                    self.assertIn(b'<html lang="en">', data)
+                    self.assertIn(str.encode(id), data)
+
+    def test_iddiff_rfcdiff_compatibility_docname(self):
+        labels = [
+            'draft-ietf-quic-http-23',
+            'draft-ietf-quic-http-23.txt',
+            'rfc8226',
+            'rfc8226.txt']
+
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                for id in labels:
+                    for param in ('url1', 'url2'):
+                        result = client.get(
+                                '/api/iddiff?' + urlencode({param: id}),
+                                headers={'X-API-KEY': VALID_API_KEY})
+
+                        data = result.get_data()
+
+                        self.assertEqual(result.status_code, 200)
+                        self.assertIn(b'<html lang="en">', data)
+                        self.assertIn(str.encode(id), data)
+
+    def test_wdiff_rfcdiff_compatibility(self):
+        labels = [
+            'https://www.ietf.org/archive/id/draft-iab-xml2rfcv2-02.xml',
+            'draft-ietf-quic-http-23',
+            'draft-ietf-quic-http-23.txt',
+            'rfc8226',
+            'rfc8226.txt']
+
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                for id in labels:
+                    result = client.get(
+                            '/api/iddiff?' + urlencode({
+                                'url1': id,
+                                'difftype': '--hwdiff'}),
+                            headers={'X-API-KEY': VALID_API_KEY})
+
+                    data = result.get_data()
+
+                    self.assertEqual(result.status_code, 200)
+                    self.assertIn(b'<html lang="en">', data)
+                    self.assertIn(b'<pre>', data)
+                    self.assertIn(b'</pre>', data)
