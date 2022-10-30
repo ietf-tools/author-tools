@@ -10,7 +10,7 @@ from at.utils.file import (
 from at.utils.iddiff import get_id_diff, IddiffError
 from at.utils.logs import update_logs
 from at.utils.net import (
-        get_latest, is_valid_url, is_url, InvalidURL, LatestDraftNotFound)
+        get_latest, is_valid_url, is_url, InvalidURL, DocumentNotFound)
 from at.utils.processor import (
         get_html, get_pdf, get_text, get_xml, process_file, KramdownError,
         MmarkError, TextError, XML2RFCError)
@@ -316,7 +316,7 @@ def id_diff():
             url = get_latest(doc_1,
                              current_app.config['DT_LATEST_DRAFT_URL'],
                              logger)
-        except LatestDraftNotFound as e:
+        except DocumentNotFound as e:
             return jsonify(error=str(e)), BAD_REQUEST
         except DownloadError as e:
             return jsonify(error=str(e)), BAD_REQUEST
@@ -364,7 +364,7 @@ def id_diff():
                                             current_app.config['UPLOAD_DIR'],
                                             logger)
                     single_draft = True
-                except LatestDraftNotFound as e:
+                except DocumentNotFound as e:
                     return jsonify(error=str(e)), BAD_REQUEST
                 except DownloadError as e:
                     return jsonify(error=str(e)), BAD_REQUEST
@@ -395,7 +395,7 @@ def id_diff():
             url = get_latest(doc_2,
                              current_app.config['DT_LATEST_DRAFT_URL'],
                              logger)
-        except LatestDraftNotFound as e:
+        except DocumentNotFound as e:
             return jsonify(error=str(e)), BAD_REQUEST
 
         try:
@@ -476,7 +476,7 @@ def abnf_extract():
 
         return response
 
-    except LatestDraftNotFound as e:
+    except DocumentNotFound as e:
         return jsonify(error=str(e)), BAD_REQUEST
     except DownloadError as e:
         return jsonify(error=str(e)), BAD_REQUEST

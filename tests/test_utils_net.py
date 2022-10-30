@@ -4,7 +4,7 @@ from unittest import TestCase
 import responses
 
 from at.utils.net import (
-        get_latest, is_valid_url, is_url, InvalidURL, LatestDraftNotFound)
+        get_latest, is_valid_url, is_url, InvalidURL, DocumentNotFound)
 
 DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/doc/rfcdiff-latest-json'
 
@@ -21,11 +21,11 @@ class TestUtilsNet(TestCase):
         set_logger(INFO)
 
     def test_get_latest_not_found_error(self):
-        with self.assertRaises(LatestDraftNotFound) as error:
+        with self.assertRaises(DocumentNotFound) as error:
             get_latest('foobar-foobar', DT_LATEST_DRAFT_URL)
 
         self.assertEqual(str(error.exception),
-                         'Can not find the latest draft on datatracker')
+                         'Can not find the latest document on datatracker')
 
     @responses.activate
     def test_get_latest_no_content_url_error(self):
@@ -35,12 +35,12 @@ class TestUtilsNet(TestCase):
                 '/'.join([DT_LATEST_DRAFT_URL, rfc]),
                 json={},
                 status=200)
-        with self.assertRaises(LatestDraftNotFound) as error:
+        with self.assertRaises(DocumentNotFound) as error:
             get_latest(rfc, DT_LATEST_DRAFT_URL)
 
         self.assertEqual(
                     str(error.exception),
-                    'Can not find url for the latest draft on datatracker')
+                    'Can not find url for the latest document on datatracker')
 
     def test_get_latest_rfc(self):
         rfc = 'rfc666'
@@ -56,9 +56,9 @@ class TestUtilsNet(TestCase):
         draft_name = 'draft-ietf-quic-http'
         revision = '23'
         draft = '-'.join([draft_name, revision])
-        latest_draft_url = get_latest(draft=draft,
+        latest_draft_url = get_latest(doc=draft,
                                       dt_latest_url=DT_LATEST_DRAFT_URL,
-                                      original_draft=draft)
+                                      original_doc=draft)
         self.assertTrue(latest_draft_url.startswith('https://'))
         self.assertIn(draft_name, latest_draft_url)
         self.assertNotIn(revision, latest_draft_url)
@@ -67,9 +67,9 @@ class TestUtilsNet(TestCase):
     def test_get_latest_with_original_matching(self):
         rfc = 'rfc7231'
         previous = 'draft-ietf-httpbis-p2-semantics-26'
-        latest_draft_url = get_latest(draft=rfc,
+        latest_draft_url = get_latest(doc=rfc,
                                       dt_latest_url=DT_LATEST_DRAFT_URL,
-                                      original_draft=rfc)
+                                      original_doc=rfc)
         self.assertTrue(latest_draft_url.startswith('https://'))
         self.assertIn(previous, latest_draft_url)
 
