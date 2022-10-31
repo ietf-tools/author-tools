@@ -5,6 +5,8 @@ from shutil import rmtree
 from unittest import TestCase
 from urllib.parse import urlencode
 
+import responses
+
 from at import create_app
 
 TEST_DATA_DIR = './tests/data/'
@@ -610,3 +612,64 @@ class TestApiIddiff(TestCase):
                     self.assertIn(b'<html lang="en">', data)
                     self.assertIn(b'<pre>', data)
                     self.assertIn(b'</pre>', data)
+
+    @responses.activate
+    def test_error_document_not_found(self):
+        rfc = 'rfc666'
+        responses.add(
+                responses.GET,
+                '/'.join([DT_LATEST_DRAFT_URL, rfc]),
+                json={},
+                status=200)
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.get(
+                        '/api/iddiff?' + urlencode({'doc_1': rfc}),
+                        headers={'X-API-KEY': VALID_API_KEY})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                msg = 'Can not find url for the latest document on datatracker'
+                self.assertEqual(json_data['error'], msg)
+
+    @responses.activate
+    def test_error_document_download_error(self):
+        rfc = 'rfc9000'
+        rfc_url = 'https://example.com/rfc9000.txt'
+        dt_response = {'content_url': rfc_url, 'name': rfc}
+        responses.add(
+                responses.GET,
+                '/'.join([DT_LATEST_DRAFT_URL, rfc]),
+                json=dt_response,
+                status=200)
+        responses.add(
+                responses.GET,
+                rfc_url,
+                status=404)
+
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.get(
+                        '/api/iddiff?' + urlencode({'doc_1': rfc}),
+                        headers={'X-API-KEY': VALID_API_KEY})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                msg = 'Error occured while downloading file.'
+                self.assertEqual(json_data['error'], msg)
+
+    def test_error_draft_name_error(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post(
+                        '/api/iddiff',
+                        data={
+                            'file_1': (
+                                open(get_path(DRAFT_A), 'rb'),
+                                'test-foobar.txt'),
+                            'apikey': VALID_API_KEY})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                msg = 'Can not determine draft/rfc'
+                self.assertEqual(json_data['error'], msg)

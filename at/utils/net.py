@@ -9,7 +9,7 @@ ALLOWED_SCHEMES = ['http', 'https']
 
 
 # Exceptions
-class LatestDraftNotFound(Exception):
+class DocumentNotFound(Exception):
     '''Error class for latest draft not found error'''
     pass
 
@@ -40,37 +40,47 @@ def is_valid_url(url, allowed_domains=None, logger=getLogger()):
     return True
 
 
-def get_latest(draft, dt_latest_url, original_draft=None, logger=getLogger()):
+def get_latest(doc, dt_latest_url, logger=getLogger()):
     '''Returns URL latest ID/RFC from Datatracker.'''
 
-    url = '/'.join([dt_latest_url, draft])
+    url = '/'.join([dt_latest_url, doc])
     response = get(url)
 
     if response.status_code == OK:
         try:
             data = response.json()
-            latest_draft = data['content_url']
-
-            if original_draft:
-                draft_name = data['name']
-                if 'rev' in data.keys():
-                    draft_name = '-'.join([data['name'], data['rev']])
-
-                if draft_name == original_draft:
-                    latest_draft = get_latest(draft=data['previous'],
-                                              dt_latest_url=dt_latest_url,
-                                              logger=logger)
-
+            latest_doc = data['content_url']
         except KeyError:
             logger.error('can not find content_url for {}'.format(url))
-            raise LatestDraftNotFound(
-                    'Can not find url for the latest draft on datatracker')
+            raise DocumentNotFound(
+                    'Can not find url for the latest document on datatracker')
     else:
-        logger.error('can not find draft for {}'.format(url))
-        raise LatestDraftNotFound(
-                'Can not find the latest draft on datatracker')
+        logger.error('can not find doc for {}'.format(url))
+        raise DocumentNotFound(
+                'Can not find the latest document on datatracker')
 
-    return latest_draft
+    return latest_doc
+
+
+def get_previous(doc, dt_latest_url, logger=getLogger()):
+    '''Returns previous ID/RFC from datatracker'''
+    url = '/'.join([dt_latest_url, doc])
+    response = get(url)
+
+    if response.status_code == OK:
+        try:
+            data = response.json()
+            previous_doc = data['previous']
+        except KeyError:
+            logger.error('can not find content_url for {}'.format(url))
+            raise DocumentNotFound(
+                'Can not find url for the previous document on datatracker')
+    else:
+        logger.error('can not find doc for {}'.format(url))
+        raise DocumentNotFound(
+                'Can not find the previous document on datatracker')
+
+    return get_latest(previous_doc, dt_latest_url, logger)
 
 
 def is_url(string):

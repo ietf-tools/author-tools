@@ -58,7 +58,7 @@ class TestApiAbnfExtract(TestCase):
                 self.assertEqual(result.status_code, 400)
                 self.assertEqual(
                         json_data['error'],
-                        'Can not find the latest draft on datatracker')
+                        'Can not find the latest document on datatracker')
 
     def test_download_error(self):
         url = 'https://www.ietf.org/archives/id/draft-404.txt'
