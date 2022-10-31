@@ -10,7 +10,8 @@ from at.utils.file import (
 from at.utils.iddiff import get_id_diff, IddiffError
 from at.utils.logs import update_logs
 from at.utils.net import (
-        get_latest, is_valid_url, is_url, InvalidURL, DocumentNotFound)
+        get_latest, get_previous, is_valid_url, is_url, InvalidURL,
+        DocumentNotFound)
 from at.utils.processor import (
         get_html, get_pdf, get_text, get_xml, process_file, KramdownError,
         MmarkError, TextError, XML2RFCError)
@@ -318,8 +319,6 @@ def id_diff():
                              logger)
         except DocumentNotFound as e:
             return jsonify(error=str(e)), BAD_REQUEST
-        except DownloadError as e:
-            return jsonify(error=str(e)), BAD_REQUEST
 
         try:
             dir_path_1, filename_1 = get_text_id_from_url(
@@ -346,19 +345,19 @@ def id_diff():
         if 'file_2' not in request.files:
             filename = filename_1.split('/')[-1]
             draft_name = get_name(filename)
-            original_draft = get_name_with_revision(filename)
+            original_doc_name = get_name_with_revision(filename)
 
             if draft_name is None:
                 logger.error('Can not determine draft name for {}'.format(
                                                             file_1.filename))
-                return jsonify(error='Can not determine draft/rfc')
+                return (jsonify(error='Can not determine draft/rfc'),
+                        BAD_REQUEST)
             else:
                 try:
-                    url = get_latest(
-                                    draft_name,
-                                    current_app.config['DT_LATEST_DRAFT_URL'],
-                                    original_draft,
-                                    logger)
+                    url = get_previous(
+                            original_doc_name,
+                            current_app.config['DT_LATEST_DRAFT_URL'],
+                            logger)
                     dir_path_2, filename_2 = get_text_id_from_url(
                                             url,
                                             current_app.config['UPLOAD_DIR'],

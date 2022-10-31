@@ -40,7 +40,7 @@ def is_valid_url(url, allowed_domains=None, logger=getLogger()):
     return True
 
 
-def get_latest(doc, dt_latest_url, original_doc=None, logger=getLogger()):
+def get_latest(doc, dt_latest_url, logger=getLogger()):
     '''Returns URL latest ID/RFC from Datatracker.'''
 
     url = '/'.join([dt_latest_url, doc])
@@ -50,17 +50,6 @@ def get_latest(doc, dt_latest_url, original_doc=None, logger=getLogger()):
         try:
             data = response.json()
             latest_doc = data['content_url']
-
-            if original_doc:
-                doc_name = data['name']
-                if 'rev' in data.keys():
-                    doc_name = '-'.join([data['name'], data['rev']])
-
-                if doc_name == original_doc:
-                    latest_doc = get_latest(doc=data['previous'],
-                                            dt_latest_url=dt_latest_url,
-                                            logger=logger)
-
         except KeyError:
             logger.error('can not find content_url for {}'.format(url))
             raise DocumentNotFound(
@@ -71,6 +60,27 @@ def get_latest(doc, dt_latest_url, original_doc=None, logger=getLogger()):
                 'Can not find the latest document on datatracker')
 
     return latest_doc
+
+
+def get_previous(doc, dt_latest_url, logger=getLogger()):
+    '''Returns previous ID/RFC from datatracker'''
+    url = '/'.join([dt_latest_url, doc])
+    response = get(url)
+
+    if response.status_code == OK:
+        try:
+            data = response.json()
+            previous_doc = data['previous']
+        except KeyError:
+            logger.error('can not find content_url for {}'.format(url))
+            raise DocumentNotFound(
+                'Can not find url for the previous document on datatracker')
+    else:
+        logger.error('can not find doc for {}'.format(url))
+        raise DocumentNotFound(
+                'Can not find the previous document on datatracker')
+
+    return get_latest(previous_doc, dt_latest_url, logger)
 
 
 def is_url(string):
