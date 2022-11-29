@@ -372,11 +372,7 @@ paths:
                   description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)
       responses:
         '200':
-          description: Returns iddiff as HTML.
-          content:
-            text/html:
-              schema:
-                type: string
+          description: Returns iddiff as HTML or text
         '400':
           description: Error has occured.
           content:
@@ -442,11 +438,7 @@ paths:
           description: If this property is set, HTML table is returned. (ignored if wdiff is set)
       responses:
         '200':
-          description: Returns iddiff as HTML.
-          content:
-            text/html:
-              schema:
-                type: string
+          description: Returns iddiff as HTML or text
         '400':
           description: Error has occured.
           content:
