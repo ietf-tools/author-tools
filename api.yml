@@ -352,6 +352,9 @@ paths:
                 chbars:
                   type: string
                   description: If this property is set, changebar output is returned.
+                abdiff:
+                  type: string
+                  description: If this property is set, before-after output is returned.
                 table:
                   type: string
                   description: If this property is set, HTML table is returned. (ignored if wdiff is set)
@@ -363,7 +366,7 @@ paths:
                   description: (rfcdiff compatibility parameter) Second draft URL or document name.
                 difftype:
                   type: string
-                  description: (rfcdiff compatibility parameter) Diff type; Accepts wdiff, hwdiff and chbars.
+                  description: (rfcdiff compatibility parameter) Diff type; Accepts wdiff, hwdiff, chbars and abdiff.
                 apikey:
                   type: string
                   description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)
@@ -427,6 +430,11 @@ paths:
           schema:
             type: string
           description: If this property is set, changebar output is returned.
+        - in: query
+          name: abdiff
+          schema:
+            type: string
+          description: If this property is set, before-after output is returned.
         - in: query
           name: table
           schema:

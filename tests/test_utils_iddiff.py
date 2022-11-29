@@ -57,3 +57,11 @@ class TestUtilsIddiff(TestCase):
                               chbars=True)
 
         self.assertIn('|Expires:', id_diff)
+
+    def test_get_abdiff(self):
+        id_diff = get_id_diff(''.join([TEST_DATA_DIR, DRAFT_A]),
+                              ''.join([TEST_DATA_DIR, DRAFT_B]),
+                              abdiff=True)
+
+        self.assertIn('OLD:', id_diff)
+        self.assertIn('NEW:', id_diff)
