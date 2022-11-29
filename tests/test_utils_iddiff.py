@@ -50,3 +50,10 @@ class TestUtilsIddiff(TestCase):
         self.assertIn('<html lang="en">', id_diff)
         self.assertIn('<pre>', id_diff)
         self.assertIn('</pre>', id_diff)
+
+    def test_get_chbars(self):
+        id_diff = get_id_diff(''.join([TEST_DATA_DIR, DRAFT_A]),
+                              ''.join([TEST_DATA_DIR, DRAFT_B]),
+                              chbars=True)
+
+        self.assertIn('|Expires:', id_diff)

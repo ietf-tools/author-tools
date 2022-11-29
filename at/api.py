@@ -255,6 +255,11 @@ def id_diff():
     else:
         wdiff = False
 
+    if request.values.get('chbars', False):
+        chbars = True
+    else:
+        chbars = False
+
     # rfcdiff compantibility
     url1 = request.values.get('url1', '').strip()
     url2 = request.values.get('url2', '').strip()
@@ -272,8 +277,11 @@ def id_diff():
         else:
             doc_2 = url2
 
-    if len(difftype) > 0 and 'wdiff' in difftype:
-        wdiff = True
+    if len(difftype) > 0:
+        if 'wdiff' in difftype:
+            wdiff = True
+        elif 'chbars' in difftype:
+            chbars = True
 
     # allow single parameters for doc_? and url_?
     if 'file_1' not in request.files and not doc_1 and not url_1:
@@ -429,6 +437,7 @@ def id_diff():
                              new_draft=new_draft,
                              table=table,
                              wdiff=wdiff,
+                             chbars=chbars,
                              logger=logger)
         for dir_path in (dir_path_1, dir_path_2):
             iddiff = iddiff.replace('{}/'.format(dir_path), '')

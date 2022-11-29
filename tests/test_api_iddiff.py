@@ -432,6 +432,26 @@ class TestApiIddiff(TestCase):
                     self.assertIn(b'<pre>', data)
                     self.assertIn(b'</pre>', data)
 
+    def test_chbars(self):
+        labels = [
+            'draft-ietf-quic-http-23',
+            'draft-ietf-quic-http-23.txt']
+
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                for id in labels:
+                    result = client.post(
+                            '/api/iddiff',
+                            data={
+                                'doc_1': id,
+                                'chbars': True,
+                                'apikey': VALID_API_KEY})
+
+                    data = result.get_data()
+
+                    self.assertEqual(result.status_code, 200)
+                    self.assertIn(b'|Intended status: Standards Track', data)
+
     def test_iddiff_with_invalid_first_url(self):
         urls = [
             'https://www.rfc-editor.org/rfc/rfc9000.xml',
@@ -612,6 +632,25 @@ class TestApiIddiff(TestCase):
                     self.assertIn(b'<html lang="en">', data)
                     self.assertIn(b'<pre>', data)
                     self.assertIn(b'</pre>', data)
+
+    def test_chbars_rfcdiff_compatibility(self):
+        labels = [
+            'draft-ietf-quic-http-23',
+            'draft-ietf-quic-http-23.txt']
+
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                for id in labels:
+                    result = client.get(
+                            '/api/iddiff?' + urlencode({
+                                'url1': id,
+                                'difftype': '--chbars'}),
+                            headers={'X-API-KEY': VALID_API_KEY})
+
+                    data = result.get_data()
+
+                    self.assertEqual(result.status_code, 200)
+                    self.assertIn(b'|Intended status: Standards Track', data)
 
     @responses.activate
     def test_error_document_not_found(self):
