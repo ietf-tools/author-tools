@@ -19,6 +19,7 @@ RUN apt-get update && \
         python3.10 \
         python3-pip \
         libpango-1.0-0 \
+        wdiff \
         npm \
         gawk \
         bison \
