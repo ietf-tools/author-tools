@@ -19,7 +19,7 @@ def get_id_diff(old_draft, new_draft, table=False, wdiff=False,
     logger.debug('running iddiff')
 
     if wdiff:
-        output = proc_run(args=['iddiff', '-w', old_draft, new_draft],
+        output = proc_run(args=['iddiff', '--hwdiff', old_draft, new_draft],
                           capture_output=True)
     elif table:
         output = proc_run(args=['iddiff', '-t', old_draft, new_draft],
