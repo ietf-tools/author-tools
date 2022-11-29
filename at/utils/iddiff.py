@@ -12,7 +12,7 @@ class IddiffError(Exception):
     pass
 
 
-def get_id_diff(old_draft, new_draft, table=False, wdiff=False,
+def get_id_diff(old_draft, new_draft, table=False, wdiff=False, chbars=False,
                 logger=getLogger()):
     '''Returns iddiff output'''
 
@@ -20,6 +20,9 @@ def get_id_diff(old_draft, new_draft, table=False, wdiff=False,
 
     if wdiff:
         output = proc_run(args=['iddiff', '--hwdiff', old_draft, new_draft],
+                          capture_output=True)
+    elif chbars:
+        output = proc_run(args=['iddiff', '--chbars', old_draft, new_draft],
                           capture_output=True)
     elif table:
         output = proc_run(args=['iddiff', '-t', old_draft, new_draft],
