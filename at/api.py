@@ -25,6 +25,7 @@ from at.utils.version import (
         get_svgcheck_version, get_weasyprint_version, get_xml2rfc_version)
 
 BAD_REQUEST = 400
+OK_REQUEST = 200
 VERSION_INFORMATION = {
         'xml2rfc': get_xml2rfc_version(),
         'kramdown-rfc': get_kramdown_rfc_version(),
@@ -449,7 +450,12 @@ def id_diff():
                              logger=logger)
         for dir_path in (dir_path_1, dir_path_2):
             iddiff = iddiff.replace('{}/'.format(dir_path), '')
-        return iddiff
+        if chbars or abdiff:
+            response = make_response(iddiff, OK_REQUEST)
+            response.mimetype = 'text/plain'
+            return response
+        else:
+            return iddiff
     except IddiffError as e:
         return jsonify(error='iddiff error: {}'.format(e)), BAD_REQUEST
 
