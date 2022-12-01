@@ -519,6 +519,61 @@ paths:
                   error:
                     type: string
                     description: Error description
+    post:
+      summary: Get idnits output
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                verbose:
+                  type: integer
+                  minimum: 0
+                  default: 0
+                  maximum: 2
+                  description: Sets verbose level from 0 to 2.
+                hidetext:
+                  type: string
+                  description: Set this to remove draft text from output.
+                year:
+                  type: integer
+                  description: Use the given year in the boilerplate (instead of the current year).
+                submitcheck:
+                  type: string
+                  description: Set this to do submission checks
+      responses:
+        '200':
+          description: Returns idnits output
+          content:
+            text/plain:
+              schema:
+                type: string
+        '400':
+          description: Error has occured.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
+        '401':
+          description: Failed to authenticate.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
   /api/abnf/extract:
     get:
       summary: Extract ABNF using BAP aex
