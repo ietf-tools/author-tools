@@ -25,7 +25,6 @@ from at.utils.version import (
         get_svgcheck_version, get_weasyprint_version, get_xml2rfc_version)
 
 BAD_REQUEST = 400
-OK_REQUEST = 200
 VERSION_INFORMATION = {
         'xml2rfc': get_xml2rfc_version(),
         'kramdown-rfc': get_kramdown_rfc_version(),
@@ -180,10 +179,10 @@ def validate():
         return jsonify(error='Input file format not supported'), BAD_REQUEST
 
 
-@bp.route('/idnits', methods=('GET',))
+@bp.route('/idnits', methods=('GET', 'POST'))
 @require_api_key
 def idnits():
-    '''GET: /idnits API call
+    '''GET/POST: /idnits API call
     Returns idnits output'''
 
     logger = current_app.logger
@@ -200,10 +199,35 @@ def idnits():
     else:
         submit_check = False
 
-    if url == '':
-        logger.info('URL is missing')
-        return jsonify(error='URL is missing'), BAD_REQUEST
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            logger.info('no input file')
+            return jsonify(error='No file'), BAD_REQUEST
+
+        file = request.files['file']
+
+        if file.filename == '':
+            logger.info('filename missing')
+            return jsonify(
+                    error='Filename is missing'), BAD_REQUEST
+
+        if file and allowed_file(file.filename):
+            try:
+                dir_path, filename = get_text_id_from_file(
+                        file=file,
+                        upload_dir=current_app.config['UPLOAD_DIR'])
+            except TextProcessingError as e:
+                return jsonify(error=str(e)), BAD_REQUEST
+        else:
+            logger.info('File format not supportted: {}'.format(
+                                                            file.filename))
+            return jsonify(
+                        error='Input file format not supported'), BAD_REQUEST
     else:
+        if url == '':
+            logger.info('URL is missing')
+            return jsonify(error='URL is missing'), BAD_REQUEST
+
         try:
             if is_valid_url(url,
                             current_app.config['ALLOWED_DOMAINS'],
@@ -219,17 +243,17 @@ def idnits():
         except DownloadError as e:
             return jsonify(error=str(e)), BAD_REQUEST
 
-        output = get_idnits(filename,
-                            logger=logger,
-                            verbose=verbose,
-                            show_text=show_text,
-                            year=year,
-                            submit_check=submit_check)
+    output = get_idnits(filename,
+                        logger=logger,
+                        verbose=verbose,
+                        show_text=show_text,
+                        year=year,
+                        submit_check=submit_check)
 
-        response = make_response(output)
-        response.headers['Content-Type'] = 'text/plain; charset=UTF-8'
+    response = make_response(output)
+    response.headers['Content-Type'] = 'text/plain; charset=UTF-8'
 
-        return response
+    return response
 
 
 @bp.route('/iddiff', methods=('POST', 'GET'))
@@ -451,8 +475,8 @@ def id_diff():
         for dir_path in (dir_path_1, dir_path_2):
             iddiff = iddiff.replace('{}/'.format(dir_path), '')
         if chbars or abdiff:
-            response = make_response(iddiff, OK_REQUEST)
-            response.mimetype = 'text/plain'
+            response = make_response(iddiff)
+            response.headers['Content-Type'] = 'text/plain; charset=UTF-8'
             return response
         else:
             return iddiff

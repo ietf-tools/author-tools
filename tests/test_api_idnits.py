@@ -7,8 +7,18 @@ from urllib.parse import urlencode
 
 from at import create_app
 
+TEST_DATA_DIR = './tests/data/'
+TEST_XML_DRAFT = 'draft-smoke-signals-00.xml'
+TEST_UNSUPPORTED_FORMAT = 'draft-smoke-signals-00.odt'
+TEST_XML_ERROR = 'draft-smoke-signals-00.error.xml'
+TEST_KRAMDOWN_ERROR = 'draft-smoke-signals-00.error.md'
 TEMPORARY_DATA_DIR = './tests/tmp/'
 ALLOWED_DOMAINS = ['ietf.org', 'datatracker.ietf.org']
+
+
+def get_path(filename):
+    '''Returns file path'''
+    return ''.join([TEST_DATA_DIR, filename])
 
 
 class TestApiIdnits(TestCase):
@@ -149,3 +159,70 @@ class TestApiIdnits(TestCase):
                 self.assertIn('idnits', data)
                 # submission check
                 self.assertIn('Running in submission checking mode', data)
+
+    def test_no_file(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post('/api/idnits')
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                self.assertEqual(json_data['error'], 'No file')
+
+    def test_missing_file_name(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post(
+                        '/api/idnits',
+                        data={
+                            'file': (
+                                open(get_path(TEST_XML_DRAFT), 'rb'),
+                                '')})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                self.assertEqual(json_data['error'], 'Filename is missing')
+
+    def test_unsupported_file_format(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post(
+                        '/api/idnits',
+                        data={
+                            'file': (
+                                open(get_path(TEST_UNSUPPORTED_FORMAT), 'rb'),
+                                TEST_UNSUPPORTED_FORMAT)})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                self.assertEqual(
+                        json_data['error'],
+                        'Input file format not supported')
+
+    def test_kramdown_error(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post(
+                        '/api/idnits',
+                        data={
+                            'file': (
+                                open(get_path(TEST_KRAMDOWN_ERROR), 'rb'),
+                                TEST_KRAMDOWN_ERROR)})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                self.assertIsNotNone(json_data['error'])
+
+    def test_xml_error(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post(
+                        '/api/idnits',
+                        data={
+                            'file': (
+                                open(get_path(TEST_XML_ERROR), 'rb'),
+                                TEST_XML_ERROR)})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                self.assertIsNotNone(json_data['error'])
