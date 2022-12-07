@@ -358,6 +358,9 @@ paths:
                 table:
                   type: string
                   description: If this property is set, HTML table is returned. (ignored if wdiff is set)
+                latest:
+                  type: string
+                  description: If this property is set and second document is not provided, use the latest document from datatracker for comparison.
                 url1:
                   type: string
                   description: (rfcdiff compatibility parameter) First draft URL or document name.

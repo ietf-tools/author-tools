@@ -269,6 +269,7 @@ def id_diff():
     doc_2 = request.values.get('doc_2', '').strip()
     url_1 = request.values.get('url_1', '').strip()
     url_2 = request.values.get('url_2', '').strip()
+    latest = request.values.get('latest', '').strip()
 
     if request.values.get('table', False):
         table = True
@@ -394,10 +395,16 @@ def id_diff():
                         BAD_REQUEST)
             else:
                 try:
-                    url = get_previous(
-                            original_doc_name,
-                            current_app.config['DT_LATEST_DRAFT_URL'],
-                            logger)
+                    if latest:
+                        url = get_latest(
+                                draft_name,
+                                current_app.config['DT_LATEST_DRAFT_URL'],
+                                logger)
+                    else:
+                        url = get_previous(
+                                original_doc_name,
+                                current_app.config['DT_LATEST_DRAFT_URL'],
+                                logger)
                     dir_path_2, filename_2 = get_text_id_from_url(
                                             url,
                                             current_app.config['UPLOAD_DIR'],

@@ -753,3 +753,18 @@ class TestApiIddiff(TestCase):
                 self.assertEqual(result.status_code, 400)
                 msg = 'Can not determine draft/rfc'
                 self.assertEqual(json_data['error'], msg)
+
+    def test_iddiff_with_latest(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                id = 'draft-ietf-quic-http'
+                result = client.post(
+                        '/api/iddiff',
+                        data={
+                            'doc_1': id,
+                            'latest': True,
+                            'apikey': VALID_API_KEY})
+
+                data = result.get_data()
+                self.assertEqual(result.status_code, 200)
+                self.assertIn(b'<html lang="en">', data)
