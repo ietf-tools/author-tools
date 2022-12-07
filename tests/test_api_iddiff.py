@@ -713,6 +713,62 @@ class TestApiIddiff(TestCase):
                 self.assertEqual(json_data['error'], msg)
 
     @responses.activate
+    def test_error_document_2_not_found(self):
+        url_1 = 'https://www.ietf.org/archive/id/draft-ietf-quic-http-23.txt'
+        rfc = 'rfc666'
+        responses.add(
+                responses.GET,
+                '/'.join([DT_LATEST_DRAFT_URL, rfc]),
+                json={},
+                status=200)
+        responses.add(
+                responses.GET,
+                url_1,
+                status=200)
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.get(
+                        '/api/iddiff?' + urlencode({
+                            'url_1': url_1, 'doc_2': rfc}),
+                        headers={'X-API-KEY': VALID_API_KEY})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                msg = 'Can not find url for the latest document on datatracker'
+                self.assertEqual(json_data['error'], msg)
+
+    @responses.activate
+    def test_error_document_2_not_found_without_doc_2(self):
+        draft_1 = 'draft-ietf-quic-http-23'
+        draft_2 = 'draft-ietf-quic-http-22'
+        url_1 = 'https://www.ietf.org/archive/id/draft-ietf-quic-http-23.txt'
+        dt_response = {'previous': draft_2}
+        responses.add(
+                responses.GET,
+                '/'.join([DT_LATEST_DRAFT_URL, draft_1]),
+                json=dt_response,
+                status=200)
+        responses.add(
+                responses.GET,
+                '/'.join([DT_LATEST_DRAFT_URL, draft_2]),
+                json={},
+                status=200)
+        responses.add(
+                responses.GET,
+                url_1,
+                status=200)
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.get(
+                        '/api/iddiff?' + urlencode({'url_1': url_1}),
+                        headers={'X-API-KEY': VALID_API_KEY})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                msg = 'Can not find url for the latest document on datatracker'
+                self.assertEqual(json_data['error'], msg)
+
+    @responses.activate
     def test_error_document_download_error(self):
         rfc = 'rfc9000'
         rfc_url = 'https://example.com/rfc9000.txt'
@@ -731,6 +787,75 @@ class TestApiIddiff(TestCase):
             with self.app.app_context():
                 result = client.get(
                         '/api/iddiff?' + urlencode({'doc_1': rfc}),
+                        headers={'X-API-KEY': VALID_API_KEY})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                msg = 'Error occured while downloading file.'
+                self.assertEqual(json_data['error'], msg)
+
+    @responses.activate
+    def test_error_document_2_download_error_without_doc_2(self):
+        draft_1 = 'draft-ietf-quic-http-23'
+        draft_2 = 'draft-ietf-quic-http-22'
+        url_1 = 'https://www.ietf.org/archive/id/draft-ietf-quic-http-23.txt'
+        url_2 = 'https://www.ietf.org/archive/id/draft-ietf-quic-http-22.txt'
+        dt_response_1 = {'previous': draft_2}
+        dt_response_2 = {'content_url': url_2, 'name': draft_2}
+        responses.add(
+                responses.GET,
+                '/'.join([DT_LATEST_DRAFT_URL, draft_1]),
+                json=dt_response_1,
+                status=200)
+        responses.add(
+                responses.GET,
+                '/'.join([DT_LATEST_DRAFT_URL, draft_2]),
+                json=dt_response_2,
+                status=200)
+        responses.add(
+                responses.GET,
+                url_1,
+                status=200)
+        responses.add(
+                responses.GET,
+                url_2,
+                status=404)
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.get(
+                        '/api/iddiff?' + urlencode({'url_1': url_1}),
+                        headers={'X-API-KEY': VALID_API_KEY})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                msg = 'Error occured while downloading file.'
+                self.assertEqual(json_data['error'], msg)
+
+    @responses.activate
+    def test_error_document_2_download_error(self):
+        url_1 = 'https://www.ietf.org/archive/id/draft-ietf-quic-http-23.txt'
+        rfc = 'rfc9000'
+        rfc_url = 'https://example.com/rfc9000.txt'
+        dt_response = {'content_url': rfc_url, 'name': rfc}
+        responses.add(
+                responses.GET,
+                '/'.join([DT_LATEST_DRAFT_URL, rfc]),
+                json=dt_response,
+                status=200)
+        responses.add(
+                responses.GET,
+                rfc_url,
+                status=404)
+        responses.add(
+                responses.GET,
+                url_1,
+                status=200)
+
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.get(
+                        '/api/iddiff?' + urlencode({
+                            'url_1': url_1, 'doc_2': rfc}),
                         headers={'X-API-KEY': VALID_API_KEY})
                 json_data = result.get_json()
 
