@@ -3,9 +3,12 @@ from os import mkdir, path
 from re import compile as re_compile
 from uuid import uuid4
 
+from decorator import decorator
+from flask import current_app, jsonify, request
 from requests import get
 from requests.exceptions import ConnectionError, Timeout
 from werkzeug.utils import secure_filename
+
 
 ALLOWED_EXTENSIONS = ('txt', 'xml', 'md', 'mkd',)
 ALLOWED_EXTENSIONS_BY_PROCESS = {'svgcheck': ('svg', )}
@@ -13,6 +16,7 @@ DIR_MODE = 0o770
 DRAFT_NAME = re_compile(r'(-\d+)?(\..*)?$')
 DRAFT_NAME_WITH_REVISION = re_compile(r'\..*$')
 OK = 200
+BAD_REQUEST = 400
 
 
 # Exceptions
@@ -139,3 +143,26 @@ def cleanup_output(filename, output):
                  .replace(path.dirname(path.relpath(filename)) + '/', '')
     else:
         return None
+
+
+@decorator
+def check_file(f, *args, **kwargs):
+    '''Check posted files'''
+    logger = current_app.logger
+
+    file_check_process = None
+    if '/svgcheck' in request.path:
+        file_check_process = 'svgcheck'
+
+    if 'file' in request.files:
+        file = request.files['file']
+
+        if file.filename == '':
+            logger.info('filename missing')
+            return jsonify(error='Filename is missing'), BAD_REQUEST
+        if not allowed_file(file.filename, process=file_check_process):
+            logger.info('File format not supportted: {}'.format(file.filename))
+            return jsonify(
+                    error='Input file format not supported'), BAD_REQUEST
+
+    return f(*args, **kwargs)

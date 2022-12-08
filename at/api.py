@@ -5,7 +5,7 @@ from flask import (
 from at.utils.abnf import extract_abnf, parse_abnf
 from at.utils.authentication import require_api_key
 from at.utils.file import (
-        allowed_file, get_file, get_name, get_name_with_revision,
+        allowed_file, check_file, get_file, get_name, get_name_with_revision,
         save_file, save_file_from_text, DownloadError)
 from at.utils.iddiff import get_id_diff, IddiffError
 from at.utils.logs import update_logs
@@ -42,6 +42,7 @@ bp = Blueprint('api', __name__, url_prefix='/api')
 
 @bp.route('/render/<format>', methods=('POST',))
 @require_api_key
+@check_file
 def render(format):
     '''POST: /render/<format> API call
     Returns rendered format of the given input file.
@@ -57,68 +58,60 @@ def render(format):
 
     logs = {'errors': [], 'warnings': []}
 
-    if file.filename == '':
-        logger.info('filename missing')
-        return jsonify(error='Filename is missing'), BAD_REQUEST
-
-    if file and allowed_file(file.filename):
-        try:
-            dir_path, filename = process_file(
-                    file=file,
-                    upload_dir=current_app.config['UPLOAD_DIR'],
-                    logger=logger)
-        except KramdownError as e:
-            return jsonify(
-                    error='kramdown-rfc error: {}'.format(e)), BAD_REQUEST
-        except MmarkError as e:
-            return jsonify(
-                    error='mmark error: {}'.format(e)), BAD_REQUEST
-        except TextError as e:
-            return jsonify(error='id2xml error: {}'.format(e)), BAD_REQUEST
-
-        try:
-            xml_file, _logs = get_xml(filename, logger=logger)
-            logs = update_logs(logs, _logs)
-        except XML2RFCError as e:
-            return jsonify(error='xml2rfc error: {}'.format(e)), BAD_REQUEST
-
-        rendered_filename = ''
-
-        try:
-            if format == 'xml':
-                rendered_filename = get_file(xml_file)
-            elif format == 'html':
-                html_file, _logs = get_html(xml_file, logger=logger)
-                logs = update_logs(logs, _logs)
-                rendered_filename = get_file(html_file)
-            elif format == 'text':
-                text_file, _logs = get_text(xml_file, logger=logger)
-                logs = update_logs(logs, _logs)
-                rendered_filename = get_file(text_file)
-            elif format == 'pdf':
-                pdf_file, _logs = get_pdf(xml_file, logger=logger)
-                logs = update_logs(logs, _logs)
-                rendered_filename = get_file(pdf_file)
-            else:
-                logger.info(
-                        'render format not supported: {}'.format(format))
-                return jsonify(
-                        error='Render format not supported'), BAD_REQUEST
-        except XML2RFCError as e:
-            return jsonify(error='xml2rfc error: {}'.format(e)), BAD_REQUEST
-
-        if len(rendered_filename) > 0:
-            url = '/'.join((current_app.config['SITE_URL'],
-                            'api',
-                            'export',
-                            rendered_filename))
-
+    try:
+        dir_path, filename = process_file(
+                file=file,
+                upload_dir=current_app.config['UPLOAD_DIR'],
+                logger=logger)
+    except KramdownError as e:
         return jsonify(
-                    url=url,
-                    logs=logs)
-    else:
-        logger.info('File format not supportted: {}'.format(file.filename))
-        return jsonify(error='Input file format not supported'), BAD_REQUEST
+                error='kramdown-rfc error: {}'.format(e)), BAD_REQUEST
+    except MmarkError as e:
+        return jsonify(
+                error='mmark error: {}'.format(e)), BAD_REQUEST
+    except TextError as e:
+        return jsonify(error='id2xml error: {}'.format(e)), BAD_REQUEST
+
+    try:
+        xml_file, _logs = get_xml(filename, logger=logger)
+        logs = update_logs(logs, _logs)
+    except XML2RFCError as e:
+        return jsonify(error='xml2rfc error: {}'.format(e)), BAD_REQUEST
+
+    rendered_filename = ''
+
+    try:
+        if format == 'xml':
+            rendered_filename = get_file(xml_file)
+        elif format == 'html':
+            html_file, _logs = get_html(xml_file, logger=logger)
+            logs = update_logs(logs, _logs)
+            rendered_filename = get_file(html_file)
+        elif format == 'text':
+            text_file, _logs = get_text(xml_file, logger=logger)
+            logs = update_logs(logs, _logs)
+            rendered_filename = get_file(text_file)
+        elif format == 'pdf':
+            pdf_file, _logs = get_pdf(xml_file, logger=logger)
+            logs = update_logs(logs, _logs)
+            rendered_filename = get_file(pdf_file)
+        else:
+            logger.info(
+                    'render format not supported: {}'.format(format))
+            return jsonify(
+                    error='Render format not supported'), BAD_REQUEST
+    except XML2RFCError as e:
+        return jsonify(error='xml2rfc error: {}'.format(e)), BAD_REQUEST
+
+    if len(rendered_filename) > 0:
+        url = '/'.join((current_app.config['SITE_URL'],
+                        'api',
+                        'export',
+                        rendered_filename))
+
+    return jsonify(
+                url=url,
+                logs=logs)
 
 
 @bp.route('/export/<dir>/<file>', methods=('GET',))
@@ -137,6 +130,7 @@ def export(dir, file):
 
 @bp.route('/validate', methods=('POST',))
 @require_api_key
+@check_file
 def validate():
     '''POST: /validate API call
     Returns JSON with errors, warnings and informational output'''
@@ -149,38 +143,31 @@ def validate():
 
     file = request.files['file']
 
-    if file.filename == '':
-        logger.info('filename missing')
-        return jsonify(error='Filename is missing'), BAD_REQUEST
+    try:
+        _, filename = process_file(
+                file=file,
+                upload_dir=current_app.config['UPLOAD_DIR'],
+                logger=logger)
+    except KramdownError as e:
+        return jsonify(
+                error='kramdown-rfc error: {}'.format(e)), BAD_REQUEST
+    except MmarkError as e:
+        return jsonify(
+                error='mmark error: {}'.format(e)), BAD_REQUEST
+    except TextError as e:
+        return jsonify(error='id2xml error: {}'.format(e)), BAD_REQUEST
 
-    if file and allowed_file(file.filename):
-        try:
-            _, filename = process_file(
-                    file=file,
-                    upload_dir=current_app.config['UPLOAD_DIR'],
-                    logger=logger)
-        except KramdownError as e:
-            return jsonify(
-                    error='kramdown-rfc error: {}'.format(e)), BAD_REQUEST
-        except MmarkError as e:
-            return jsonify(
-                    error='mmark error: {}'.format(e)), BAD_REQUEST
-        except TextError as e:
-            return jsonify(error='id2xml error: {}'.format(e)), BAD_REQUEST
+    try:
+        log = validate_xml(filename, logger=logger)
+    except XML2RFCError as e:
+        return jsonify(error='xml2rfc error: {}'.format(e)), BAD_REQUEST
 
-        try:
-            log = validate_xml(filename, logger=logger)
-        except XML2RFCError as e:
-            return jsonify(error='xml2rfc error: {}'.format(e)), BAD_REQUEST
-
-        return jsonify(log)
-    else:
-        logger.info('File format not supportted: {}'.format(file.filename))
-        return jsonify(error='Input file format not supported'), BAD_REQUEST
+    return jsonify(log)
 
 
 @bp.route('/idnits', methods=('GET', 'POST'))
 @require_api_key
+@check_file
 def idnits():
     '''GET/POST: /idnits API call
     Returns idnits output'''
@@ -206,23 +193,12 @@ def idnits():
 
         file = request.files['file']
 
-        if file.filename == '':
-            logger.info('filename missing')
-            return jsonify(
-                    error='Filename is missing'), BAD_REQUEST
-
-        if file and allowed_file(file.filename):
-            try:
-                dir_path, filename = get_text_id_from_file(
-                        file=file,
-                        upload_dir=current_app.config['UPLOAD_DIR'])
-            except TextProcessingError as e:
-                return jsonify(error=str(e)), BAD_REQUEST
-        else:
-            logger.info('File format not supportted: {}'.format(
-                                                            file.filename))
-            return jsonify(
-                        error='Input file format not supported'), BAD_REQUEST
+        try:
+            dir_path, filename = get_text_id_from_file(
+                    file=file,
+                    upload_dir=current_app.config['UPLOAD_DIR'])
+        except TextProcessingError as e:
+            return jsonify(error=str(e)), BAD_REQUEST
     else:
         if url == '':
             logger.info('URL is missing')
@@ -560,6 +536,7 @@ def abnf_parse():
 
 @bp.route('/svgcheck', methods=('POST',))
 @require_api_key
+@check_file(file_check_process='svgcheck')
 def svgcheck():
     '''GET: /svgcheck API call
     Check SVG content and return results'''
@@ -572,22 +549,14 @@ def svgcheck():
 
     file = request.files['file']
 
-    if file.filename == '':
-        logger.info('filename missing')
-        return jsonify(error='Filename is missing'), BAD_REQUEST
+    _, filename = save_file(file, current_app.config['UPLOAD_DIR'])
 
-    if file and allowed_file(file.filename, process='svgcheck'):
-        _, filename = save_file(file, current_app.config['UPLOAD_DIR'])
+    svg, result, errors = get_svgcheck(filename, logger=logger)
 
-        svg, result, errors = get_svgcheck(filename, logger=logger)
-
-        return jsonify({
-                        'svgcheck': result,
-                        'errors': errors,
-                        'svg': svg})
-    else:
-        logger.info('File format not supportted: {}'.format(file.filename))
-        return jsonify(error='Input file format not supported'), BAD_REQUEST
+    return jsonify({
+                    'svgcheck': result,
+                    'errors': errors,
+                    'svg': svg})
 
 
 @bp.route('/version', methods=('GET',))
