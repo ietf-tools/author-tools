@@ -15,6 +15,7 @@ VERSION_LABELS = (
     'iddiff',
     'aasvg',
     'svgcheck',
+    'rfcdiff',
     'bap')
 
 

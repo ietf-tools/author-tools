@@ -208,6 +208,27 @@ class TestApiIddiff(TestCase):
                 self.assertIn(str.encode(DRAFT_A), data)
                 self.assertIn(str.encode(DRAFT_B), data)
 
+    def test_iddiff_with_two_files_use_rfcdiff(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post(
+                        '/api/iddiff',
+                        data={
+                            'file_1': (
+                                open(get_path(DRAFT_A), 'rb'),
+                                DRAFT_A),
+                            'file_2': (
+                                open(get_path(DRAFT_B), 'rb'),
+                                DRAFT_B),
+                            'rfcdiff': True})
+
+                data = result.get_data()
+
+                self.assertEqual(result.status_code, 200)
+                self.assertIn(b'<html', data)
+                self.assertIn(str.encode(DRAFT_A), data)
+                self.assertIn(str.encode(DRAFT_B), data)
+
     def test_iddiff_with_two_labels(self):
         pairs = [
             ('draft-ietf-quic-http-23', 'draft-ietf-quic-http-24'),

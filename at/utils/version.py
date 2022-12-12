@@ -16,7 +16,7 @@ def get_kramdown_rfc_version(logger=getLogger()):
         output.check_returncode()
         return output.stdout.decode('utf-8').replace(
                 'kramdown-rfc', '').strip()
-    except CalledProcessError:
+    except CalledProcessError:  # pragma: no cover
         logger.info('kramdown-rfc error: {}'.format(
             output.stderr.decode('utf-8')))
         return None
@@ -30,7 +30,7 @@ def get_mmark_version(logger=getLogger()):
     try:
         output.check_returncode()
         return output.stdout.decode('utf-8').strip()
-    except CalledProcessError:
+    except CalledProcessError:  # pragma: no cover
         logger.info('mmark error: {}'.format(
             output.stderr.decode('utf-8')))
         return None
@@ -44,7 +44,7 @@ def get_id2xml_version(logger=getLogger()):
     try:
         output.check_returncode()
         return output.stdout.decode('utf-8').replace('id2xml', '').strip()
-    except CalledProcessError:
+    except CalledProcessError:  # pragma: no cover
         logger.info('id2xml error: {}'.format(
             output.stderr.decode('utf-8')))
         return None
@@ -70,7 +70,7 @@ def get_idnits_version(logger=getLogger()):
     try:
         output.check_returncode()
         return output.stdout.decode('utf-8').replace('idnits', '').strip()
-    except CalledProcessError:
+    except CalledProcessError:  # pragma: no cover
         logger.info('idnits error: {}'.format(
             output.stderr.decode('utf-8')))
         return None
@@ -84,7 +84,7 @@ def get_aasvg_version(logger=getLogger()):
     try:
         output.check_returncode()
         return output.stdout.decode('utf-8').replace('aasvg', '').strip()
-    except CalledProcessError:
+    except CalledProcessError:  # pragma: no cover
         logger.info('aasvg error: {}'.format(
             output.stderr.decode('utf-8')))
         return None
@@ -98,7 +98,7 @@ def get_iddiff_version(logger=getLogger()):
     try:
         output.check_returncode()
         return output.stdout.decode('utf-8').replace('iddiff', '').strip()
-    except CalledProcessError:
+    except CalledProcessError:  # pragma: no cover
         logger.info('iddiff error: {}'.format(
             output.stderr.decode('utf-8')))
         return None
@@ -113,7 +113,22 @@ def get_svgcheck_version(logger=getLogger()):
         output.check_returncode()
         return output.stdout.decode('utf-8').split('\n')[0] \
                             .replace('svgcheck =', '').strip()
-    except CalledProcessError:
+    except CalledProcessError:  # pragma: no cover
         logger.info('svgcheck error: {}'.format(
+            output.stderr.decode('utf-8')))
+        return None
+
+
+def get_rfcdiff_version(logger=getLogger()):
+    '''Return rfcdiff version'''
+
+    output = proc_run(args=['rfcdiff', '--version'], capture_output=True)
+
+    try:
+        output.check_returncode()
+        return output.stdout.decode('utf-8').split('\n')[0] \
+                            .replace('rfcdiff =', '').strip()
+    except CalledProcessError:  # pragma: no cover
+        logger.info('rfcdiff error: {}'.format(
             output.stderr.decode('utf-8')))
         return None

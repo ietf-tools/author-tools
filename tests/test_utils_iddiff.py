@@ -31,6 +31,15 @@ class TestUtilsIddiff(TestCase):
         self.assertIn(DRAFT_A, id_diff)
         self.assertIn(DRAFT_B, id_diff)
 
+    def test_get_id_diff_with_rfcdiff(self):
+        id_diff = get_id_diff(''.join([TEST_DATA_DIR, DRAFT_A]),
+                              ''.join([TEST_DATA_DIR, DRAFT_B]),
+                              diff_tool='rfcdiff')
+
+        self.assertIn('<html', id_diff)
+        self.assertIn(DRAFT_A, id_diff)
+        self.assertIn(DRAFT_B, id_diff)
+
     def test_get_id_diff_with_table_only(self):
         id_diff = get_id_diff(''.join([TEST_DATA_DIR, DRAFT_A]),
                               ''.join([TEST_DATA_DIR, DRAFT_B]),
