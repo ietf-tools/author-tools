@@ -12,26 +12,31 @@ class IddiffError(Exception):
     pass
 
 
-def get_id_diff(old_draft, new_draft, table=False, wdiff=False, chbars=False,
-                abdiff=False, logger=getLogger()):
+def get_id_diff(old_draft, new_draft, diff_tool='iddiff', table=False,
+                wdiff=False, chbars=False, abdiff=False, logger=getLogger()):
     '''Returns iddiff output'''
 
-    logger.debug('running iddiff')
+    if diff_tool == 'rfcdiff':
+        logger.debug('running rfcdiff')
+        diff = ['rfcdiff', '--stdout', ]
+    else:
+        logger.debug('running iddiff')
+        diff = ['iddiff', ]
 
     if wdiff:
-        output = proc_run(args=['iddiff', '--hwdiff', old_draft, new_draft],
+        output = proc_run(args=diff + ['--hwdiff', old_draft, new_draft],
                           capture_output=True)
     elif chbars:
-        output = proc_run(args=['iddiff', '--chbars', old_draft, new_draft],
+        output = proc_run(args=diff + ['--chbars', old_draft, new_draft],
                           capture_output=True)
     elif abdiff:
-        output = proc_run(args=['iddiff', '--abdiff', old_draft, new_draft],
+        output = proc_run(args=diff + ['--abdiff', old_draft, new_draft],
                           capture_output=True)
-    elif table:
-        output = proc_run(args=['iddiff', '-t', old_draft, new_draft],
+    elif table and diff_tool == 'iddiff':
+        output = proc_run(args=diff + ['-t', old_draft, new_draft],
                           capture_output=True)
     else:
-        output = proc_run(args=['iddiff', old_draft, new_draft],
+        output = proc_run(args=diff + [old_draft, new_draft],
                           capture_output=True)
 
     try:
