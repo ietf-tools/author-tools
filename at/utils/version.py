@@ -127,7 +127,7 @@ def get_rfcdiff_version(logger=getLogger()):
     try:
         output.check_returncode()
         return output.stdout.decode('utf-8').split('\n')[0] \
-                            .replace('rfcdiff =', '').strip()
+                            .replace('rfcdiff', '').strip()
     except CalledProcessError:  # pragma: no cover
         logger.info('rfcdiff error: {}'.format(
             output.stderr.decode('utf-8')))
