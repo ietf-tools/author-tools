@@ -326,37 +326,57 @@ def id_diff():
             error = 'Error converting first draft to text: {}' \
                     .format(str(e))
             return jsonify(error=error), BAD_REQUEST
-    elif doc_1:
-        try:
-            url = get_latest(doc_1,
-                             current_app.config['DT_LATEST_DRAFT_URL'],
+    else:
+        if doc_1:
+            try:
+                url_1 = get_latest(doc_1,
+                                   current_app.config['DT_LATEST_DRAFT_URL'],
+                                   logger)
+            except DocumentNotFound as e:
+                return jsonify(error=str(e)), BAD_REQUEST
+        else:
+            try:
+                is_valid_url(url_1,
+                             current_app.config['ALLOWED_DOMAINS'],
                              logger)
-        except DocumentNotFound as e:
-            return jsonify(error=str(e)), BAD_REQUEST
+            except InvalidURL as e:
+                return jsonify(error=str(e)), BAD_REQUEST
 
         try:
             dir_path_1, filename_1 = get_text_id_from_url(
-                                            url,
-                                            current_app.config['UPLOAD_DIR'],
-                                            logger)
-        except DownloadError as e:
-            return jsonify(error=str(e)), BAD_REQUEST
-    else:
-        try:
-            if is_valid_url(url_1,
-                            current_app.config['ALLOWED_DOMAINS'],
-                            logger):
-                dir_path_1, filename_1 = get_text_id_from_url(
                                             url_1,
                                             current_app.config['UPLOAD_DIR'],
                                             logger)
-        except InvalidURL as e:
-            return jsonify(error=str(e)), BAD_REQUEST
         except DownloadError as e:
             return jsonify(error=str(e)), BAD_REQUEST
 
-    if not doc_2 and not url_2:
-        if 'file_2' not in request.files:
+    if not doc_2 and not url_2 and 'file_2' in request.files:
+        file_2 = request.files['file_2']
+
+        try:
+            dir_path_2, filename_2 = get_text_id_from_file(
+                    file=file_2,
+                    upload_dir=current_app.config['UPLOAD_DIR'])
+        except TextProcessingError as e:
+            error = 'Error converting second draft to text: {}' \
+                    .format(str(e))
+            return jsonify(error=error), BAD_REQUEST
+    else:
+        if url_2:
+            try:
+                is_valid_url(url_2,
+                             current_app.config['ALLOWED_DOMAINS'],
+                             logger)
+            except InvalidURL as e:
+                return jsonify(error=str(e)), BAD_REQUEST
+        elif doc_2:
+            try:
+                url_2 = get_latest(doc_2,
+                                   current_app.config['DT_LATEST_DRAFT_URL'],
+                                   logger)
+            except DocumentNotFound as e:
+                return jsonify(error=str(e)), BAD_REQUEST
+        else:
             filename = filename_1.split('/')[-1]
             draft_name = get_name(filename)
             original_doc_name = get_name_with_revision(filename)
@@ -369,61 +389,23 @@ def id_diff():
             else:
                 try:
                     if latest:
-                        url = get_latest(
+                        url_2 = get_latest(
                                 draft_name,
                                 current_app.config['DT_LATEST_DRAFT_URL'],
                                 logger)
                     else:
-                        url = get_previous(
+                        url_2 = get_previous(
                                 original_doc_name,
                                 current_app.config['DT_LATEST_DRAFT_URL'],
                                 logger)
-                    dir_path_2, filename_2 = get_text_id_from_url(
-                                            url,
-                                            current_app.config['UPLOAD_DIR'],
-                                            logger)
                     single_draft = True
                 except DocumentNotFound as e:
                     return jsonify(error=str(e)), BAD_REQUEST
-                except DownloadError as e:
-                    return jsonify(error=str(e)), BAD_REQUEST
-        else:
-            file_2 = request.files['file_2']
-
-            try:
-                dir_path_2, filename_2 = get_text_id_from_file(
-                        file=file_2,
-                        upload_dir=current_app.config['UPLOAD_DIR'])
-            except TextProcessingError as e:
-                error = 'Error converting second draft to text: {}' \
-                        .format(str(e))
-                return jsonify(error=error), BAD_REQUEST
-    elif doc_2:
-        try:
-            url = get_latest(doc_2,
-                             current_app.config['DT_LATEST_DRAFT_URL'],
-                             logger)
-        except DocumentNotFound as e:
-            return jsonify(error=str(e)), BAD_REQUEST
-
         try:
             dir_path_2, filename_2 = get_text_id_from_url(
-                                            url,
-                                            current_app.config['UPLOAD_DIR'],
-                                            logger)
-        except DownloadError as e:
-            return jsonify(error=str(e)), BAD_REQUEST
-    else:
-        try:
-            if is_valid_url(url_2,
-                            current_app.config['ALLOWED_DOMAINS'],
-                            logger):
-                dir_path_2, filename_2 = get_text_id_from_url(
                                             url_2,
                                             current_app.config['UPLOAD_DIR'],
                                             logger)
-        except InvalidURL as e:
-            return jsonify(error=str(e)), BAD_REQUEST
         except DownloadError as e:
             return jsonify(error=str(e)), BAD_REQUEST
 
@@ -450,7 +432,7 @@ def id_diff():
             return response
         else:
             return iddiff
-    except IddiffError as e:
+    except IddiffError as e:  # pragma: no cover
         return jsonify(error='iddiff error: {}'.format(e)), BAD_REQUEST
 
 
