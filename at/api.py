@@ -5,8 +5,8 @@ from flask import (
 from at.utils.abnf import extract_abnf, parse_abnf
 from at.utils.authentication import require_api_key
 from at.utils.file import (
-        allowed_file, check_file, get_file, get_name, get_name_with_revision,
-        save_file, save_file_from_text, DownloadError)
+        check_file, get_file, get_name, get_name_with_revision, save_file,
+        save_file_from_text, DownloadError)
 from at.utils.iddiff import get_id_diff, IddiffError
 from at.utils.logs import update_logs
 from at.utils.net import (
@@ -236,6 +236,7 @@ def idnits():
 
 @bp.route('/iddiff', methods=('POST', 'GET'))
 @require_api_key
+@check_file
 def id_diff():
     '''POST: /iddiff API call
     Returns HTML output of ID diff
@@ -317,25 +318,14 @@ def id_diff():
         else:
             file_1 = request.files['file_1']
 
-        if file_1.filename == '':
-            logger.info('first draft filename missing')
-            return jsonify(
-                    error='Filename of first draft missing'), BAD_REQUEST
-
-        if file_1 and allowed_file(file_1.filename):
-            try:
-                dir_path_1, filename_1 = get_text_id_from_file(
-                        file=file_1,
-                        upload_dir=current_app.config['UPLOAD_DIR'])
-            except TextProcessingError as e:
-                error = 'Error converting first draft to text: {}' \
-                        .format(str(e))
-                return jsonify(error=error), BAD_REQUEST
-        else:
-            logger.info('File format not supportted: {}'.format(
-                                                            file_1.filename))
-            return jsonify(
-                        error='First file format not supported'), BAD_REQUEST
+        try:
+            dir_path_1, filename_1 = get_text_id_from_file(
+                    file=file_1,
+                    upload_dir=current_app.config['UPLOAD_DIR'])
+        except TextProcessingError as e:
+            error = 'Error converting first draft to text: {}' \
+                    .format(str(e))
+            return jsonify(error=error), BAD_REQUEST
     elif doc_1:
         try:
             url = get_latest(doc_1,
@@ -400,25 +390,14 @@ def id_diff():
         else:
             file_2 = request.files['file_2']
 
-            if file_2.filename == '':
-                logger.info('second draft filename missing')
-                return jsonify(
-                        error='Filename of second draft missing'), BAD_REQUEST
-
-            if file_2 and allowed_file(file_2.filename):
-                try:
-                    dir_path_2, filename_2 = get_text_id_from_file(
-                            file=file_2,
-                            upload_dir=current_app.config['UPLOAD_DIR'])
-                except TextProcessingError as e:
-                    error = 'Error converting second draft to text: {}' \
-                            .format(str(e))
-                    return jsonify(error=error), BAD_REQUEST
-            else:
-                logger.info('File format not supportted: {}'.format(
-                                                            file_2.filename))
-                return jsonify(
-                        error='Second file format not supported'), BAD_REQUEST
+            try:
+                dir_path_2, filename_2 = get_text_id_from_file(
+                        file=file_2,
+                        upload_dir=current_app.config['UPLOAD_DIR'])
+            except TextProcessingError as e:
+                error = 'Error converting second draft to text: {}' \
+                        .format(str(e))
+                return jsonify(error=error), BAD_REQUEST
     elif doc_2:
         try:
             url = get_latest(doc_2,
