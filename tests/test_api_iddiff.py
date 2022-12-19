@@ -88,7 +88,7 @@ class TestApiIddiff(TestCase):
 
                 self.assertEqual(result.status_code, 400)
                 self.assertEqual(
-                        json_data['error'], 'Filename of first draft missing')
+                        json_data['error'], 'Filename is missing')
 
     def test_missing_second_file_name(self):
         with self.app.test_client() as client:
@@ -107,7 +107,7 @@ class TestApiIddiff(TestCase):
 
                 self.assertEqual(result.status_code, 400)
                 self.assertEqual(
-                        json_data['error'], 'Filename of second draft missing')
+                        json_data['error'], 'Filename is missing')
 
     def test_unsupported_first_file_format(self):
         with self.app.test_client() as client:
@@ -127,7 +127,7 @@ class TestApiIddiff(TestCase):
                 self.assertEqual(result.status_code, 400)
                 self.assertEqual(
                         json_data['error'],
-                        'First file format not supported')
+                        'Input file format not supported')
 
     def test_unsupported_second_file_format(self):
         with self.app.test_client() as client:
@@ -147,7 +147,7 @@ class TestApiIddiff(TestCase):
                 self.assertEqual(result.status_code, 400)
                 self.assertEqual(
                         json_data['error'],
-                        'Second file format not supported')
+                        'Input file format not supported')
 
     def test_first_file_convert_error(self):
         with self.app.test_client() as client:

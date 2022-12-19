@@ -154,8 +154,8 @@ def check_file(f, *args, **kwargs):
     if '/svgcheck' in request.path:
         file_check_process = 'svgcheck'
 
-    if 'file' in request.files:
-        file = request.files['file']
+    for file_entry in request.files:
+        file = request.files[file_entry]
 
         if file.filename == '':
             logger.info('filename missing')
