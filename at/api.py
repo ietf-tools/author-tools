@@ -349,6 +349,10 @@ def id_diff():
                                             logger)
         except DownloadError as e:
             return jsonify(error=str(e)), BAD_REQUEST
+        except TextProcessingError as e:
+            error = 'Error converting first document to text: {}' \
+                    .format(str(e))
+            return jsonify(error=str(error)), BAD_REQUEST
 
     if not doc_2 and not url_2 and 'file_2' in request.files:
         file_2 = request.files['file_2']
@@ -408,6 +412,10 @@ def id_diff():
                                             logger)
         except DownloadError as e:
             return jsonify(error=str(e)), BAD_REQUEST
+        except TextProcessingError as e:
+            error = 'Error converting second document to text: {}' \
+                    .format(str(e))
+            return jsonify(error=str(error)), BAD_REQUEST
 
     try:
         if single_draft:

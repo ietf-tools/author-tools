@@ -914,3 +914,29 @@ class TestApiIddiff(TestCase):
                 data = result.get_data()
                 self.assertEqual(result.status_code, 200)
                 self.assertIn(b'<html lang="en">', data)
+
+    def test_iddiff_text_processing_first_doc(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post(
+                        '/api/iddiff',
+                        data={'url_1': 'https://ietf.org/about'})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                self.assertTrue(json_data['error'].startswith(
+                                    'Error converting first document to text'))
+
+    def test_iddiff_text_processing_second_doc(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post(
+                        '/api/iddiff',
+                        data={
+                            'doc_1': 'draft-ietf-dmarc-psd',
+                            'url_2': 'https://ietf.org/about'})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                self.assertTrue(json_data['error'].startswith(
+                                    'Error converting second document'))
