@@ -940,3 +940,15 @@ class TestApiIddiff(TestCase):
                 self.assertEqual(result.status_code, 400)
                 self.assertTrue(json_data['error'].startswith(
                                     'Error converting second document'))
+
+    def test_iddiff_filename_error(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post(
+                        '/api/iddiff',
+                        data={'url_1': 'https://ietf.org/'})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                self.assertTrue(json_data['error'].startswith(
+                                    'Can not determine the filename:'))

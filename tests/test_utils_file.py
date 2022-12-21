@@ -120,6 +120,13 @@ class TestUtilsFile(TestCase):
         self.assertEqual(str(error.exception),
                          'Error occured while downloading file.')
 
+    def test_save_file_from_url_no_filename(self):
+        url = 'https://example.com/'
+        with self.assertRaises(DownloadError) as error:
+            save_file_from_url(url, TEMPORARY_DATA_DIR)
+        self.assertEqual(str(error.exception),
+                         'Can not determine the filename: {}'.format(url))
+
     def test_save_file_from_url_valid(self):
         id_url = 'https://www.ietf.org/archive/id/draft-ietf-quic-http-23.txt'
         (dir_path, file_path) = save_file_from_url(id_url, TEMPORARY_DATA_DIR)
