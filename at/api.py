@@ -382,19 +382,19 @@ def id_diff():
                 return jsonify(error=str(e)), BAD_REQUEST
         else:
             filename = filename_1.split('/')[-1]
-            draft_name = get_name(filename)
+            document_name = get_name(filename)
             original_doc_name = get_name_with_revision(filename)
 
-            if draft_name is None:
+            if document_name is None:
                 logger.error('Can not determine draft name for {}'.format(
-                                                            file_1.filename))
+                                                            filename))
                 return (jsonify(error='Can not determine draft/rfc'),
                         BAD_REQUEST)
             else:
                 try:
                     if latest:
                         url_2 = get_latest(
-                                draft_name,
+                                document_name,
                                 current_app.config['DT_LATEST_DRAFT_URL'],
                                 logger)
                     else:
