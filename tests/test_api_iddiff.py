@@ -900,6 +900,18 @@ class TestApiIddiff(TestCase):
                 msg = 'Can not determine draft/rfc'
                 self.assertEqual(json_data['error'], msg)
 
+    def test_error_draft_name_error_for_downloaded_file(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post(
+                        '/api/iddiff',
+                        data={'url_1': 'https://ietf.org/robots.txt'})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                self.assertTrue(json_data['error'].startswith(
+                                    'Can not determine draft/rfc'))
+
     def test_iddiff_with_latest(self):
         with self.app.test_client() as client:
             with self.app.app_context():
