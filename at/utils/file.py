@@ -89,9 +89,14 @@ def save_file_from_url(url, upload_dir, logger=getLogger()):
     '''Download and save the file from given URL and returns path'''
     dir_path = path.join(upload_dir, str(uuid4()))
     mkdir(dir_path, mode=DIR_MODE)
+    save_filename = secure_filename(url.split('/')[-1])
+    if len(save_filename) == 0:
+        error = 'Can not determine the filename: {}'.format(url)
+        logger.error(error)
+        raise DownloadError(error)
     filename = path.join(
             dir_path,
-            secure_filename(url.split('/')[-1]))
+            save_filename)
 
     try:
         response = get(url)
