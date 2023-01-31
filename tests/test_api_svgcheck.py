@@ -92,7 +92,8 @@ class TestApiSvgcheck(TestCase):
 
                 self.assertEqual(result.status_code, 200)
                 self.assertIn('</svg>', json_data['svg'])
-                self.assertIn('Parsing file', json_data['svgcheck'])
+                self.assertIn('File conforms to SVG requirements.',
+                              json_data['svgcheck'])
                 self.assertIsNone(json_data['errors'])
 
     def test_svgcheck_error(self):

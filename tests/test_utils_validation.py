@@ -159,5 +159,5 @@ class TestUtilsValidation(TestCase):
         svg, logs, errors = svgcheck(''.join((TEMPORARY_DATA_DIR, TEST_SVG)))
 
         self.assertIn('</svg>', svg)
-        self.assertIn('Parsing file', logs)
+        self.assertIn('File conforms to SVG requirements.', logs)
         self.assertIsNone(errors)
