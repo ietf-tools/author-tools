@@ -29,11 +29,10 @@ pydyf==0.5.0
 pyphen==0.13.2
 PyYAML==6.0
 requests==2.28.2
-rfctools-common==0.6.2
-sentry-sdk==1.13.0
+sentry-sdk==1.14.0
 six==1.16.0
 sortedcontainers==2.4.0
-svgcheck==0.6.0
+svgcheck==0.7.0
 tinycss2==1.2.1
 urllib3==1.26.14
 wcwidth==0.2.6
