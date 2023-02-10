@@ -4,9 +4,31 @@ from subprocess import run as proc_run, CalledProcessError
 from xml2rfc import XmlRfcParser
 from lxml.etree import XMLSyntaxError
 
-from at.utils.file import cleanup_output, get_filename
+from at.utils.file import cleanup_output, get_extension, get_filename
 from at.utils.logs import process_xml2rfc_log
-from at.utils.processor import XML2RFCError
+from at.utils.processor import process_file, XML2RFCError
+from at.utils.text import get_text_id_from_file
+
+
+def validate_draft(file, upload_dir, logger=getLogger()):
+    '''Validate uploaded file.'''
+
+    file_ext = get_extension(file.filename)
+
+    if file_ext.lower() == '.txt':
+        # don't try to convert text files to XML
+        _, filename = get_text_id_from_file(
+                        file=file,
+                        upload_dir=upload_dir)
+        log = {'idnits': idnits(filename, logger)}
+    else:
+        _, filename = process_file(
+                        file=file,
+                        upload_dir=upload_dir,
+                        logger=logger)
+        log = validate_xml(filename, logger=logger)
+
+    return log
 
 
 def validate_xml(filename, logger=getLogger()):

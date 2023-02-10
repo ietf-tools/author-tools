@@ -4,13 +4,17 @@ from shutil import copy, rmtree
 from subprocess import CompletedProcess
 from unittest import TestCase
 
+from werkzeug.datastructures import FileStorage
+
 from at.utils.validation import (
-        convert_v2v3, idnits, svgcheck, validate_xml, xml2rfc_validation)
+        convert_v2v3, idnits, svgcheck, validate_draft, validate_xml,
+        xml2rfc_validation)
 
 TEST_DATA_DIR = './tests/data/'
 TEST_XML_DRAFT = 'draft-smoke-signals-00.xml'
 TEST_XML_INVALID = 'draft-smoke-signals-00.invalid.xml'
 TEST_XML_V2_DRAFT = 'draft-smoke-signals-00.v2.xml'
+TEST_TEXT_DRAFT = 'draft-smoke-signals-00.txt'
 TEST_SVG = 'ietf.svg'
 TEST_DATA = [TEST_XML_DRAFT, TEST_XML_INVALID, TEST_XML_V2_DRAFT, TEST_SVG]
 TEMPORARY_DATA_DIR = './tests/tmp/'
@@ -161,3 +165,25 @@ class TestUtilsValidation(TestCase):
         self.assertIn('</svg>', svg)
         self.assertIn('File conforms to SVG requirements.', logs)
         self.assertIsNone(errors)
+
+    def test_validate_draft(self):
+        with open(''.join([TEST_DATA_DIR, TEST_XML_DRAFT]), 'rb') as file:
+            file_object = FileStorage(file, filename=TEST_XML_DRAFT)
+            log = validate_draft(file_object, TEMPORARY_DATA_DIR)
+
+            self.assertIn('errors', log.keys())
+            self.assertIn('warnings', log.keys())
+            self.assertIn('idnits', log.keys())
+            self.assertEqual(len(log['errors']), 0)
+            self.assertGreaterEqual(len(log['warnings']), 0)
+            self.assertGreater(len(log['idnits']), 0)
+
+    def test_validate_draft_text(self):
+        with open(''.join([TEST_DATA_DIR, TEST_TEXT_DRAFT]), 'rb') as file:
+            file_object = FileStorage(file, filename=TEST_TEXT_DRAFT)
+            log = validate_draft(file_object, TEMPORARY_DATA_DIR)
+
+            self.assertNotIn('errors', log.keys())
+            self.assertNotIn('warnings', log.keys())
+            self.assertIn('idnits', log.keys())
+            self.assertGreater(len(log['idnits']), 0)

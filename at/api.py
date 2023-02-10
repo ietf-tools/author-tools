@@ -18,7 +18,7 @@ from at.utils.processor import (
 from at.utils.text import (
         get_text_id_from_file, get_text_id_from_url, TextProcessingError)
 from at.utils.validation import (
-        idnits as get_idnits, svgcheck as get_svgcheck, validate_xml)
+        idnits as get_idnits, svgcheck as get_svgcheck, validate_draft)
 from at.utils.version import (
         get_aasvg_version, get_idnits_version, get_id2xml_version,
         get_iddiff_version, get_mmark_version, get_kramdown_rfc_version,
@@ -146,21 +146,15 @@ def validate():
     file = request.files['file']
 
     try:
-        _, filename = process_file(
-                file=file,
-                upload_dir=current_app.config['UPLOAD_DIR'],
-                logger=logger)
+        log = validate_draft(file=file,
+                             upload_dir=current_app.config['UPLOAD_DIR'],
+                             logger=logger)
     except KramdownError as e:
         return jsonify(
                 error='kramdown-rfc error: {}'.format(e)), BAD_REQUEST
     except MmarkError as e:
         return jsonify(
                 error='mmark error: {}'.format(e)), BAD_REQUEST
-    except TextError as e:
-        return jsonify(error='id2xml error: {}'.format(e)), BAD_REQUEST
-
-    try:
-        log = validate_xml(filename, logger=logger)
     except XML2RFCError as e:
         return jsonify(error='xml2rfc error: {}'.format(e)), BAD_REQUEST
 
@@ -196,7 +190,7 @@ def idnits():
         file = request.files['file']
 
         try:
-            dir_path, filename = get_text_id_from_file(
+            _, filename = get_text_id_from_file(
                     file=file,
                     upload_dir=current_app.config['UPLOAD_DIR'])
         except TextProcessingError as e:
@@ -210,7 +204,7 @@ def idnits():
             if is_valid_url(url,
                             current_app.config['ALLOWED_DOMAINS'],
                             logger):
-                dir_path, filename = get_text_id_from_url(
+                _, filename = get_text_id_from_url(
                                             url,
                                             current_app.config['UPLOAD_DIR'],
                                             logger)
