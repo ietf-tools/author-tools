@@ -15,11 +15,10 @@ TEST_KRAMDOWN_DRAFT = 'draft-smoke-signals-00.md'
 TEST_MMARK_DRAFT = 'draft-smoke-signals-00.mmark.md'
 TEST_UNSUPPORTED_FORMAT = 'draft-smoke-signals-00.odt'
 TEST_XML_ERROR = 'draft-smoke-signals-00.error.xml'
-TEST_TEXT_ERROR = 'draft-smoke-signals-00.error.txt'
 TEST_KRAMDOWN_ERROR = 'draft-smoke-signals-00.error.md'
 TEST_DATA = [
-        TEST_XML_DRAFT, TEST_XML_V2_DRAFT, TEST_TEXT_DRAFT,
-        TEST_KRAMDOWN_DRAFT, TEST_MMARK_DRAFT]
+        TEST_XML_DRAFT, TEST_XML_V2_DRAFT, TEST_KRAMDOWN_DRAFT,
+        TEST_MMARK_DRAFT]
 TEMPORARY_DATA_DIR = './tests/tmp/'
 VALID_API_KEY = 'foobar'
 
@@ -113,6 +112,24 @@ class TestApiValidate(TestCase):
                     self.assertGreaterEqual(len(json_data['warnings']), 0)
                     self.assertGreater(len(json_data['idnits']), 0)
 
+    def test_validate_text(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post(
+                        '/api/validate',
+                        data={
+                            'file': (
+                                open(get_path(TEST_TEXT_DRAFT), 'rb'),
+                                TEST_TEXT_DRAFT),
+                            'apikey': VALID_API_KEY})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 200)
+                self.assertNotIn('errors', json_data)
+                self.assertNotIn('warnings', json_data)
+                self.assertIn('idnits', json_data)
+                self.assertGreater(len(json_data['idnits']), 0)
+
     def test_validate_invalid_id(self):
         with self.app.test_client() as client:
             with self.app.app_context():
@@ -148,22 +165,6 @@ class TestApiValidate(TestCase):
                 self.assertEqual(result.status_code, 400)
                 self.assertTrue(json_data['error'].startswith(
                     'kramdown-rfc error:'))
-
-    def test_text_error(self):
-        with self.app.test_client() as client:
-            with self.app.app_context():
-                result = client.post(
-                        '/api/validate',
-                        data={
-                            'file': (
-                                open(get_path(TEST_TEXT_ERROR), 'rb'),
-                                TEST_TEXT_ERROR),
-                            'apikey': VALID_API_KEY})
-                json_data = result.get_json()
-
-                self.assertEqual(result.status_code, 400)
-                self.assertTrue(json_data['error'].startswith(
-                    'id2xml error:'))
 
     def test_xml_error(self):
         with self.app.test_client() as client:
