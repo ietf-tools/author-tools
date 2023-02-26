@@ -9,7 +9,7 @@ from at import create_app
 
 API = '/api/abnf/extract'
 TEMPORARY_DATA_DIR = './tests/tmp/'
-DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/doc/rfcdiff-latest-json'
+DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/api/rfcdiff-latest-json'
 ALLOWED_DOMAINS = ['ietf.org', 'rfc-editor.org']
 
 

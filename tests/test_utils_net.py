@@ -7,7 +7,7 @@ from at.utils.net import (
         get_latest, get_previous, is_valid_url, is_url, InvalidURL,
         DocumentNotFound)
 
-DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/doc/rfcdiff-latest-json'
+DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/api/rfcdiff-latest-json'
 
 
 class TestUtilsNet(TestCase):
