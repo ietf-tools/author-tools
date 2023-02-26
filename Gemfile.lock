@@ -7,14 +7,18 @@ GEM
       rexml
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
-    kramdown-rfc (1.6.22)
-      kramdown-rfc2629 (= 1.6.22)
-    kramdown-rfc2629 (1.6.22)
+    kramdown-rfc (1.6.24)
+      kramdown-rfc2629 (= 1.6.24)
+    kramdown-rfc2629 (1.6.24)
       certified (~> 1.0)
       json_pure (~> 2.0)
       kramdown (~> 2.4.0)
       kramdown-parser-gfm (~> 1.1)
+      unicode-name (~> 1.0)
     rexml (3.2.5)
+    unicode-name (1.11.0)
+      unicode-types (~> 1.8)
+    unicode-types (1.8.0)
 
 PLATFORMS
   arm64-darwin-20
