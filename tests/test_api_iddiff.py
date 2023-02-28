@@ -18,7 +18,7 @@ TEST_XML_ERROR = 'draft-smoke-signals-00.error.xml'
 TEMPORARY_DATA_DIR = './tests/tmp/'
 DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/api/rfcdiff-latest-json'
 VALID_API_KEY = 'foobar'
-ALLOWED_DOMAINS = ['ietf.org', ]
+ALLOWED_DOMAINS = ['ietf.org', 'rfc-editor.org',]
 
 
 def get_path(filename):
@@ -734,6 +734,31 @@ class TestApiIddiff(TestCase):
                 self.assertEqual(json_data['error'], msg)
 
     @responses.activate
+    def test_error_document_not_found_with_url(self):
+        rfc = 'rfc666'
+        url_2 = 'https://www.ietf.org/archive/id/draft-ietf-quic-http-23.txt'
+        responses.add(
+                responses.GET,
+                '/'.join([DT_LATEST_DRAFT_URL, rfc]),
+                json={},
+                status=200)
+        responses.add(
+                responses.GET,
+                url_2,
+                status=200)
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.get(
+                        '/api/iddiff?' + urlencode({
+                            'doc_1': rfc, 'url_2': url_2}),
+                        headers={'X-API-KEY': VALID_API_KEY})
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 400)
+                msg = 'Can not find url for the latest document on datatracker'
+                self.assertEqual(json_data['error'], msg)
+
+    @responses.activate
     def test_error_document_2_not_found(self):
         url_1 = 'https://www.ietf.org/archive/id/draft-ietf-quic-http-23.txt'
         rfc = 'rfc666'
@@ -792,8 +817,10 @@ class TestApiIddiff(TestCase):
     @responses.activate
     def test_error_document_download_error(self):
         rfc = 'rfc9000'
-        rfc_url = 'https://example.com/rfc9000.txt'
-        dt_response = {'content_url': rfc_url, 'name': rfc}
+        rfc_url = 'https://ietf.org/rfc9000.txt'
+        dt_response = {'name': rfc,
+                       'content_url': rfc_url,
+                       'previous_url': rfc_url}
         responses.add(
                 responses.GET,
                 '/'.join([DT_LATEST_DRAFT_URL, rfc]),
@@ -913,13 +940,13 @@ class TestApiIddiff(TestCase):
                                     'Can not determine draft/rfc'))
 
     def test_iddiff_with_latest(self):
+        url = 'https://www.ietf.org/archive/id/draft-ietf-quic-http-00.txt'
         with self.app.test_client() as client:
             with self.app.app_context():
-                id = 'draft-ietf-quic-http'
                 result = client.post(
                         '/api/iddiff',
                         data={
-                            'doc_1': id,
+                            'url_1': url,
                             'latest': True,
                             'apikey': VALID_API_KEY})
 
