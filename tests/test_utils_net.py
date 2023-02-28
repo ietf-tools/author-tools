@@ -4,7 +4,7 @@ from unittest import TestCase
 import responses
 
 from at.utils.net import (
-        get_latest, get_previous, is_valid_url, is_url, InvalidURL,
+        get_both, get_latest, get_previous, is_valid_url, is_url, InvalidURL,
         DocumentNotFound)
 
 DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/api/rfcdiff-latest-json'
@@ -147,3 +147,52 @@ class TestUtilsNet(TestCase):
         self.assertEqual(
                 str(error.exception),
                 'Can not find url for the previous document on datatracker')
+
+    def test_get_both_for_rfc(self):
+        rfc = 'rfc7749'
+        previous = 'draft-iab-xml2rfcv2-02'
+        previous_doc_url, latest_doc_url = get_both(rfc, DT_LATEST_DRAFT_URL)
+        self.assertTrue(previous_doc_url.startswith('https://'))
+        self.assertIn(previous, previous_doc_url)
+        self.assertTrue(latest_doc_url.startswith('https://'))
+        self.assertIn(rfc, latest_doc_url)
+
+    def test_get_both_for_id(self):
+        draft = 'draft-ietf-sipcore-multiple-reasons-00'
+        previous = 'draft-sparks-sipcore-multiple-reasons-00'
+        previous_doc_url, latest_doc_url = get_both(draft, DT_LATEST_DRAFT_URL)
+        self.assertTrue(previous_doc_url.startswith('https://'))
+        self.assertIn(previous, previous_doc_url)
+        self.assertTrue(latest_doc_url.startswith('https://'))
+        self.assertIn(draft, latest_doc_url)
+
+    def test_get_both_latest_not_found_error(self):
+        with self.assertRaises(DocumentNotFound) as error:
+            get_both('foobar-foobar', DT_LATEST_DRAFT_URL)
+
+        self.assertEqual(str(error.exception),
+                         'Can not find the latest document on datatracker')
+
+    def test_get_both_previous_not_found_error(self):
+        draft = 'draft-reschke-xml2rfc-00'
+        with self.assertRaises(DocumentNotFound) as error:
+            get_both(draft, DT_LATEST_DRAFT_URL)
+
+        self.assertEqual(
+                str(error.exception),
+                'Can not find url for previous document on datatracker')
+
+    @responses.activate
+    def test_get_both_no_content_url_error(self):
+        rfc = 'rfc666'
+        responses.add(
+                responses.GET,
+                '/'.join([DT_LATEST_DRAFT_URL, rfc]),
+                json={},
+                status=200)
+        with self.assertRaises(DocumentNotFound) as error:
+            get_both(rfc, DT_LATEST_DRAFT_URL)
+
+        self.assertEqual(
+                str(error.exception),
+                'Can not find url for the latest document on datatracker')

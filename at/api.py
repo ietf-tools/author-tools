@@ -10,7 +10,7 @@ from at.utils.file import (
 from at.utils.iddiff import get_id_diff, IddiffError
 from at.utils.logs import update_logs
 from at.utils.net import (
-        get_latest, get_previous, is_valid_url, is_url, InvalidURL,
+        get_both, get_latest, get_previous, is_valid_url, is_url, InvalidURL,
         DocumentNotFound)
 from at.utils.processor import (
         get_html, get_pdf, get_text, get_xml, process_file, KramdownError,
@@ -303,14 +303,27 @@ def id_diff():
             url_1 = url_2
             url_2 = ''
 
+    if not any((url_1,
+                url_2,
+                'file_1' in request.files,
+                'file_2' in request.files,
+                all((doc_1, doc_2)))):
+        doc = doc_1 if doc_1 else doc_2
+        if not doc:
+            logger.info('no documents to compare')
+            return jsonify(error='No documents to compare'), BAD_REQUEST
+        doc_1 = doc_2 = ''
+        try:
+            url_1, url_2 = get_both(doc,
+                                    current_app.config['DT_LATEST_DRAFT_URL'],
+                                    logger)
+        except DocumentNotFound as e:
+            return jsonify(error=str(e)), BAD_REQUEST
+
     single_draft = False
 
     if not doc_1 and not url_1:
-        if 'file_1' not in request.files:
-            logger.info('no documents to compare')
-            return jsonify(error='No documents to compare'), BAD_REQUEST
-        else:
-            file_1 = request.files['file_1']
+        file_1 = request.files['file_1']
 
         try:
             dir_path_1, filename_1 = get_text_id_from_file(
