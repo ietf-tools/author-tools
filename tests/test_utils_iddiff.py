@@ -1,5 +1,7 @@
 from logging import disable as set_logger, INFO, CRITICAL
 from unittest import TestCase
+from unittest.mock import patch
+
 
 from at.utils.iddiff import get_id_diff, IddiffError
 
@@ -74,3 +76,9 @@ class TestUtilsIddiff(TestCase):
 
         self.assertIn('OLD:', id_diff)
         self.assertIn('NEW:', id_diff)
+
+    @patch('at.utils.iddiff.TIMEOUT', 0)
+    def test_iddiff_timeout(self):
+        with self.assertRaises(IddiffError):
+            get_id_diff(''.join([TEST_DATA_DIR, DRAFT_A]),
+                        ''.join([TEST_DATA_DIR, DRAFT_B]))
