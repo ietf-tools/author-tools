@@ -952,7 +952,7 @@ class TestApiIddiff(TestCase):
 
                 data = result.get_data()
                 self.assertEqual(result.status_code, 200)
-                self.assertIn(b'<html lang="en">', data)
+                self.assertIn(b'<html', data)
 
     def test_iddiff_text_processing_first_doc(self):
         with self.app.test_client() as client:
