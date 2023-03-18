@@ -447,6 +447,16 @@ paths:
           schema:
             type: string
           description: Use rfcdiff instead of iddiff (experimental)
+        - in: query
+          name: url1
+          schema:
+            type: string
+          description: (rfcdiff compatibility parameter) First draft URL or document name.
+        - in: query
+          name: url2
+          schema:
+            type: string
+          description: (rfcdiff compatibility parameter) Second draft URL or document name.
       responses:
         '200':
           description: Returns iddiff as HTML or text
