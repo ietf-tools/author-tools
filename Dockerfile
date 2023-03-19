@@ -36,7 +36,10 @@ RUN mkdir -p ~/.fonts/opentype && \
     rm Noto-unhinted.zip && \
     wget -q https://fonts.google.com/download?family=Roboto%20Mono -O roboto-mono.zip && \
     unzip -q roboto-mono.zip -d ~/.fonts/opentype/ && \
-    rm roboto-mono.zip
+    rm roboto-mono.zip && \
+    wget -q https://fonts.google.com/download?family=Noto+Sans+Math -O noto-sans-math.zip && \
+    unzip -q noto-sans-math.zip -d ~/.fonts/opentype/ && \
+    rm noto-sans-math.zip
 
 # Install bap
 RUN wget https://github.com/ietf-tools/bap/archive/refs/heads/master.zip && \
