@@ -406,7 +406,7 @@ paths:
           name: doc_1
           schema:
             type: string
-          description: First document name unless doc_1 is provided.
+          description: First document name unless url_1 is provided.
         - in: query
           name: doc_2
           schema:
