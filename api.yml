@@ -318,7 +318,7 @@ paths:
                     description: Error description
   /api/iddiff:
     post:
-      summary: Compare two drafts with iddiff
+      summary: Compare two documents with iddiff
       requestBody:
         required: true
         content:
@@ -329,23 +329,23 @@ paths:
                 file_1:
                   type: string
                   format: binary
-                  description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                  description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text document (.txt)
                 file_2:
                   type: string
                   format: binary
-                  description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt). This is optional. If file_2, doc_2 or url_2 is not provided, second draft will be identified based on the first draft or first draft file name.
+                  description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text document (.txt). This is optional. If file_2, doc_2 or url_2 is not provided, second document will be identified based on the first document or first document file name.
                 doc_1:
                   type: string
-                  description: First draft name unless file_1 is provided.
+                  description: First document name unless file_1 is provided.
                 doc_2:
                   type: string
-                  description: Second draft name unless file_2 is provided. This is optional. If file_2, doc_2 or url_2 is not provided, second draft will be identified based on the first draft or first draft file name.
+                  description: Second document name unless file_2 is provided. This is optional. If file_2, doc_2 or url_2 is not provided, second document will be identified based on the first document or first document file name.
                 url_1:
                   type: string
-                  description: First draft URL unless file_1 or doc_1 is provided.
+                  description: First document URL unless file_1 or doc_1 is provided.
                 url_2:
                   type: string
-                  description: Second draft URL unless file_2 or doc_2 is provided. This is optional. If file_2, doc_2 or url_2 is not provided, second draft will be identified based on the first draft or first draft file name.
+                  description: Second document URL unless file_2 or doc_2 is provided. This is optional. If file_2, doc_2 or url_2 is not provided, second document will be identified based on the first document or first document file name.
                 wdiff:
                   type: string
                   description: If this property is set, HTML wdiff is returned.
@@ -363,10 +363,10 @@ paths:
                   description: If this property is set and second document is not provided, use the latest document from datatracker for comparison.
                 url1:
                   type: string
-                  description: (rfcdiff compatibility parameter) First draft URL or document name.
+                  description: (rfcdiff compatibility parameter) First document URL or document name.
                 url2:
                   type: string
-                  description: (rfcdiff compatibility parameter) Second draft URL or document name.
+                  description: (rfcdiff compatibility parameter) Second document URL or document name.
                 difftype:
                   type: string
                   description: (rfcdiff compatibility parameter) Diff type; Accepts wdiff, hwdiff, chbars and abdiff.
@@ -400,28 +400,28 @@ paths:
                     type: string
                     description: Error description
     get:
-      summary: Compare two drafts with iddiff
+      summary: Compare two documents with iddiff
       parameters:
         - in: query
           name: doc_1
           schema:
             type: string
-          description: First draft name unless doc_1 is provided.
+          description: First document name unless doc_1 is provided.
         - in: query
           name: doc_2
           schema:
             type: string
-          description: Second draft name unless url_2 is provided. This is optional. If doc_2 and url_2 are not provided, second draft will be identified based on the first draft or first draft file name.
+          description: Second document name unless url_2 is provided. This is optional. If doc_2 and url_2 are not provided, second document will be identified based on the first document or first document file name.
         - in: query
           name: url_1
           schema:
             type: string
-          description: First draft URL unless doc_1 is provided.
+          description: First document URL unless doc_1 is provided.
         - in: query
           name: url_2
           schema:
             type: string
-          description: Second draft URL unless doc_2 is provided. This is optional. If doc_2 and url_2 are not provided, second draft will be identified based on the first draft or first draft file name.
+          description: Second document URL unless doc_2 is provided. This is optional. If doc_2 and url_2 are not provided, second document will be identified based on the first document or first document file name.
         - in: query
           name: wdiff
           schema:
@@ -451,12 +451,12 @@ paths:
           name: url1
           schema:
             type: string
-          description: (rfcdiff compatibility parameter) First draft URL or document name.
+          description: (rfcdiff compatibility parameter) First document URL or document name.
         - in: query
           name: url2
           schema:
             type: string
-          description: (rfcdiff compatibility parameter) Second draft URL or document name.
+          description: (rfcdiff compatibility parameter) Second document URL or document name.
       responses:
         '200':
           description: Returns iddiff as HTML or text
