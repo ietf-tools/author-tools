@@ -204,6 +204,28 @@ class TestApiIddiff(TestCase):
                 data = result.get_data()
 
                 self.assertEqual(result.status_code, 200)
+                self.assertIn(b'<html', data)
+                self.assertIn(str.encode(DRAFT_A), data)
+                self.assertIn(str.encode(DRAFT_B), data)
+
+    def test_iddiff_with_two_files_use_iddiff(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post(
+                        '/api/iddiff',
+                        data={
+                            'file_1': (
+                                open(get_path(DRAFT_A), 'rb'),
+                                DRAFT_A),
+                            'file_2': (
+                                open(get_path(DRAFT_B), 'rb'),
+                                DRAFT_B),
+                            'apikey': VALID_API_KEY,
+                            'iddiff': True})
+
+                data = result.get_data()
+
+                self.assertEqual(result.status_code, 200)
                 self.assertIn(b'<html lang="en">', data)
                 self.assertIn(str.encode(DRAFT_A), data)
                 self.assertIn(str.encode(DRAFT_B), data)
@@ -249,7 +271,7 @@ class TestApiIddiff(TestCase):
                     data = result.get_data()
 
                     self.assertEqual(result.status_code, 200)
-                    self.assertIn(b'<html lang="en">', data)
+                    self.assertIn(b'<html', data)
                     self.assertIn(str.encode(doc_1), data)
                     self.assertIn(str.encode(doc_2), data)
 
@@ -272,7 +294,7 @@ class TestApiIddiff(TestCase):
                     data = result.get_data()
 
                     self.assertEqual(result.status_code, 200)
-                    self.assertIn(b'<html lang="en">', data)
+                    self.assertIn(b'<html', data)
                     self.assertIn(str.encode(doc_1), data)
                     self.assertIn(str.encode(doc_2), data)
 
@@ -292,7 +314,7 @@ class TestApiIddiff(TestCase):
                 data = result.get_data()
 
                 self.assertEqual(result.status_code, 200)
-                self.assertIn(b'<html lang="en">', data)
+                self.assertIn(b'<html', data)
                 self.assertIn(str.encode(draft_name), data)
 
     def test_iddiff_with_one_label(self):
@@ -317,7 +339,7 @@ class TestApiIddiff(TestCase):
                         data = result.get_data()
 
                         self.assertEqual(result.status_code, 200)
-                        self.assertIn(b'<html lang="en">', data)
+                        self.assertIn(b'<html', data)
                         self.assertIn(b'<td class="lblock">', data)
                         self.assertIn(str.encode(id), data)
 
@@ -339,7 +361,7 @@ class TestApiIddiff(TestCase):
                         data = result.get_data()
 
                         self.assertEqual(result.status_code, 200)
-                        self.assertIn(b'<html lang="en">', data)
+                        self.assertIn(b'<html', data)
                         self.assertIn(str.encode(id), data)
 
     def test_iddiff_with_label_and_file(self):
@@ -359,7 +381,7 @@ class TestApiIddiff(TestCase):
                 data = result.get_data()
 
                 self.assertEqual(result.status_code, 200)
-                self.assertIn(b'<html lang="en">', data)
+                self.assertIn(b'<html', data)
                 self.assertIn(str.encode(DRAFT_A), data)
                 self.assertIn(str.encode(draft_name), data)
 
@@ -380,7 +402,7 @@ class TestApiIddiff(TestCase):
                 data = result.get_data()
 
                 self.assertEqual(result.status_code, 200)
-                self.assertIn(b'<html lang="en">', data)
+                self.assertIn(b'<html', data)
                 self.assertIn(str.encode(draft_name), data)
                 self.assertIn(str.encode(DRAFT_A), data)
 
@@ -401,7 +423,7 @@ class TestApiIddiff(TestCase):
                 data = result.get_data()
 
                 self.assertEqual(result.status_code, 200)
-                self.assertIn(b'<html lang="en">', data)
+                self.assertIn(b'<html', data)
                 self.assertIn(str.encode(XML_DRAFT.split('.')[0]), data)
 
     def test_iddiff_with_table_only(self):
@@ -419,12 +441,13 @@ class TestApiIddiff(TestCase):
                             data={
                                 'doc_1': id,
                                 'table': 1,
+                                'iddiff': 1,
                                 'apikey': VALID_API_KEY})
 
                     data = result.get_data()
 
                     self.assertEqual(result.status_code, 200)
-                    self.assertNotIn(b'<html lang="en">', data)
+                    self.assertNotIn(b'<html', data)
                     self.assertIn(b'<table', data)
                     self.assertIn(b'</table>', data)
                     self.assertIn(str.encode(id), data)
@@ -449,7 +472,7 @@ class TestApiIddiff(TestCase):
                     data = result.get_data()
 
                     self.assertEqual(result.status_code, 200)
-                    self.assertIn(b'<html lang="en">', data)
+                    self.assertIn(b'<html', data)
                     self.assertIn(b'<pre>', data)
                     self.assertIn(b'</pre>', data)
 
@@ -550,7 +573,7 @@ class TestApiIddiff(TestCase):
                     data = result.get_data()
 
                     self.assertEqual(result.status_code, 200)
-                    self.assertIn(b'<html lang="en">', data)
+                    self.assertIn(b'<html', data)
                     self.assertIn(str.encode(id), data)
 
     def test_iddiff_get_with_one_url(self):
@@ -567,7 +590,7 @@ class TestApiIddiff(TestCase):
                     data = result.get_data()
 
                     self.assertEqual(result.status_code, 200)
-                    self.assertIn(b'<html lang="en">', data)
+                    self.assertIn(b'<html', data)
                     self.assertIn(str.encode(id), data)
 
     def test_iddiff_with_two_urls(self):
@@ -588,7 +611,7 @@ class TestApiIddiff(TestCase):
                 data = result.get_data()
 
                 self.assertEqual(result.status_code, 200)
-                self.assertIn(b'<html lang="en">', data)
+                self.assertIn(b'<html', data)
                 self.assertIn(str.encode(doc_1), data)
                 self.assertIn(str.encode(doc_2), data)
 
@@ -609,7 +632,7 @@ class TestApiIddiff(TestCase):
                 data = result.get_data()
 
                 self.assertEqual(result.status_code, 200)
-                self.assertIn(b'<html lang="en">', data)
+                self.assertIn(b'<html', data)
                 self.assertIn(str.encode(doc_1), data)
                 self.assertIn(str.encode(doc_2), data)
 
@@ -627,7 +650,7 @@ class TestApiIddiff(TestCase):
                     data = result.get_data()
 
                     self.assertEqual(result.status_code, 200)
-                    self.assertIn(b'<html lang="en">', data)
+                    self.assertIn(b'<html', data)
                     self.assertIn(str.encode(id), data)
 
     def test_iddiff_rfcdiff_compatibility_docname(self):
@@ -648,7 +671,7 @@ class TestApiIddiff(TestCase):
                         data = result.get_data()
 
                         self.assertEqual(result.status_code, 200)
-                        self.assertIn(b'<html lang="en">', data)
+                        self.assertIn(b'<html', data)
                         self.assertIn(str.encode(id), data)
 
     def test_wdiff_rfcdiff_compatibility(self):
@@ -671,7 +694,7 @@ class TestApiIddiff(TestCase):
                     data = result.get_data()
 
                     self.assertEqual(result.status_code, 200)
-                    self.assertIn(b'<html lang="en">', data)
+                    self.assertIn(b'<html', data)
                     self.assertIn(b'<pre>', data)
                     self.assertIn(b'</pre>', data)
 

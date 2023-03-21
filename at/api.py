@@ -264,10 +264,10 @@ def id_diff():
     else:
         abdiff = False
 
-    if request.values.get('rfcdiff', False):
-        diff_tool = 'rfcdiff'
-    else:
+    if request.values.get('iddiff', False):
         diff_tool = 'iddiff'
+    else:
+        diff_tool = 'rfcdiff'
 
     # rfcdiff compantibility
     url1 = request.values.get('url1', '').strip()

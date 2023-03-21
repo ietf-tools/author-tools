@@ -372,7 +372,10 @@ paths:
                   description: (rfcdiff compatibility parameter) Diff type; Accepts wdiff, hwdiff, chbars and abdiff.
                 rfcdiff:
                   type: string
-                  description: Use rfcdiff instead of iddiff (experimental)
+                  description: Use rfcdiff instead of iddiff (no op, this API call uses rfcdiff by default)
+                iddiff:
+                  type: string
+                  description: Use iddiff instead of iddiff (experimental)
                 apikey:
                   type: string
                   description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)
@@ -446,7 +449,12 @@ paths:
           name: rfcdiff
           schema:
             type: string
-          description: Use rfcdiff instead of iddiff (experimental)
+          description: Use rfcdiff instead of iddiff (no op, this API call uses rfcdiff by default)
+        - in: query
+          name: iddiff
+          schema:
+            type: string
+          description: Use iddiff instead of iddiff (experimental)
         - in: query
           name: url1
           schema:
