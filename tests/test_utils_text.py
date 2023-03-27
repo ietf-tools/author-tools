@@ -85,3 +85,26 @@ class TestUtilsText(TestCase):
         url = 'https://author-tools.ietf.org/sitemap.xml'
         with self.assertRaises(TextProcessingError):
             get_text_id_from_url(url, TEMPORARY_DATA_DIR)
+
+    def test_get_text_id_from_file_raw(self):
+        for filename in TEST_DATA:
+            suffix = f".{filename.split('.')[-1]}"
+            with open(''.join([TEST_DATA_DIR, filename]), 'rb') as file:
+                file_object = FileStorage(file, filename=filename)
+                (dir_path, file_path) = get_text_id_from_file(
+                                            file_object,
+                                            TEMPORARY_DATA_DIR,
+                                            raw=True)
+                self.assertTrue(Path(dir_path).exists())
+                self.assertTrue(Path(file_path).exists())
+                self.assertEqual(Path(file_path).suffix, suffix)
+
+    def test_get_text_id_from_url_raw(self):
+        url = 'https://www.ietf.org/archive/id/draft-iab-xml2rfcv2-01.xml'
+        (dir_path, file_path) = get_text_id_from_url(
+                                    url,
+                                    TEMPORARY_DATA_DIR,
+                                    raw=True)
+        self.assertTrue(Path(dir_path).exists())
+        self.assertTrue(Path(file_path).exists())
+        self.assertEqual(Path(file_path).suffix, '.xml')

@@ -192,7 +192,8 @@ def idnits():
         try:
             _, filename = get_text_id_from_file(
                     file=file,
-                    upload_dir=current_app.config['UPLOAD_DIR'])
+                    upload_dir=current_app.config['UPLOAD_DIR'],
+                    logger=logger)
         except TextProcessingError as e:
             return jsonify(error=str(e)), BAD_REQUEST
     else:
@@ -207,7 +208,7 @@ def idnits():
                 _, filename = get_text_id_from_url(
                                             url,
                                             current_app.config['UPLOAD_DIR'],
-                                            logger)
+                                            logger=logger)
         except TextProcessingError as e:
             return jsonify(error=str(e)), BAD_REQUEST
         except InvalidURL as e:
@@ -243,6 +244,11 @@ def id_diff():
     url_1 = request.values.get('url_1', '').strip()
     url_2 = request.values.get('url_2', '').strip()
     latest = request.values.get('latest', '').strip()
+
+    if request.values.get('raw', False):
+        raw = True
+    else:
+        raw = False
 
     if request.values.get('table', False):
         table = True
@@ -328,7 +334,9 @@ def id_diff():
         try:
             dir_path_1, filename_1 = get_text_id_from_file(
                     file=file_1,
-                    upload_dir=current_app.config['UPLOAD_DIR'])
+                    upload_dir=current_app.config['UPLOAD_DIR'],
+                    raw=raw,
+                    logger=logger)
         except TextProcessingError as e:
             error = 'Error converting first draft to text: {}' \
                     .format(str(e))
@@ -353,7 +361,8 @@ def id_diff():
             dir_path_1, filename_1 = get_text_id_from_url(
                                             url_1,
                                             current_app.config['UPLOAD_DIR'],
-                                            logger)
+                                            raw=raw,
+                                            logger=logger)
         except DownloadError as e:
             return jsonify(error=str(e)), BAD_REQUEST
         except TextProcessingError as e:
@@ -367,7 +376,9 @@ def id_diff():
         try:
             dir_path_2, filename_2 = get_text_id_from_file(
                     file=file_2,
-                    upload_dir=current_app.config['UPLOAD_DIR'])
+                    upload_dir=current_app.config['UPLOAD_DIR'],
+                    raw=raw,
+                    logger=logger)
         except TextProcessingError as e:
             error = 'Error converting second draft to text: {}' \
                     .format(str(e))
@@ -416,7 +427,8 @@ def id_diff():
             dir_path_2, filename_2 = get_text_id_from_url(
                                             url_2,
                                             current_app.config['UPLOAD_DIR'],
-                                            logger)
+                                            raw=raw,
+                                            logger=logger)
         except DownloadError as e:
             return jsonify(error=str(e)), BAD_REQUEST
         except TextProcessingError as e:
@@ -480,7 +492,7 @@ def abnf_extract():
         _, filename = get_text_id_from_url(
                                             url,
                                             current_app.config['UPLOAD_DIR'],
-                                            logger)
+                                            logger=logger)
 
         output = extract_abnf(filename, logger=logger)
 
