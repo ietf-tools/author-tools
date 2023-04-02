@@ -11,20 +11,26 @@ class TextProcessingError(Exception):
     pass
 
 
-def get_text_id_from_file(file, upload_dir, logger=getLogger()):
+def get_text_id_from_file(file, upload_dir, raw=False, logger=getLogger()):
     '''Save file and returns text draft'''
 
     (dir_path, filename) = save_file(file, upload_dir)
 
-    return get_text_id(dir_path, filename, logger)
+    if not raw:
+        (dir_path, filename) = get_text_id(dir_path, filename, logger)
+
+    return (dir_path, filename)
 
 
-def get_text_id_from_url(url, upload_dir, logger=getLogger()):
+def get_text_id_from_url(url, upload_dir, raw=False, logger=getLogger()):
     '''Save file from URL and returns text draft'''
 
     (dir_path, filename) = save_file_from_url(url, upload_dir)
 
-    return get_text_id(dir_path, filename, logger)
+    if not raw:
+        (dir_path, filename) = get_text_id(dir_path, filename, logger)
+
+    return (dir_path, filename)
 
 
 def get_text_id(dir_path, filename, logger=getLogger()):

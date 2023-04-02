@@ -12,7 +12,8 @@ from at import create_app
 TEST_DATA_DIR = './tests/data/'
 DRAFT_A = 'draft-smoke-signals-00.txt'
 DRAFT_B = 'draft-smoke-signals-01.txt'
-XML_DRAFT = 'draft-smoke-signals-00.xml'
+XML_DRAFT_A = 'draft-smoke-signals-00.xml'
+XML_DRAFT_B = 'draft-smoke-signals-01.xml'
 TEST_UNSUPPORTED_FORMAT = 'draft-smoke-signals-00.odt'
 TEST_XML_ERROR = 'draft-smoke-signals-00.error.xml'
 TEMPORARY_DATA_DIR = './tests/tmp/'
@@ -207,6 +208,28 @@ class TestApiIddiff(TestCase):
                 self.assertIn(b'<html', data)
                 self.assertIn(str.encode(DRAFT_A), data)
                 self.assertIn(str.encode(DRAFT_B), data)
+
+    def test_iddiff_with_two_files_raw(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post(
+                        '/api/iddiff',
+                        data={
+                            'file_1': (
+                                open(get_path(XML_DRAFT_A), 'rb'),
+                                XML_DRAFT_A),
+                            'file_2': (
+                                open(get_path(XML_DRAFT_B), 'rb'),
+                                XML_DRAFT_B),
+                            'raw': 1,
+                            'apikey': VALID_API_KEY})
+
+                data = result.get_data()
+
+                self.assertEqual(result.status_code, 200)
+                self.assertIn(b'<html', data)
+                self.assertIn(str.encode(XML_DRAFT_A), data)
+                self.assertIn(str.encode(XML_DRAFT_B), data)
 
     def test_iddiff_with_two_files_use_iddiff(self):
         with self.app.test_client() as client:
@@ -413,18 +436,18 @@ class TestApiIddiff(TestCase):
                         '/api/iddiff',
                         data={
                             'file_1': (
-                                open(get_path(XML_DRAFT), 'rb'),
-                                XML_DRAFT),
+                                open(get_path(XML_DRAFT_A), 'rb'),
+                                XML_DRAFT_A),
                             'file_2': (
-                                open(get_path(XML_DRAFT), 'rb'),
-                                XML_DRAFT),
+                                open(get_path(XML_DRAFT_A), 'rb'),
+                                XML_DRAFT_A),
                             'apikey': VALID_API_KEY})
 
                 data = result.get_data()
 
                 self.assertEqual(result.status_code, 200)
                 self.assertIn(b'<html', data)
-                self.assertIn(str.encode(XML_DRAFT.split('.')[0]), data)
+                self.assertIn(str.encode(XML_DRAFT_A.split('.')[0]), data)
 
     def test_iddiff_with_table_only(self):
         labels = [

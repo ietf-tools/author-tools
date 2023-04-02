@@ -376,6 +376,9 @@ paths:
                 iddiff:
                   type: string
                   description: Use iddiff instead of iddiff (experimental)
+                raw:
+                  type: string
+                  description: If this property is set, input files are not converted to text.
                 apikey:
                   type: string
                   description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)
@@ -455,6 +458,11 @@ paths:
           schema:
             type: string
           description: Use iddiff instead of iddiff (experimental)
+        - in: query
+          name: raw
+          schema:
+            type: string
+          description: If this property is set, input files are not converted to text.
         - in: query
           name: url1
           schema:
