@@ -1,5 +1,5 @@
 appdirs==1.4.4
-blinker==1.6.1
+blinker==1.6.2
 Brotli==1.0.9
 certifi==2022.12.7
 cffi==1.15.1
@@ -34,11 +34,10 @@ six==1.16.0
 sortedcontainers==2.4.0
 svgcheck==0.7.1
 tinycss2==1.2.1
-typing_extensions==4.5.0
 urllib3==1.26.15
 wcwidth==0.2.6
 weasyprint==58.1
 webencodings==0.5.1
 Werkzeug==2.2.3
-xml2rfc==3.17.0
+xml2rfc==3.17.1
 zopfli==0.2.2
