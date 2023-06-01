@@ -2,16 +2,16 @@ GEM
   remote: https://rubygems.org/
   specs:
     certified (1.0.0)
-    connection_pool (2.4.0)
+    connection_pool (2.4.1)
     differ (0.1.2)
     json_pure (2.6.3)
     kramdown (2.4.0)
       rexml
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
-    kramdown-rfc (1.6.31)
-      kramdown-rfc2629 (= 1.6.31)
-    kramdown-rfc2629 (1.6.31)
+    kramdown-rfc (1.6.34)
+      kramdown-rfc2629 (= 1.6.34)
+    kramdown-rfc2629 (1.6.34)
       certified (~> 1.0)
       differ (~> 0.1)
       json_pure (~> 2.0)
