@@ -2,7 +2,7 @@
 openapi: "3.0.0"
 info:
   title: IETF Author Tools API
-  version: 0.14.3
+  version: 0.14.4
 servers:
   - url: https://author-tools.ietf.org
     description: Alpha server
