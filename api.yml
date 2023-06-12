@@ -718,21 +718,69 @@ paths:
                   description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)
       responses:
         '200':
-          description: Returns draft in requested format.
+          description: Returns svgcheck output
           content:
-            application/xml:
+            application/json:
               schema:
                 type: object
                 properties:
                   svg:
                     type: string
-                    description: Parsed SVG outpu
+                    description: Parsed SVG output
                   svgcheck:
                     type: string
                     description: svgcheck output logs
                   errors:
                     type: string
                     description: svgcheck errors
+        '400':
+          description: Error has occured.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
+        '401':
+          description: Failed to authenticate.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
+  /api/clean_svg_ids:
+    post:
+      summary: Changes SVG duplicate ids in SVG
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: XML file with .xml extension
+                apikey:
+                  type: string
+                  description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)
+      responses:
+        '200':
+          description: Returns temporary URL to the draft in requested format.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    description: Temporary URL to requested format
         '400':
           description: Error has occured.
           content:
