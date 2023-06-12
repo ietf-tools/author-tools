@@ -11,7 +11,10 @@ from werkzeug.utils import secure_filename
 
 
 ALLOWED_EXTENSIONS = ('txt', 'xml', 'md', 'mkd',)
-ALLOWED_EXTENSIONS_BY_PROCESS = {'svgcheck': ('svg', )}
+ALLOWED_EXTENSIONS_BY_PROCESS = {
+        'svgcheck': ('svg', ),
+        'clean_svg_ids': ('xml', ),
+        }
 DIR_MODE = 0o770
 DRAFT_NAME = re_compile(r'(-\d+)?(\..*)?$')
 DRAFT_NAME_WITH_REVISION = re_compile(r'\..*$')
@@ -158,6 +161,8 @@ def check_file(f, *args, **kwargs):
     file_check_process = None
     if '/svgcheck' in request.path:
         file_check_process = 'svgcheck'
+    if '/clean_svg_ids' in request.path:
+        file_check_process = 'clean_svg_ids'
 
     for file_entry in request.files:
         file = request.files[file_entry]

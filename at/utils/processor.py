@@ -265,3 +265,20 @@ def get_pdf(filename, logger=getLogger()):
 
     logger.info('new file saved at {}'.format(pdf_file))
     return (pdf_file, process_xml2rfc_log(output, filename))
+
+
+def clean_svg_ids(filename, logger=getLogger()):
+    '''Clean SVGs with duplicates IDs in XML'''
+    logger.debug('invoking kramdown-rfc-clean-svg-ids')
+
+    output = proc_run(
+                args=['kramdown-rfc-clean-svg-ids', filename],
+                capture_output=True)
+
+    # write output to XML file
+    xml_file = get_filename(filename, 'xml')
+    with open(xml_file, 'wb') as file:
+        file.write(output.stdout)
+
+    logger.info('new file saved at {}'.format(xml_file))
+    return xml_file

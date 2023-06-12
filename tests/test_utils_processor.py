@@ -6,8 +6,9 @@ from unittest import TestCase
 from werkzeug.datastructures import FileStorage
 
 from at.utils.processor import (
-        convert_v2v3, get_html, get_pdf, get_text, get_xml, kramdown2xml,
-        md2xml, mmark2xml, process_file, txt2xml, MmarkError, XML2RFCError)
+        clean_svg_ids, convert_v2v3, get_html, get_pdf, get_text, get_xml,
+        kramdown2xml, md2xml, mmark2xml, process_file, txt2xml, MmarkError,
+        XML2RFCError)
 
 TEST_DATA_DIR = './tests/data/'
 TEST_XML_DRAFT = 'draft-smoke-signals-00.xml'
@@ -158,3 +159,10 @@ class TestUtilsProcessor(TestCase):
         with self.assertRaises(XML2RFCError):
             saved_file, logs = get_pdf(
                     ''.join([TEMPORARY_DATA_DIR, TEST_XML_ERROR]))
+
+    def test_clean_svg_ids(self):
+        saved_file = clean_svg_ids(
+                ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT]))
+
+        self.assertTrue(Path(saved_file).exists())
+        self.assertEqual(Path(saved_file).suffix, '.xml')

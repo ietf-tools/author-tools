@@ -13,8 +13,8 @@ from at.utils.net import (
         get_both, get_latest, get_previous, is_valid_url, is_url, InvalidURL,
         DocumentNotFound)
 from at.utils.processor import (
-        get_html, get_pdf, get_text, get_xml, process_file, KramdownError,
-        MmarkError, TextError, XML2RFCError)
+        clean_svg_ids as clean_svg, get_html, get_pdf, get_text, get_xml,
+        process_file, KramdownError, MmarkError, TextError, XML2RFCError)
 from at.utils.text import (
         get_text_id_from_file, get_text_id_from_url, TextProcessingError)
 from at.utils.validation import (
@@ -532,9 +532,9 @@ def abnf_parse():
 
 @bp.route('/svgcheck', methods=('POST',))
 @require_api_key
-@check_file(file_check_process='svgcheck')
+@check_file
 def svgcheck():
-    '''GET: /svgcheck API call
+    '''POST: /svgcheck API call
     Check SVG content and return results'''
 
     logger = current_app.logger
@@ -553,6 +553,35 @@ def svgcheck():
                     'svgcheck': result,
                     'errors': errors,
                     'svg': svg})
+
+
+@bp.route('/clean_svg_ids', methods=('POST',))
+@require_api_key
+@check_file
+def clean_svg_ids():
+    '''POST: /clean_svg_ids API call
+    Clean SVGs with duplicate IDs'''
+
+    logger = current_app.logger
+
+    if 'file' not in request.files:
+        logger.info('no input file')
+        return jsonify(error='No file'), BAD_REQUEST
+
+    file = request.files['file']
+
+    _, filename = save_file(file, current_app.config['UPLOAD_DIR'])
+
+    xml_file = clean_svg(filename, logger=logger)
+
+    updated_filename = get_file(xml_file)
+    if len(updated_filename) > 0:
+        url = '/'.join((current_app.config['SITE_URL'],
+                        'api',
+                        'export',
+                        updated_filename))
+
+    return jsonify(url=url)
 
 
 @bp.route('/version', methods=('GET',))
