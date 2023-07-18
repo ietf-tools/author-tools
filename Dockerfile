@@ -82,7 +82,7 @@ RUN mkdir -p tmp && \
     echo "VERSION = '0.15.3'" >> at/config.py && \
     echo "REQUIRE_AUTH = False" >> at/config.py && \
     echo "DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/api/rfcdiff-latest-json'" >> at/config.py && \
-    echo "ALLOWED_DOMAINS = ['ietf.org', 'rfc-editor.org', 'github.com', 'githubusercontent.com', 'github.io', 'gitlab.com']" >> at/config.py
+    echo "ALLOWED_DOMAINS = ['ietf.org', 'rfc-editor.org', 'github.com', 'githubusercontent.com', 'github.io', 'gitlab.com', 'gitlab.io', 'codeberg.pages']" >> at/config.py
 
 # host with waitress
 CMD python3 serve.py
