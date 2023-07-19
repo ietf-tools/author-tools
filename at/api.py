@@ -403,6 +403,11 @@ def id_diff():
             document_name = get_name(filename)
             original_doc_name = get_name_with_revision(filename)
 
+            if original_doc_name == document_name:
+                # document doesn't have a revision in the file name
+                # compare with the latest
+                latest = True
+
             if document_name is None:
                 logger.error('Can not determine draft name for {}'.format(
                                                             filename))
