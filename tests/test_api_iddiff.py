@@ -12,6 +12,7 @@ from at import create_app
 TEST_DATA_DIR = './tests/data/'
 DRAFT_A = 'draft-smoke-signals-00.txt'
 DRAFT_B = 'draft-smoke-signals-01.txt'
+DT_DRAFT_A = 'draft-iab-xml2rfc-02.txt'
 XML_DRAFT_A = 'draft-smoke-signals-00.xml'
 XML_DRAFT_B = 'draft-smoke-signals-01.xml'
 TEST_UNSUPPORTED_FORMAT = 'draft-smoke-signals-00.odt'
@@ -322,23 +323,44 @@ class TestApiIddiff(TestCase):
                     self.assertIn(str.encode(doc_2), data)
 
     def test_iddiff_with_one_file(self):
+        doc_2 = f'{DT_DRAFT_A[:-4][:-2]}{int(DT_DRAFT_A[:-4][-2:]) - 1:02}'
         with self.app.test_client() as client:
             with self.app.app_context():
-                draft_name = 'draft-ietf-quic-http-23.txt'
-
                 result = client.post(
                         '/api/iddiff',
                         data={
                             'file_1': (
-                                open(get_path(DRAFT_A), 'rb'),
-                                draft_name),
+                                open(get_path(DT_DRAFT_A), 'rb'),
+                                DT_DRAFT_A),
                             'apikey': VALID_API_KEY})
 
                 data = result.get_data()
 
                 self.assertEqual(result.status_code, 200)
                 self.assertIn(b'<html', data)
-                self.assertIn(str.encode(draft_name), data)
+                self.assertIn(str.encode(DT_DRAFT_A), data)
+                self.assertIn(str.encode(doc_2), data)
+
+    def test_iddiff_with_one_file_without_version(self):
+        # When there is no version in the ID, compare with the latest
+        doc_1 = f'{DT_DRAFT_A[:-7]}.txt'   # name without version
+        doc_2 = 'rfc7991'  # latest
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post(
+                        '/api/iddiff',
+                        data={
+                            'file_1': (
+                                open(get_path(DT_DRAFT_A), 'rb'),
+                                doc_1),
+                            'apikey': VALID_API_KEY})
+
+                data = result.get_data()
+
+                self.assertEqual(result.status_code, 200)
+                self.assertIn(b'<html', data)
+                self.assertIn(str.encode(doc_1), data)
+                self.assertIn(str.encode(doc_2), data)
 
     def test_iddiff_with_one_label(self):
         labels = [
@@ -388,46 +410,44 @@ class TestApiIddiff(TestCase):
                         self.assertIn(str.encode(id), data)
 
     def test_iddiff_with_label_and_file(self):
+        doc_2 = f'{DT_DRAFT_A[:-4][:-2]}{int(DT_DRAFT_A[:-4][-2:]) + 1:02}'
         with self.app.test_client() as client:
             with self.app.app_context():
-                draft_name = 'draft-ietf-quic-http-23.txt'
-
                 result = client.post(
                         '/api/iddiff',
                         data={
                             'file_1': (
-                                open(get_path(DRAFT_A), 'rb'),
-                                DRAFT_A),
-                            'doc_2': draft_name,
+                                open(get_path(DT_DRAFT_A), 'rb'),
+                                DT_DRAFT_A),
+                            'doc_2': doc_2,
                             'apikey': VALID_API_KEY})
 
                 data = result.get_data()
 
                 self.assertEqual(result.status_code, 200)
                 self.assertIn(b'<html', data)
-                self.assertIn(str.encode(DRAFT_A), data)
-                self.assertIn(str.encode(draft_name), data)
+                self.assertIn(str.encode(DT_DRAFT_A), data)
+                self.assertIn(str.encode(doc_2), data)
 
     def test_iddiff_with_file_and_label(self):
+        doc_1 = f'{DT_DRAFT_A[:-4][:-2]}{int(DT_DRAFT_A[:-4][-2:]) - 1:02}'
         with self.app.test_client() as client:
             with self.app.app_context():
-                draft_name = 'draft-ietf-quic-http-23.txt'
-
                 result = client.post(
                         '/api/iddiff',
                         data={
-                            'doc_1': draft_name,
+                            'doc_1': doc_1,
                             'file_2': (
-                                open(get_path(DRAFT_A), 'rb'),
-                                DRAFT_A),
+                                open(get_path(DT_DRAFT_A), 'rb'),
+                                DT_DRAFT_A),
                             'apikey': VALID_API_KEY})
 
                 data = result.get_data()
 
                 self.assertEqual(result.status_code, 200)
                 self.assertIn(b'<html', data)
-                self.assertIn(str.encode(draft_name), data)
-                self.assertIn(str.encode(DRAFT_A), data)
+                self.assertIn(str.encode(doc_1), data)
+                self.assertIn(str.encode(DT_DRAFT_A), data)
 
     def test_iddiff_with_non_text_draft(self):
         with self.app.test_client() as client:
