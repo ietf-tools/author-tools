@@ -16,6 +16,6 @@
   },
   "homepage": "https://github.com/ietf-tools/ietf-at#readme",
   "dependencies": {
-    "aasvg": "^0.3.5"
+    "aasvg": "^0.3.6"
   }
 }
