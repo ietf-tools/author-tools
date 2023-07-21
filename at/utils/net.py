@@ -25,17 +25,14 @@ def is_valid_url(url, allowed_domains=None, logger=getLogger()):
     try:
         url_parts = urlsplit(url)
         if url_parts.scheme not in ALLOWED_SCHEMES:
-            logger.info('URL: {} scheme is not allowed.')
-            raise InvalidURL('{} scheme is not allowed.'.format(
-                url_parts.scheme))
+            logger.info(f'URL: {url_parts.scheme} scheme is not allowed.')
+            raise InvalidURL(f'{url_parts.scheme} scheme is not allowed.')
         if '.'.join(url_parts.netloc.split('.')[-2:]) not in allowed_domains:
-            logger.info('URL: {} domain is not allowed.')
-            raise InvalidURL('{} domain is not allowed.'.format(
-                url_parts.netloc))
+            logger.info(f'URL: {url_parts.netloc} domain is not allowed.')
+            raise InvalidURL(f'{url_parts.netloc} domain is not allowed.')
     except ValueError as e:
-        logger.info('invalid URL: {url} error: {error}'.format(
-            url=url, error=str(e)))
-        raise InvalidURL('Invalid URL: {}'.format(url))
+        logger.info(f'invalid URL: {url} error: {str(e)}')
+        raise InvalidURL(f'Invalid URL: {url}')
 
     return True
 
