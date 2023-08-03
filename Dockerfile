@@ -72,7 +72,7 @@ RUN npm install
 # Install Python dependencies
 RUN apt-get remove -y python3-blinker
 RUN pip3 install --upgrade pip
-RUN pip3 install -r requirements.txt -c constraints.txt waitress
+RUN pip3 install -r requirements.txt -c constraints.txt gunicorn
 
 # Install Ruby dependencies
 RUN gem install bundler && bundle install
@@ -84,5 +84,5 @@ RUN mkdir -p tmp && \
     echo "DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/api/rfcdiff-latest-json'" >> at/config.py && \
     echo "ALLOWED_DOMAINS = ['ietf.org', 'rfc-editor.org', 'github.com', 'githubusercontent.com', 'github.io', 'gitlab.com', 'gitlab.io', 'codeberg.page']" >> at/config.py
 
-# host with waitress
-CMD python3 serve.py
+# host with gunicorn
+CMD gunicorn --workers=20 -b 0.0.0.0:80 'at:create_app()'
