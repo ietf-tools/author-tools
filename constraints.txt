@@ -39,5 +39,5 @@ wcwidth==0.2.6
 weasyprint==59.0
 webencodings==0.5.1
 Werkzeug==2.3.6
-xml2rfc==3.17.5
+xml2rfc==3.18.0
 zopfli==0.2.2
