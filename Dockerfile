@@ -85,4 +85,4 @@ RUN mkdir -p tmp && \
     echo "ALLOWED_DOMAINS = ['ietf.org', 'rfc-editor.org', 'github.com', 'githubusercontent.com', 'github.io', 'gitlab.com', 'gitlab.io', 'codeberg.page']" >> at/config.py
 
 # host with gunicorn
-CMD gunicorn --workers=20 -b 0.0.0.0:80 'at:create_app()'
+CMD gunicorn --workers=16 -b 0.0.0.0:80 'at:create_app()'
