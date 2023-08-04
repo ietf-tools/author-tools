@@ -63,7 +63,7 @@ RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
     tar zxf mmark_*.tgz -C /bin/ && \
     rm mmark_*.tgz
 
-COPY Gemfile Gemfile.lock LICENSE README.md api.yml constraints.txt package-lock.json package.json requirements.txt serve.py .
+COPY Gemfile Gemfile.lock LICENSE README.md api.yml constraints.txt package-lock.json package.json requirements.txt .
 COPY at ./at
 
 # Install JavaScript dependencies
