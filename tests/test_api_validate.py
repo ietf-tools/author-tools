@@ -108,9 +108,13 @@ class TestApiValidate(TestCase):
                     self.assertIn('errors', json_data)
                     self.assertIn('warnings', json_data)
                     self.assertIn('idnits', json_data)
+                    self.assertIn('bare_unicode', json_data)
+                    self.assertIn('non_ascii', json_data)
                     self.assertEqual(len(json_data['errors']), 0)
-                    self.assertGreaterEqual(len(json_data['warnings']), 0)
                     self.assertGreater(len(json_data['idnits']), 0)
+                    self.assertGreaterEqual(len(json_data['warnings']), 0)
+                    self.assertGreaterEqual(len(json_data['bare_unicode']), 0)
+                    self.assertGreaterEqual(len(json_data['non_ascii']), 0)
 
     def test_validate_text(self):
         with self.app.test_client() as client:
@@ -127,6 +131,8 @@ class TestApiValidate(TestCase):
                 self.assertEqual(result.status_code, 200)
                 self.assertNotIn('errors', json_data)
                 self.assertNotIn('warnings', json_data)
+                self.assertNotIn('bare_unicode', json_data)
+                self.assertIn('non_ascii', json_data)
                 self.assertIn('idnits', json_data)
                 self.assertGreater(len(json_data['idnits']), 0)
 

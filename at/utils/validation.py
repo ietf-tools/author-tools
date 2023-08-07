@@ -28,6 +28,9 @@ def validate_draft(file, upload_dir, logger=getLogger()):
                         logger=logger)
         log = validate_xml(filename, logger=logger)
 
+    # get list of non ASCII chars
+    log['non_ascii'] = get_non_ascii_chars(filename=filename, logger=logger)
+
     return log
 
 
@@ -78,7 +81,8 @@ def xml2rfc_validation(filename, logger=getLogger()):
     text_file = get_filename(filename, 'txt')
 
     output = proc_run(
-                args=['xml2rfc', '--out', text_file,  filename],
+                args=['xml2rfc', '--warn-bare-unicode', '--out', text_file,
+                      filename],
                 capture_output=True)
 
     try:
@@ -199,3 +203,13 @@ def svgcheck(filename, logger=getLogger()):
     return (parsed_svg,
             cleanup_output(filename, result),
             cleanup_output(filename, errors))
+
+
+def get_non_ascii_chars(filename, logger=getLogger()):
+    '''Run kramdown-rfc echars and return output'''
+
+    logger.debug('running echars')
+
+    output = proc_run(['echars', filename], capture_output=True)
+
+    return output.stdout.decode('utf-8')

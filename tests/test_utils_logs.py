@@ -44,14 +44,18 @@ class TestUtilsLogs(TestCase):
 
             self.assertIn('errors', log.keys())
             self.assertIn('warnings', log.keys())
+            self.assertIn('bare_unicode', log.keys())
             self.assertGreaterEqual(len(log['errors']), 0)
             self.assertGreaterEqual(len(log['warnings']), 0)
+            self.assertGreaterEqual(len(log['bare_unicode']), 0)
             for error in log['errors']:
                 self.assertNotRegex(r'xml2rfc', error)
                 self.assertNotRegex(r'Error:', error)
             for warning in log['warnings']:
                 self.assertNotRegex(r'xml2rfc', warning)
                 self.assertNotRegex(r'Warning:', warning)
+            for bare_unicde in log['bare_unicode']:
+                self.assertIn('Found non-ascii characters', bare_unicde)
 
     def test_get_errors_valid(self):
         filename = ''.join([TEMPORARY_DATA_DIR, TEST_XML_DRAFT])

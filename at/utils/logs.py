@@ -14,6 +14,7 @@ def process_xml2rfc_log(output, filename):
     log = []
     errors = []
     warnings = []
+    unicode = []
 
     if output.stderr:
         log = cleanup_output(filename,
@@ -30,12 +31,18 @@ def process_xml2rfc_log(output, filename):
             else:
                 errors.append(message)
         elif warning and (message := warning.group('message')):
-            if line and (line := line.group('line')):
-                warnings.append(f'({line}) {message}')
+            if 'Found non-ascii characters' in message:
+                if line and (line := line.group('line')):
+                    unicode.append(f'({line}) {message}')
+                else:
+                    warnings.append(message)
             else:
-                warnings.append(message)
+                if line and (line := line.group('line')):
+                    warnings.append(f'({line}) {message}')
+                else:
+                    warnings.append(message)
 
-    return {'errors': errors, 'warnings': warnings}
+    return {'errors': errors, 'warnings': warnings, 'bare_unicode': unicode}
 
 
 def get_errors(output, filename):
