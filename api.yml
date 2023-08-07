@@ -296,6 +296,15 @@ paths:
                   idnits:
                     type: string
                     description: idnits output
+                  non_ascii:
+                    type: string
+                    description: kramdown-rfc echars output
+                  bare_unicode:
+                    type: array
+                    description: list of bare Unicode (non-ascci) usage report
+                    items:
+                      type: string
+                      description: warning description
         '400':
           description: Error has occured.
           content:

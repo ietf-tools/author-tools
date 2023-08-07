@@ -7,8 +7,8 @@ from unittest import TestCase
 from werkzeug.datastructures import FileStorage
 
 from at.utils.validation import (
-        convert_v2v3, idnits, svgcheck, validate_draft, validate_xml,
-        xml2rfc_validation)
+        convert_v2v3, get_non_ascii_chars, idnits, svgcheck, validate_draft,
+        validate_xml, xml2rfc_validation)
 
 TEST_DATA_DIR = './tests/data/'
 TEST_XML_DRAFT = 'draft-smoke-signals-00.xml'
@@ -46,9 +46,11 @@ class TestUtilsValidation(TestCase):
         self.assertIn('errors', log.keys())
         self.assertIn('warnings', log.keys())
         self.assertIn('idnits', log.keys())
+        self.assertIn('bare_unicode', log.keys())
         self.assertEqual(len(log['errors']), 0)
-        self.assertGreaterEqual(len(log['warnings']), 0)
         self.assertGreater(len(log['idnits']), 0)
+        self.assertGreaterEqual(len(log['warnings']), 0)
+        self.assertGreaterEqual(len(log['bare_unicode']), 0)
 
     def test_validate_xml_invalid_xml(self):
         log = validate_xml(''.join([TEMPORARY_DATA_DIR, TEST_XML_INVALID]))
@@ -56,6 +58,7 @@ class TestUtilsValidation(TestCase):
         self.assertIn('errors', log.keys())
         self.assertIn('warnings', log.keys())
         self.assertIn('idnits', log.keys())
+        self.assertIn('bare_unicode', log.keys())
         self.assertGreater(len(log['errors']), 0)
         self.assertGreater(len(log['idnits']), 0)
         self.assertGreater(len(log['idnits']), 0)
@@ -174,9 +177,13 @@ class TestUtilsValidation(TestCase):
             self.assertIn('errors', log.keys())
             self.assertIn('warnings', log.keys())
             self.assertIn('idnits', log.keys())
+            self.assertIn('bare_unicode', log.keys())
+            self.assertIn('non_ascii', log.keys())
             self.assertEqual(len(log['errors']), 0)
-            self.assertGreaterEqual(len(log['warnings']), 0)
             self.assertGreater(len(log['idnits']), 0)
+            self.assertGreaterEqual(len(log['warnings']), 0)
+            self.assertGreaterEqual(len(log['bare_unicode']), 0)
+            self.assertGreaterEqual(len(log['non_ascii']), 0)
 
     def test_validate_draft_text(self):
         with open(''.join([TEST_DATA_DIR, TEST_TEXT_DRAFT]), 'rb') as file:
@@ -186,4 +193,12 @@ class TestUtilsValidation(TestCase):
             self.assertNotIn('errors', log.keys())
             self.assertNotIn('warnings', log.keys())
             self.assertIn('idnits', log.keys())
+            self.assertIn('non_ascii', log.keys())
             self.assertGreater(len(log['idnits']), 0)
+            self.assertGreaterEqual(len(log['non_ascii']), 0)
+
+    def test_get_non_ascii_chars(self):
+        log = get_non_ascii_chars(''.join([TEMPORARY_DATA_DIR,
+                                           TEST_XML_DRAFT]))
+
+        self.assertIn('Sinhala', log)
