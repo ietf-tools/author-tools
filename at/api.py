@@ -22,8 +22,8 @@ from at.utils.validation import (
 from at.utils.version import (
         get_aasvg_version, get_idnits_version, get_id2xml_version,
         get_iddiff_version, get_mmark_version, get_kramdown_rfc_version,
-        get_rfcdiff_version, get_svgcheck_version, get_weasyprint_version,
-        get_xml2rfc_version)
+        get_rfcdiff_version, get_svgcheck_version, get_tex2svg_version,
+        get_utftex_version, get_weasyprint_version, get_xml2rfc_version)
 
 BAD_REQUEST = 400
 VERSION_INFORMATION = {
@@ -37,6 +37,8 @@ VERSION_INFORMATION = {
         'aasvg': get_aasvg_version(),
         'svgcheck': get_svgcheck_version(),
         'rfcdiff': get_rfcdiff_version(),
+        'tex2svg': get_tex2svg_version(),
+        'utftex': get_utftex_version(),
         'bap': '1.4'}   # bap does not provide a switch to get version
 
 bp = Blueprint('api', __name__, url_prefix='/api')

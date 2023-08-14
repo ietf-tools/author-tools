@@ -30,6 +30,8 @@ jobs:
         sudo tar zxf mmark_*.tgz -C /bin/
         wget https://github.com/ietf-tools/bap/archive/refs/heads/master.zip
         unzip -q master.zip -d /tmp/bap
+        wget https://github.com/bartp5/libtexprintf/archive/refs/tags/v1.25.zip
+        unzip -q  -q v1.25.zip -d /tmp/
 
     - name: Build bap
       working-directory: /tmp/bap/bap-master/
@@ -38,6 +40,17 @@ jobs:
         sudo ./configure
         sudo make
         sudo cp aex bap /bin
+
+    - name: Build utftex
+      working-directory: /tmp/libtexprintf-1.25
+      env:
+        LD_LIBRARY_PATH: /usr/local/lib
+      run: |
+        sudo ldconfig
+        sudo apt-get install -y autoconf pkg-config libtool
+        sudo ./autogen.sh
+        sudo ./configure
+        sudo make install
 
     # Python
     - name: Set up Python 3.10
@@ -66,7 +79,8 @@ jobs:
       run: pyflakes at tests
     - name: Run tests and collect coverage
       env:
-        PATH: $PATH:/bin:./node_modules/.bin/
+        PATH: $PATH:/usr/local/bin:/bin:./node_modules/.bin/
+        LD_LIBRARY_PATH: /usr/local/lib
       run: |
         coverage run -m unittest discover tests
         coverage xml

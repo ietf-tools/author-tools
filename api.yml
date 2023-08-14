@@ -860,3 +860,9 @@ paths:
                       rfcdiff:
                         type: string
                         description: rfcdiff version
+                      utftex:
+                        type: string
+                        description: utftex version
+                      tex2svg:
+                        type: string
+                        description: tex2svg version

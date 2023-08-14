@@ -16,6 +16,7 @@
   },
   "homepage": "https://github.com/ietf-tools/ietf-at#readme",
   "dependencies": {
-    "aasvg": "^0.3.6"
+    "aasvg": "^0.3.6",
+    "mathjax-node-cli": "^1.0.0"
   }
 }
