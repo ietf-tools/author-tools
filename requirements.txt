@@ -1,10 +1,10 @@
 decorator>=5.1.1
-Flask>=2.3.2
+Flask>=2.3.3
 Flask-Cors>=4.0.0
 id2xml>=1.5.2
 iddiff>=0.4.3
 requests>=2.31.0
-sentry-sdk[flask]>=1.29.2
+sentry-sdk[flask]>=1.31.0
 svgcheck>=0.7.1
 weasyprint>=59.0
 xml2rfc>=3.18.0
