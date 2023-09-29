@@ -6,5 +6,5 @@ iddiff>=0.4.3
 requests>=2.31.0
 sentry-sdk[flask]>=1.31.0
 svgcheck>=0.7.1
-weasyprint>=59.0,<60.0
-xml2rfc>=3.18.0
+weasyprint>=60.1
+xml2rfc>=3.18.1
