@@ -7,7 +7,7 @@ click==8.1.7
 ConfigArgParse==1.7
 cssselect2==0.7.0
 decorator==5.1.1
-Flask==2.3.3
+Flask==3.0.0
 Flask-Cors==4.0.0
 fonttools==4.43.1
 google-i18n-address==3.1.0
@@ -15,7 +15,6 @@ html5lib==1.1
 id2xml==1.5.2
 iddiff==0.4.3
 idna==3.4
-importlib-metadata==6.8.0
 intervaltree==3.1.0
 itsdangerous==2.1.2
 Jinja2==3.1.2
@@ -41,5 +40,4 @@ weasyprint==60.1
 webencodings==0.5.1
 Werkzeug==3.0.1
 xml2rfc==3.18.2
-zipp==3.17.0
 zopfli==0.2.3
