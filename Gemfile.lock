@@ -4,14 +4,14 @@ GEM
     certified (1.0.0)
     connection_pool (2.4.1)
     differ (0.1.2)
-    json_pure (2.6.3)
+    json_pure (2.7.1)
     kramdown (2.4.0)
       rexml
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
-    kramdown-rfc (1.7.3)
-      kramdown-rfc2629 (= 1.7.3)
-    kramdown-rfc2629 (1.7.3)
+    kramdown-rfc (1.7.4)
+      kramdown-rfc2629 (= 1.7.4)
+    kramdown-rfc2629 (1.7.4)
       certified (~> 1.0)
       differ (~> 0.1)
       json_pure (~> 2.0)
@@ -32,6 +32,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-20
+  arm64-darwin-23
   x86_64-linux
 
 DEPENDENCIES
