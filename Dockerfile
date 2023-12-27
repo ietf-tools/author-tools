@@ -6,6 +6,8 @@ ENV PATH=$PATH:./node_modules/.bin
 ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 # Disable local file read for kramdown-rfc
 ENV KRAMDOWN_SAFE=1
+# Number of gunicorn workers
+ENV GUNICORN_WORKERS=4
 
 WORKDIR /usr/src/app
 
@@ -100,4 +102,4 @@ RUN mkdir -p tmp && \
     echo "ALLOWED_DOMAINS = ['ietf.org', 'rfc-editor.org', 'github.com', 'githubusercontent.com', 'github.io', 'gitlab.com', 'gitlab.io', 'codeberg.page']" >> at/config.py
 
 # host with gunicorn
-CMD gunicorn --workers=16 -b 0.0.0.0:80 'at:create_app()'
+CMD gunicorn --workers=$GUNICORN_WORKERS -b 0.0.0.0:80 'at:create_app()'
