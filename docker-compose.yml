@@ -5,3 +5,5 @@ services:
     build: .
     ports:
       - '8888:80'
+    environment:
+      - GUNICORN_WORKERS=4
