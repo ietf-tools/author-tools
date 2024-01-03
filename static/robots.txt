@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Allow: /iddiff$
+Disallow: /api/
+Disallow: /api2/
+Disallow: /diff
+Disallow: /iddiff?*
+
+Sitemap: https://author-tools.ietf.org/sitemap.xml
+
+Host: author-tools.ietf.org

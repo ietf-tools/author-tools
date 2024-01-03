@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en"> <head>
+    <meta charset="utf-8">
+    <title>IETF Author Tools - idnits</title>
+    <meta name="description" content="This service allows you to inspect an ID (Internet-Draft) for a variety of conditions that should be adjusted to bring the document into line with policies from the IETF, the IETF Trust, and the RFC Editor.">
+    <link rel="canonical" href="https://author-tools.ietf.org/">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles/custom.css">
+  </head>
+  <body>
+    <header>
+      <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">
+           <img alt="IETF Logo" src="https://www.ietf.org/lib/dt/7.39.0/ietf/images/ietflogo-small-transparent.png">
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2">
+              <li class="nav-item">
+                <a class="nav-link" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/iddiff">iddiff</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/idnits">idnits</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/svgcheck">svgcheck</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/abnf">ABNF Tools</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/doc/">API</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://bib.ietf.org">BibXML</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://authors.ietf.org">Internet-Draft Author Resources</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://www.ietf.org/">IETF</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://datatracker.ietf.org/">Datatracker</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <div class="container">
+        <div class="row">
+          <h1 class="text-center">IETF Author Tools - idnits</h1>
+        </div>
+        <div class="row">
+          <div>
+            <p>
+              The service inspects Internet-Draft (ID) documents for a variety
+              of conditions that should be adjusted to bring the document into
+              line with policies from the IETF, the IETF Trust, and the RFC Editor.
+              The determination of which issues are to be reported is based on:
+            </p>
+            <ul>
+              <li>Requirements in <a href="https://www.ietf.org/id-info/1id-guidelines.txt">https://www.ietf.org/id-info/1id-guidelines.txt</a></li>
+              <li>Requirements in <a href="https://www.ietf.org/id-info/checklist">https://www.ietf.org/id-info/checklist</a></li>
+              <li>Additional requirements captured from Area Directors (ADs) and authors over time.</li>
+              <li>Requirements in <a href="https://iaoc.ietf.org/documents/idnits-SOW-00.pdf">https://iaoc.ietf.org/documents/idnits-SOW-00.pdf</a></li>
+            </ul>
+          </div>
+          <div>
+            <ul class="nav nav-tabs" id="ulDraftTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link tab-link active" id="file-tab" data-bs-toggle="tab" data-bs-target="#file-div" type="button" role="tab" aria-controls="file-div" aria-selected="true" data-others="form-tab-url" data-bs-toggle2="tooltip" data-bs-placement="bottom">Upload File</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link tab-link" id="url-tab" data-bs-toggle="tab" data-bs-target="#url" type="button" role="tab" aria-controls="url" aria-selected="false" data-others="form-tab-file" data-bs-toggle2="tooltip" data-bs-placement="bottom">URL</button>
+              </li>
+            </ul>
+            <div class="tab-content" id="ulDraftTabsContent">
+              <div class="tab-pane fade show active" id="file-div" role="tabpanel" aria-labelledby="file-tab">
+                <form id="form-tab-file">
+                  <input class="form-control form-control-lg" id="file" name="file" type="file" accept=".xml,.md,.mkd,.txt" data-bs-toggle2="tooltip" data-bs-placement="bottom" title="Select input file. Input file can be XML, Markdown (kramdown-rfc or mmark) or text.">
+                </form>
+              </div>
+              <div class="tab-pane fade" id="url" role="tabpanel" aria-labelledby="url-tab">
+                <form id="form-tab-url">
+                  <input class="form-control form-control-lg" id="formURL" type="url" placeholder="https://www.ietf.org/archive/id/draft-ietf-wg-example-01.txt" data-bs-toggle2="tooltip" data-bs-placement="bottom" title="Provide an Internet-Draft (ID) URL. See the About page for a list of allowed domains." required>
+                  <div class="invalid-feedback">
+                    Provide a valid URL. See the About page for <a href="/about.html#allowed-domains">a list of allowed domains</a>.
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div>
+              <p>Options for idnits check (submission check ignores these options):</p>
+            </div>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="switchVerbose" checked>
+              <label class="form-check-label" for="switchVerbose">Verbose output</label>
+            </div>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="switchVeryVerbose">
+              <label class="form-check-label" for="switchVeryVerbose">Very verbose output</label>
+            </div>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="switchShowText" checked>
+              <label class="form-check-label" for="switchShowText">Show text</label>
+            </div>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="switchSubmissionCheck">
+              <label class="form-check-label" for="switchSubmissionCheck">Submission check</label>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+            <button class="btn btn-primary btn-lg flex-grow-1" type="button" value="idnits" id="buttonIdnits" data-title="Check" data-bs-toggle2="tooltip" data-bs-placement="bottom" title="Check for ID nits.">Check</button>
+            <button class="btn btn-primary btn-lg flex-grow-1" type="button" value="submissioncheck" id="buttonSubmissionCheck" data-title="Submission Check" data-bs-toggle2="tooltip" data-bs-placement="bottom" title="Perform submission checks only.">Submission Check</button>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <div class="text-center mt-3">
+        <p><small>
+          <a href="/about.html">About</a> |
+          <a href="https://github.com/ietf-tools/ietf-at">Author Tools API (github repository)</a> |
+          <a href="https://github.com/ietf-tools/ietf-at-ui">Author Tools UI (github repository)</a> |
+          <a href="https://www.ietf.org/">IETF</a> |
+          <a href="https://github.com/ietf-tools/ietf-at-ui/blob/main/LICENSE">LICENSE</a> |
+          <a href="/about.html#howto-report-bugs">Report a bug</a>
+        </small></p>
+      </div>
+    </footer>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+      crossorigin="anonymous"></script>
+    <script src="scripts/idnits.js"></script>
+    <!-- Matomo -->
+    <script>
+      var _paq = window._paq = window._paq || [];
+      /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+      _paq.push(['trackPageView']);
+      _paq.push(['enableLinkTracking']);
+      (function() {
+        var u="//analytics.ietf.org/";
+        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setSiteId', '9']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+      })();
+    </script>
+    <!-- End Matomo Code -->
+  </body>
+</html>

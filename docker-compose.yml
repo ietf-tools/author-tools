@@ -3,7 +3,17 @@ version: '3.3'
 services:
   api:
     build: .
-    ports:
-      - '8888:80'
     environment:
       - GUNICORN_WORKERS=4
+  proxy:
+    image: nginx:latest
+    depends_on:
+      - api
+    links:
+      - api
+    ports:
+      - '8888:80'
+    volumes:
+      - ./nginx-templates:/etc/nginx/templates/
+      - ./static:/usr/share/nginx/html/
+    mem_limit: 500mb

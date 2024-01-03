@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>IETF Author Tools - About</title>
+    <meta name="description" content="About IETF Author Tools and version information.">
+    <link rel="canonical" href="https://author-tools.ietf.org/">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles/custom.css">
+  </head>
+  <body>
+    <header>
+      <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">
+           <img alt="IETF Logo" src="https://www.ietf.org/lib/dt/7.39.0/ietf/images/ietflogo-small-transparent.png">
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2">
+              <li class="nav-item">
+                <a class="nav-link" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/iddiff">iddiff</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/idnits">idnits</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/svgcheck">svgcheck</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="/abnf">ABNF Tools</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/doc/">API</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://bib.ietf.org">BibXML</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://authors.ietf.org">Internet-Draft Author Resources</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://www.ietf.org/">IETF</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://datatracker.ietf.org/">Datatracker</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <div class="container">
+        <div class="row">
+          <h1 class="text-center">About Author Tools</h1>
+        </div>
+        <div class="row" id="alertError">
+          <div class="alert alert-danger d-flex align-items-center alert-dismissible fade show" role="alert">
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                </symbol>
+            </svg>
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+            <div class="error-message" id="messageError">
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <p>This service allows you to convert an Internet-Draft from one format into another, including rendered outputs. In the background this service uses id2xml, kramdown-rfc, mmark and xml2rfc, chaining them together as needed to deliver the requested conversion.</p>
+          </div>
+        </div>
+        <div class="row">
+          <table class="table table-hover">
+            <tbody>
+              <tr>
+                <th scope="col">Tool</th>
+                <th scope="col">Version</th>
+                <th scope="col">License</th>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <a href="https://github.com/ietf-tools/ietf-at">Author Tools - API</a>
+                </th>
+                <td><span id="spanIetfat"></span></td>
+                <td><a href="https://github.com/ietf-tools/ietf-at/raw/main/LICENSE">Revised BSD License</a></td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <a href="https://github.com/ietf-tools/xml2rfc">xml2rfc</a>
+                </th>
+                <td><span id="spanXml2rfc"></span></td>
+                <td><a href="https://github.com/ietf-tools/xml2rfc/raw/main/LICENSE">BSD 3-Clause License</a></td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <a href="https://github.com/cabo/kramdown-rfc">kramdown-rfc</a>
+                </th>
+                <td><span id="spanKramdown"></span></td>
+                <td><a href="https://github.com/cabo/kramdown-rfc/raw/master/LICENSE">MIT License</a></td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <a href="https://mmark.miek.nl/">mmark</a>
+                </th>
+                <td><span id="spanMmark"></span></td>
+                <td><a href="https://github.com/mmarkdown/mmark/raw/master/LICENSE">Simplified BSD License</a></td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <a href="https://github.com/ietf-tools/id2xml">id2xml</a>
+                </th>
+                <td><span id="spanId2xml"></span></td>
+                <td><a href="https://github.com/ietf-tools/id2xml/raw/main/LICENSE">Revised BSD License</a></td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <a href="https://github.com/ietf-tools/idnits">idnits</a>
+                </th>
+                <td><span id="spanIdnits"></span></td>
+                <td><a href="https://github.com/ietf-tools/idnits/raw/v2/copyright">GNU General Public License</a></td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <a href="https://github.com/ietf-tools/iddiff">iddiff</a>
+                </th>
+                <td><span id="spanIddiff"></span></td>
+                <td><a href="https://github.com/ietf-tools/iddiff/raw/main/LICENSE">Revised BSD License</a></td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <a href="https://weasyprint.org/">WeasyPrint</a>
+                </th>
+                <td><span id="spanWeasyprint"></span></td>
+                <td><a href="https://github.com/Kozea/WeasyPrint/raw/master/LICENSE">BSD 3-Clause License</a></td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <a href="https://github.com/martinthomson/aasvg/">aasvg</a>
+                </th>
+                <td><span id="spanAasvg"></span></td>
+                <td><a href="https://github.com/martinthomson/aasvg/raw/main/LICENSE">Simplified BSD License</a></td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <a href="https://github.com/ietf-tools/bap">Bill's ABNF Parser (BAP)</a>
+                </th>
+                <td><span id="spanBap"></span></td>
+                <td><a href="https://github.com/ietf-tools/bap/blob/master/main.c#L1L30">BSD 3-Clause License</a></td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <a href="https://github.com/ietf-tools/svgcheck">svgcheck</a>
+                </th>
+                <td><span id="spanSvgcheck"></span></td>
+                <td><a href="https://github.com/ietf-tools/svgcheck/raw/main/LICENSE">BSD 3-Clause License</a></td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <a href="https://github.com/ietf-tools/rfcdiff">rfcdiff</a>
+                </th>
+                <td><span id="spanRfcdiff"></span></td>
+                <td><a href="https://github.com/ietf-tools/rfcdiff/blob/main/rfcdiff#L64-L83">GNU General Public License</a></td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <a href="https://github.com/mathjax/MathJax-demos-node">tex2svg</a>
+                </th>
+                <td><span id="spanTex2svg"></span></td>
+                <td><a href="https://github.com/mathjax/MathJax-demos-node/raw/master/LICENSE">Apache License</a></td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <a href="https://github.com/bartp5/libtexprintf">utftex</a>
+                </th>
+                <td><span id="spanUtftex"></span></td>
+                <td><a href="https://github.com/bartp5/libtexprintf/raw/main/COPYING">GNU General Public License</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row">
+          <h2 id="howto-report-bugs">How to report bugs</h2>
+          <ul>
+            <li>
+              For bugs and feature requests about IETF Author Tools website,
+              create a new issue under
+              <a href="https://github.com/ietf-tools/ietf-at-ui/issues">
+                Author Tools UI
+              </a> GitHub project.
+            </li>
+            <li>
+              For bugs and feature requests about IETF Author Tools API,
+              create a new issue under
+              <a href="https://github.com/ietf-tools/ietf-at/issues">
+                Author Tools API
+              </a> GitHub project.
+            </li>
+            <li>
+              General discussions about IETF Author Tools and other IETF tools
+              happens in
+              <a href="https://www.ietf.org/mailman/listinfo/tools-discuss">
+                Tools-discuss
+              </a> mailing list.
+            </li>
+          </ul>
+        </div>
+        <div class="row">
+          <h2 id="allowed-domains">Allowed Domains</h2>
+          <p>Following domains and their subdomains are allowed as URL inputs in Author Tools</p>
+          <ul>
+            <li>ietf.org</li>
+            <li>rfc-editor.org</li>
+            <li>github.com</li>
+            <li>githubusercontent.com</li>
+            <li>github.io</li>
+            <li>gitlab.com</li>
+            <li>gitlab.io</li>
+            <li>codeberg.page</li>
+          </ul>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <div class="text-center mt-3">
+        <p><small>
+          <a href="/about.html">About</a> |
+          <a href="https://github.com/ietf-tools/ietf-at">Author Tools API (github repository)</a> |
+          <a href="https://github.com/ietf-tools/ietf-at-ui">Author Tools UI (github repository)</a> |
+          <a href="https://www.ietf.org/">IETF</a> |
+          <a href="https://github.com/ietf-tools/ietf-at-ui/blob/main/LICENSE">LICENSE</a> |
+          <a href="/about.html#howto-report-bugs">Report a bug</a>
+        </small></p>
+      </div>
+    </footer>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+      crossorigin="anonymous"></script>
+    <script src="scripts/about.js"></script>
+    <!-- Matomo -->
+    <script>
+      var _paq = window._paq = window._paq || [];
+      /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+      _paq.push(['trackPageView']);
+      _paq.push(['enableLinkTracking']);
+      (function() {
+        var u="//analytics.ietf.org/";
+        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setSiteId', '9']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+      })();
+    </script>
+    <!-- End Matomo Code -->
+  </body>
+</html>
