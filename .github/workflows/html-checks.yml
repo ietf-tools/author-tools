@@ -1,0 +1,24 @@
+name: HTML Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  validate-html:
+    name: Validate HTML
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install HTML validator
+        run:
+          npm install html-validate
+
+      - name: Validate HTML
+        run: npm exec html-validate static/*.html static/doc/*.html
