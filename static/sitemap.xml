@@ -31,7 +31,7 @@
       <priority>0.90</priority>
     </url>
     <url>
-      <loc>https://author-tools.ietf.org/about.html</loc>
+      <loc>https://author-tools.ietf.org/about</loc>
       <priority>0.90</priority>
     </url>
 </urlset>

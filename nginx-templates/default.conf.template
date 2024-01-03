@@ -38,6 +38,6 @@ server {
         rewrite ^/svgcheck$ /svgcheck.html break;
         rewrite ^/rfcdiff$ /rfcdiff.html break;
         rewrite ^/clean-svg-ids$ /clean-svg-ids.html break;
-
+        rewrite ^/about$ /about.html break;
     }
 }

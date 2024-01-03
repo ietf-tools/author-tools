@@ -2,7 +2,6 @@ User-agent: *
 Allow: /
 Allow: /iddiff$
 Disallow: /api/
-Disallow: /api2/
 Disallow: /diff
 Disallow: /iddiff?*
 
