@@ -1,6 +1,5 @@
 from logging import getLogger
 from subprocess import run as proc_run, CalledProcessError
-from re import search
 
 from weasyprint import __version__ as weasyprint_version
 from xml2rfc import __version__ as xml2rfc_version
@@ -131,40 +130,5 @@ def get_rfcdiff_version(logger=getLogger()):
                             .replace('rfcdiff', '').strip()
     except CalledProcessError:  # pragma: no cover
         logger.info('rfcdiff error: {}'.format(
-            output.stderr.decode('utf-8')))
-        return None
-
-
-def get_tex2svg_version(logger=getLogger()):
-    '''Return tex2svg version'''
-
-    output = proc_run(args=['tex2svg', '--version'], capture_output=True)
-
-    try:
-        output.check_returncode()
-        return output.stdout.decode('utf-8').strip()
-    except CalledProcessError:  # pragma: no cover
-        logger.info('tex2svg error: {}'.format(
-            output.stderr.decode('utf-8')))
-        return None
-
-
-def get_utftex_version(logger=getLogger()):
-    '''Return utftex version'''
-
-    output = proc_run(args=['utftex', '--version'], capture_output=True)
-
-    try:
-        output.check_returncode()
-        match = search(
-                    r'This is utftex version (\d+\.\d+)',
-                    output.stdout.decode('utf-8').strip())
-        if match:
-            return match.group(1)
-        else:
-            logger.info('utftex error: Could not find version.')
-            return None
-    except CalledProcessError:  # pragma: no cover
-        logger.info('utftex error: {}'.format(
             output.stderr.decode('utf-8')))
         return None

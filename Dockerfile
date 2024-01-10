@@ -3,7 +3,6 @@ LABEL maintainer="Kesara Rathnayake <kesara@staff.ietf.org>"
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV PATH=$PATH:./node_modules/.bin
-ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 # Disable local file read for kramdown-rfc
 ENV KRAMDOWN_SAFE=1
 
@@ -13,15 +12,12 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update && \
     apt-get install -y \
-        autoconf \
         software-properties-common \
         gcc \
         wget \
         ruby \
         python3.10 \
         python3-pip \
-        pkg-config \
-        libtool \
         libpango-1.0-0 \
         wdiff \
         rfcdiff \
@@ -33,8 +29,7 @@ RUN apt-get update && \
         supervisor && \
     rm -rf /var/lib/apt/lists/* /var/log/dpkg.log && \
     apt-get autoremove -y && \
-    apt-get clean -y && \
-    ldconfig
+    apt-get clean -y
 
 # Install required fonts
 RUN mkdir -p ~/.fonts/opentype && \
@@ -69,16 +64,6 @@ RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
     wget "https://github.com/mmarkdown/mmark/releases/download/v2.2.43/mmark_2.2.43_linux_$arch.tgz" && \
     tar zxf mmark_*.tgz -C /bin/ && \
     rm mmark_*.tgz
-
-# Install utftex
-RUN export UTFTEX=libtexprintf-1.25 && \
-    wget -q https://github.com/bartp5/libtexprintf/archive/refs/tags/v1.25.zip && \
-    unzip -q v1.25.zip -d /tmp/ && \
-    cd /tmp/$UTFTEX && \
-    ./autogen.sh && \
-    ./configure && \
-    make install && \
-    rm -r /tmp/$UTFTEX /usr/src/app/v1.25.zip
 
 COPY Gemfile Gemfile.lock LICENSE README.md api.yml constraints.txt package-lock.json package.json requirements.txt .
 COPY at ./at
