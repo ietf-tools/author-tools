@@ -6,8 +6,6 @@ ENV PATH=$PATH:./node_modules/.bin
 ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 # Disable local file read for kramdown-rfc
 ENV KRAMDOWN_SAFE=1
-# Number of gunicorn workers
-ENV GUNICORN_WORKERS=4
 
 WORKDIR /usr/src/app
 
@@ -30,7 +28,9 @@ RUN apt-get update && \
         npm \
         gawk \
         bison \
-        flex && \
+        flex \
+        nginx \
+        supervisor && \
     rm -rf /var/lib/apt/lists/* /var/log/dpkg.log && \
     apt-get autoremove -y && \
     apt-get clean -y && \
@@ -101,5 +101,10 @@ RUN mkdir -p tmp && \
     echo "DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/api/rfcdiff-latest-json'" >> at/config.py && \
     echo "ALLOWED_DOMAINS = ['ietf.org', 'rfc-editor.org', 'github.com', 'githubusercontent.com', 'github.io', 'gitlab.com', 'gitlab.io', 'codeberg.page']" >> at/config.py
 
-# host with gunicorn
-CMD gunicorn --workers=$GUNICORN_WORKERS -b 0.0.0.0:80 'at:create_app()'
+
+# COPY required configuration
+COPY docker/gunicorn.py /usr/src/app/
+COPY docker/nginx-default-site.conf /etc/nginx/sites-available/default
+COPY docker/supervisord.conf /etc/supervisor/conf.d/
+
+CMD ["supervisord"]

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+    <url>
+      <loc>https://author-tools.ietf.org/</loc>
+      <priority>1.00</priority>
+    </url>
+    <url>
+      <loc>https://author-tools.ietf.org/iddiff</loc>
+      <priority>1.00</priority>
+    </url>
+    <url>
+      <loc>https://author-tools.ietf.org/abnf</loc>
+      <priority>1.00</priority>
+    </url>
+    <url>
+      <loc>https://author-tools.ietf.org/idnits</loc>
+      <priority>1.00</priority>
+    </url>
+    <url>
+      <loc>https://author-tools.ietf.org/svgcheck</loc>
+      <priority>1.00</priority>
+    </url>
+    <url>
+      <loc>https://author-tools.ietf.org/clean_svg_ids</loc>
+      <priority>1.00</priority>
+    </url>
+    <url>
+      <loc>https://author-tools.ietf.org/doc/</loc>
+      <priority>0.90</priority>
+    </url>
+    <url>
+      <loc>https://author-tools.ietf.org/about</loc>
+      <priority>0.90</priority>
+    </url>
+</urlset>

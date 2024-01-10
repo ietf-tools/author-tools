@@ -1,17 +1,21 @@
-# IETF Author Tools API
+# [IETF Author Tools](https://author-tools.ietf.org)
 
 ## Documenation
 
 * [API documenation](https://author-tools.ietf.org/doc/)
 * [OpenAPI specification](api.yml)
 
-## Running API service
+## Running Author Tools service
 
 ```
-docker-compose up
+docker-compose up --build -d
 ```
 
-## Testing
+## Testing Web UI
+
+* Visit http://localhost:8888
+
+## Testing API
 
 * Test XML RFC generation
 ```
@@ -44,4 +48,4 @@ See [contributing guide](CONTRIBUTING.md).
 
 ## License
 
-* [IETF Author Tools API - License](LICENSE)
+* [IETF Author Tools License](LICENSE)

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en"> <head>
+    <meta charset="utf-8">
+    <title>IETF Author Tools - ABNF Tools</title>
+    <meta name="description" content="This service allows extract ABNF syntax from a document and parse ABNF syntax using Bill's ABNF Parser (BAP).">
+    <link rel="canonical" href="https://author-tools.ietf.org/">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles/custom.css">
+  </head>
+  <body>
+    <header>
+      <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">
+           <img alt="IETF Logo" src="https://www.ietf.org/lib/dt/7.39.0/ietf/images/ietflogo-small-transparent.png">
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2">
+              <li class="nav-item">
+                <a class="nav-link" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/iddiff">iddiff</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/idnits">idnits</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/svgcheck">svgcheck</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/abnf">ABNF Tools</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/doc/">API</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://bib.ietf.org">BibXML</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://authors.ietf.org">Internet-Draft Author Resources</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://www.ietf.org/">IETF</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://datatracker.ietf.org/">Datatracker</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <div class="container">
+        <div class="row">
+          <h1 class="text-center">IETF Author Tools - ABNF Tools</h1>
+        </div>
+        <div class="row">
+          <div>
+            <p>
+              This service uses <a href="https://github.com/ietf-tools/bap">
+              Bill's ABNF Parser (BAP)</a> to extract &amp; parse ABNF syntax.
+            </p>
+          </div>
+        </div>
+        <div class="row border rounded">
+          <div>&nbsp;</div>
+          <h5>Extract ABNF</h5>
+          <div>
+            <p>
+              Provide an URL to a text Internet-Draft/RFC or Internet-Draft/RFC
+              name. See the About page for
+              <a href="/about#allowed-domains">a list of allowed domains</a>.
+            </p>
+            <p class="text-danger">
+              The output is a concatenation of all the ABNF fragments in the
+              document, including the appendix. Therefore results may include
+              duplicates and invalid ABNF syntax.
+            </p>
+          </div>
+          <div>
+            <div>
+              <label class="form-label" for="formInput">Document Name / URL</label>
+              <input class="form-control form-control-lg" type="text" id="formInput" placeholder="RFC 9000 or https://www.ietf.org/archive/id/draft-ietf-wg-example-01.txt" data-bs-toggle2="tooltip" data-bs-placement="bottom" title="Provide an Internet-Draft (ID) / RFC URL or document name. See the About page for a list of allowed domains.">
+            </div>
+          </div>
+          <div>&nbsp;</div>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+            <button class="btn btn-primary btn-lg flex-grow-1" type="button" value="extract" id="buttonExtract" data-title="Extract ABNF" data-bs-toggle2="tooltip" data-bs-placement="bottom" title="Extract ABNF using BAP aex.">Extract ABNF</button>
+          </div>
+          <div>&nbsp;</div>
+        </div>
+        <div>&nbsp;</div>
+        <div class="row border rounded">
+          <div>&nbsp;</div>
+          <h5>Parse ABNF</h5>
+          <div>
+            <div>
+              <label class="form-label" for="formTextAreaInput">ABNF</label>
+              <textarea class="form-control monospace" id="formTextAreaInput" rows="5" placeholder="ABNF Syntax" data-bs-toggle2="tooltip" data-bs-placement="bottom" title="Provide ABNF syntax"></textarea>
+
+            </div>
+          </div>
+          <div>&nbsp;</div>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+            <button class="btn btn-primary btn-lg flex-grow-1" type="button" value="parse" id="buttonParse" data-title="Parse ABNF" data-bs-toggle2="tooltip" data-bs-placement="bottom" title="Parse ABNF using BAP.">Parse ABNF</button>
+          </div>
+          <div>&nbsp;</div>
+          <div class="accordion" id="accordionAbnfParse">
+            <div class="accordion-item" id="accordionItemErrors">
+              <h2 class="accordion-header" id="panelsErrorsHeading">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsErrors" aria-expanded="true" aria-controls="panelsErrors">
+                  Errors
+                </button>
+              </h2>
+              <div id="panelsErrors" class="accordion-collapse collapse show" aria-labelledby="panelsErrorsHeading">
+                <div class="accordion-body">
+                  <pre id="preErrors" class="pre-scrollable"></pre>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item" id="accordionItemAbnf">
+              <h2 class="accordion-header" id="panelsAbnfHeading">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsAbnf" aria-expanded="true" aria-controls="panelsAbnf">
+                  ABNF
+                </button>
+              </h2>
+              <div id="panelsAbnf" class="accordion-collapse collapse show" aria-labelledby="panelsAbnfHeading">
+                <div class="accordion-body">
+                  <pre id="preAbnf" class="pre-scrollable"></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>&nbsp;</div>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <div class="text-center mt-3">
+        <p><small>
+          <a href="/about">About</a> |
+          <a href="https://github.com/ietf-tools/ietf-at">Author Tools API (github repository)</a> |
+          <a href="https://www.ietf.org/">IETF</a> |
+          <a href="https://github.com/ietf-tools/ietf-at/blob/main/LICENSE">LICENSE</a> |
+          <a href="https://github.com/ietf-tools/ietf-at/issues/new/choose">Report a bug</a>
+        </small></p>
+      </div>
+    </footer>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+      crossorigin="anonymous"></script>
+    <script src="scripts/abnf.js"></script>
+    <!-- Matomo -->
+    <script>
+      var _paq = window._paq = window._paq || [];
+      /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+      _paq.push(['trackPageView']);
+      _paq.push(['enableLinkTracking']);
+      (function() {
+        var u="//analytics.ietf.org/";
+        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setSiteId', '9']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+      })();
+    </script>
+    <!-- End Matomo Code -->
+  </body>
+</html>
