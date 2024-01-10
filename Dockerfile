@@ -89,7 +89,7 @@ RUN npm install
 # Install Python dependencies
 RUN apt-get remove -y python3-blinker
 RUN pip3 install --upgrade pip
-RUN pip3 install -r requirements.txt -c constraints.txt gunicorn
+RUN pip3 install -r requirements.txt -c constraints.txt
 
 # Install Ruby dependencies
 RUN gem install bundler && bundle install
