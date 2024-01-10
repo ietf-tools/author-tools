@@ -8,7 +8,7 @@
 ## Running Author Tools service
 
 ```
-docker-compose up
+docker-compose up --build -d
 ```
 
 ## Testing Web UI
