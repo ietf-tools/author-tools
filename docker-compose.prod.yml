@@ -1,0 +1,20 @@
+---
+version: '2.4'
+services:
+  author-tools:
+    image: ghcr.io/ietf-tools/ietf-at:latest
+    container_name: author-tools
+    environment:
+      GUNICORN_WORKERS: ${GUNICORN_WORKERS}
+      SENTRY_DSN: ${SENTRY_DSN}
+      SITE_URL: ${SITE_URL}
+    env_file:
+      - '.env'
+    ports:
+      - '${AT_PORT}:80'
+    mem_limit: 4gb
+    logging:
+      driver: "syslog"
+      options:
+        syslog-address: "tcp://ietfa.amsl.com:514"
+    restart: unless-stopped
