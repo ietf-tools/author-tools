@@ -1,8 +1,9 @@
 ---
 version: '3.3'
 services:
-  api:
+  author-tools:
     build: .
+    container_name: author-tools
     environment:
       GUNICORN_WORKERS: ${GUNICORN_WORKERS}
       SENTRY_DSN: ${SENTRY_DSN}
@@ -11,6 +12,4 @@ services:
       - '.env'
     ports:
       - '${AT_PORT}:80'
-    volumes:
-      - ./static:/usr/share/nginx/html/
     mem_limit: 4gb

@@ -102,7 +102,8 @@ RUN mkdir -p tmp && \
     echo "ALLOWED_DOMAINS = ['ietf.org', 'rfc-editor.org', 'github.com', 'githubusercontent.com', 'github.io', 'gitlab.com', 'gitlab.io', 'codeberg.page']" >> at/config.py
 
 
-# COPY required configuration
+# COPY required files
+COPY static /usr/share/nginx/html/
 COPY docker/gunicorn.py /usr/src/app/
 COPY docker/nginx-default-site.conf /etc/nginx/sites-available/default
 COPY docker/supervisord.conf /etc/supervisor/conf.d/
