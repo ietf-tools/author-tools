@@ -16,8 +16,6 @@ VERSION_LABELS = (
     'aasvg',
     'svgcheck',
     'rfcdiff',
-    'tex2svg',
-    'utftex',
     'bap')
 
 
