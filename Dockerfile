@@ -6,8 +6,6 @@ ENV PATH=$PATH:./node_modules/.bin
 ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 # Disable local file read for kramdown-rfc
 ENV KRAMDOWN_SAFE=1
-# Number of gunicorn workers
-ENV GUNICORN_WORKERS=4
 
 WORKDIR /usr/src/app
 
