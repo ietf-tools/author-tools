@@ -89,6 +89,7 @@ RUN mkdir -p tmp && \
 
 # COPY required files
 COPY static /usr/share/nginx/html/
+COPY api.yml /usr/share/nginx/html/
 COPY docker/gunicorn.py /usr/src/app/
 COPY docker/nginx-default-site.conf /etc/nginx/sites-available/default
 COPY docker/supervisord.conf /etc/supervisor/conf.d/
