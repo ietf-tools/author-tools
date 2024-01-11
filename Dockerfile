@@ -1,6 +1,8 @@
 FROM ubuntu:jammy
 LABEL maintainer="Kesara Rathnayake <kesara@staff.ietf.org>"
 
+ARG VERSION=6.6.6
+
 ENV DEBIAN_FRONTEND noninteractive
 ENV PATH=$PATH:./node_modules/.bin
 # Disable local file read for kramdown-rfc
@@ -81,7 +83,7 @@ RUN gem install bundler && bundle install
 
 RUN mkdir -p tmp && \
     echo "UPLOAD_DIR = '$PWD/tmp'" > at/config.py && \
-    echo "VERSION = '1.1.0'" >> at/config.py && \
+    echo "VERSION = '$VERSION'" >> at/config.py && \
     echo "REQUIRE_AUTH = False" >> at/config.py && \
     echo "DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/api/rfcdiff-latest-json'" >> at/config.py && \
     echo "ALLOWED_DOMAINS = ['ietf.org', 'rfc-editor.org', 'github.com', 'githubusercontent.com', 'github.io', 'gitlab.com', 'gitlab.io', 'codeberg.page']" >> at/config.py

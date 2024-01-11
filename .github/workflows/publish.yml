@@ -63,6 +63,8 @@ jobs:
           context: .
           file: Dockerfile
           push: true
+          build-args: |
+            VERSION: ${{ steps.semver.outputs.nextStrict }}
           platforms: linux/amd64,linux/arm64
           tags: ghcr.io/${{ github.repository }}:${{ steps.semver.outputs.nextStrict }}, ghcr.io/${{ github.repository }}:latest
 
