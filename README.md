@@ -3,7 +3,7 @@
 <img src="https://raw.githubusercontent.com/ietf-tools/common/main/assets/logos/authortools.svg" alt="IETF Author Tools" height="125" />
 
 [![Release](https://img.shields.io/github/release/ietf-tools/ietf-at.svg?style=flat&maxAge=300)](https://github.com/ietf-tools/ietf-at/releases)
-[![License](https://img.shields.io/github/license/ietf-tools/ietf-at)](https://github.com/ietf-tools/ietf-at/blob/main/LICENSE)
+[![License](https://img.shields.io/github/license/ietf-tools/ietf-at?20240110)](https://github.com/ietf-tools/ietf-at/blob/main/LICENSE)
 
 ##### IETF Author Tools
 
