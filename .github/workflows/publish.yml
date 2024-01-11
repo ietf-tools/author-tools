@@ -37,12 +37,13 @@ jobs:
           body: '*pending*'
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set Helm Chart Version
+      - name: Set Helm Chart and OpenAPI Version
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
           echo "Setting version ${{ steps.semver.outputs.nextStrict }}..."
           sed -i -r -e "s|^version: .*$|version: '${{ steps.semver.outputs.nextStrict }}'|" -e "s|^appVersion: .*$|appVersion: '${{ steps.semver.outputs.nextStrict }}'|" helm/Chart.yaml
+          sed -i -r -e "s|version: .*$|version: ${{ steps.semver.outputs.nextStrict }}|" api.yml
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
