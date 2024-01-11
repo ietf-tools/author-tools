@@ -1,9 +1,4 @@
-name: Docker
-
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
+name: Publish
 
 on:
   release:
@@ -56,3 +51,10 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name }}, ghcr.io/${{ github.repository }}:latest
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Package and Push Chart
+        run: |
+          helm plugin install https://github.com/chartmuseum/helm-push.git
+          helm repo add chartmuseum https://charts.ietf.org
+          helm cm-push --version="${{github.event.release.tag_name | sed 's/^v//'}}" --username="${{secrets.HELM_REPO_USERNAME}}" --password="${{secrets.HELM_REPO_PASSWORD}}" helm/ chartmuseum
+          helm repo remove chartmuseum
