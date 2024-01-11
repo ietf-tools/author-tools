@@ -83,6 +83,7 @@ jobs:
           token: ${{ github.token }}
           fromTag: ${{ steps.semver.outputs.nextStrict }}
           toTag: ${{ steps.semver.outputs.current }}
+          excludeTypes: ''
           writeToFile: false
 
       - name: Create Release
