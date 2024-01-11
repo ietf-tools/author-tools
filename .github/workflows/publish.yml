@@ -64,7 +64,7 @@ jobs:
           file: Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name }}, ghcr.io/${{ github.repository }}:latest
+          tags: ghcr.io/${{ github.repository }}:${{ steps.semver.outputs.nextStrict }}, ghcr.io/${{ github.repository }}:latest
 
       - name: Package and Push Chart
         run: |
