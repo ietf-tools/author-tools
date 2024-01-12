@@ -11,7 +11,8 @@
 
 - [**Production Website**](https://datatracker.ietf.org)
 - [Changelog](https://github.com/ietf-tools/ietf-at/releases)
-- [Contributing](https://github.com/ietf-tools/ietf-at/blob/main/LICENSE)
+- [Contributing](https://github.com/ietf-tools/ietf-at/blob/main/CONTRIBUTING.md)
+- [License](https://github.com/ietf-tools/ietf-at/blob/main/LICENSE)
 - [Documentation](#documentation)
 - [Running Author Tools service](#running-author-tools-service)
 - [Testing Web UI](#testing-web-ui)
@@ -22,7 +23,7 @@
 ## Documentation
 
 * [API documenation](https://author-tools.ietf.org/doc/)
-* [OpenAPI specification](api.yml)
+* [OpenAPI specification](https://author-tools.ietf.org/api.yml)
 
 ## Running Author Tools service
 
