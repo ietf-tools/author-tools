@@ -3,9 +3,12 @@ name: HTML Tests
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'static/**'
   pull_request:
     branches: [ main ]
-  workflow_dispatch:
+    paths:
+      - 'static/**'
 
 jobs:
   validate-html:
