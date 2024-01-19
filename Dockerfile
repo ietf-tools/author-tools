@@ -67,7 +67,7 @@ RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
     tar zxf mmark_*.tgz -C /bin/ && \
     rm mmark_*.tgz
 
-COPY Gemfile Gemfile.lock LICENSE README.md api.yml constraints.txt package-lock.json package.json requirements.txt .
+COPY Gemfile Gemfile.lock LICENSE README.md api.yml constraints.txt package-lock.json package.json requirements.txt docker/version.py .
 COPY at ./at
 
 # Install JavaScript dependencies
@@ -86,7 +86,8 @@ RUN mkdir -p tmp && \
     echo "VERSION = '${VERSION}'" >> at/config.py && \
     echo "REQUIRE_AUTH = False" >> at/config.py && \
     echo "DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/api/rfcdiff-latest-json'" >> at/config.py && \
-    echo "ALLOWED_DOMAINS = ['ietf.org', 'rfc-editor.org', 'github.com', 'githubusercontent.com', 'github.io', 'gitlab.com', 'gitlab.io', 'codeberg.page']" >> at/config.py
+    echo "ALLOWED_DOMAINS = ['ietf.org', 'rfc-editor.org', 'github.com', 'githubusercontent.com', 'github.io', 'gitlab.com', 'gitlab.io', 'codeberg.page']" >> at/config.py && \
+    python3 version.py >> at/config.py
 
 
 # COPY required files

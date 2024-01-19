@@ -19,25 +19,8 @@ from at.utils.text import (
         get_text_id_from_file, get_text_id_from_url, TextProcessingError)
 from at.utils.validation import (
         idnits as get_idnits, svgcheck as get_svgcheck, validate_draft)
-from at.utils.version import (
-        get_aasvg_version, get_idnits_version, get_id2xml_version,
-        get_iddiff_version, get_mmark_version, get_kramdown_rfc_version,
-        get_rfcdiff_version, get_svgcheck_version, get_weasyprint_version,
-        get_xml2rfc_version)
 
 BAD_REQUEST = 400
-VERSION_INFORMATION = {
-        'xml2rfc': get_xml2rfc_version(),
-        'kramdown-rfc': get_kramdown_rfc_version(),
-        'mmark': get_mmark_version(),
-        'id2xml': get_id2xml_version(),
-        'weasyprint': get_weasyprint_version(),
-        'idnits': get_idnits_version(),
-        'iddiff': get_iddiff_version(),
-        'aasvg': get_aasvg_version(),
-        'svgcheck': get_svgcheck_version(),
-        'rfcdiff': get_rfcdiff_version(),
-        'bap': '1.4'}   # bap does not provide a switch to get version
 
 bp = Blueprint('api', __name__, url_prefix='/api')
 
@@ -596,7 +579,7 @@ def version():
 
     logger = current_app.logger
     logger.debug('version information request')
-    versions = VERSION_INFORMATION
+    versions = current_app.config['VERSION_INFORMATION']
     versions['author_tools_api'] = current_app.config['VERSION']
 
     return jsonify(versions=versions)
