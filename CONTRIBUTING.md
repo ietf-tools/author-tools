@@ -75,6 +75,7 @@ echo "VERSION = '9.9.9'" >> at/config.py
 echo "REQUIRE_AUTH = False" >> at/config.py
 echo "DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/doc/rfcdiff-latest-json'" >> at/config.py
 echo "ALLOWED_DOMAINS = ['ietf.org', 'ietf.org', 'rfc-editor.org']" >> at/config.py
+PATH=$PATH:./node_modules/.bin/ python docker/version.py >> at/config.py
 ```
 
 * Run flask server.

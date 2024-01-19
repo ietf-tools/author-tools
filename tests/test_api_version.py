@@ -4,6 +4,18 @@ from unittest import TestCase
 from at import create_app
 
 AUTHOR_TOOLS_API_TEST_VERSION = '0.0.1'
+VERSION_INFORMATION = {
+    'xml2rfc': '3.19.1',
+    'kramdown-rfc': '1.7.5',
+    'mmark': '2.2.25',
+    'id2xml': '1.5.2',
+    'weasyprint': '60.2',
+    'idnits': '2.17.00',
+    'iddiff': '0.4.3',
+    'aasvg': '0.3.6',
+    'svgcheck': '0.7.1',
+    'rfcdiff': '1.48',
+    'bap': '1.4'}
 VERSION_LABELS = (
     'author_tools_api',
     'xml2rfc',
@@ -28,6 +40,7 @@ class TestApiVersion(TestCase):
 
         config = {
                 'REQUIRE_AUTH': False,
+                'VERSION_INFORMATION': VERSION_INFORMATION,
                 'VERSION': AUTHOR_TOOLS_API_TEST_VERSION}
 
         self.app = create_app(config)
