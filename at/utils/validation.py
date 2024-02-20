@@ -213,3 +213,42 @@ def get_non_ascii_chars(filename, logger=getLogger()):
     output = proc_run(['echars', filename], capture_output=True)
 
     return output.stdout.decode('utf-8')
+
+
+def idnits3(filename,
+            logger=getLogger(),
+            year=False,
+            submit_check=False):
+    '''Run idnits3 and return output'''
+
+    logger.debug('running idnits3')
+
+    args = ['idnits3', '--output', 'pretty', '--no-progress']
+    if year:
+        args.append('--year')
+        args.append(str(year))
+    if submit_check:
+        args.append('--mode')
+        args.append('submission')
+    args.append(filename)
+
+    output = proc_run(
+                args=args,
+                capture_output=True)
+    error = None
+
+    try:
+        output.check_returncode()
+    except CalledProcessError:  # pragma: no cover
+        if output.stderr:
+            error = output.stderr.decode('utf-8')
+            logger.info('idnits3 error: {}'.format(error))
+        else:
+            error = 'Error occured while running idnits3'
+            logger.info('idnits3 error: no stderr output')
+
+    if output.stdout:
+        stdout = output.stdout.decode('utf-8', errors='ignore')
+        return cleanup_output(filename, stdout)
+    else:
+        return error    # pragma: no cover

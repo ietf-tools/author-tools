@@ -70,9 +70,11 @@ jobs:
     - name: Set up Node
       uses: actions/setup-node@v4
       with:
-        node-version: '16'
+        node-version: '18'
     - name: Install dependencies
-      run: npm install
+      run: |
+        npm install
+        mv ./node_modules/.bin/idnits ./node_modules/.bin/idnits3
     # Tests
     - name: Run Pyflakes
       run: pyflakes at tests

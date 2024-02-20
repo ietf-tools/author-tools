@@ -108,3 +108,29 @@ class TestUtilsText(TestCase):
         self.assertTrue(Path(dir_path).exists())
         self.assertTrue(Path(file_path).exists())
         self.assertEqual(Path(file_path).suffix, '.xml')
+
+    def test_get_text_id_from_file_text_or_xml(self):
+        for filename in TEST_DATA:
+            suffix = f".{filename.split('.')[-1]}"
+            with open(''.join([TEST_DATA_DIR, filename]), 'rb') as file:
+                file_object = FileStorage(file, filename=filename)
+                (dir_path, file_path) = get_text_id_from_file(
+                                            file_object,
+                                            TEMPORARY_DATA_DIR,
+                                            text_or_xml=True)
+                self.assertTrue(Path(dir_path).exists())
+                self.assertTrue(Path(file_path).exists())
+                if suffix in ['.xml', '.txt']:
+                    self.assertEqual(Path(file_path).suffix, suffix)
+                else:
+                    self.assertEqual(Path(file_path).suffix, '.txt')
+
+    def test_get_text_id_from_url_text_or_xml(self):
+        url = 'https://www.ietf.org/archive/id/draft-iab-xml2rfcv2-01.xml'
+        (dir_path, file_path) = get_text_id_from_url(
+                                    url,
+                                    TEMPORARY_DATA_DIR,
+                                    text_or_xml=True)
+        self.assertTrue(Path(dir_path).exists())
+        self.assertTrue(Path(file_path).exists())
+        self.assertEqual(Path(file_path).suffix, '.xml')

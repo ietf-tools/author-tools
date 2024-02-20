@@ -12,6 +12,12 @@ WORKDIR /usr/src/app
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+# Add nodejs 18.x
+RUN apt-get update && \
+    apt-get install -y curl gpg && \
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_18.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+
 RUN apt-get update && \
     apt-get install -y \
         software-properties-common \
@@ -21,9 +27,10 @@ RUN apt-get update && \
         python3.10 \
         python3-pip \
         libpango-1.0-0 \
+        libpango1.0-dev \
         wdiff \
         rfcdiff \
-        npm \
+        nodejs \
         gawk \
         bison \
         flex \
@@ -72,6 +79,9 @@ COPY at ./at
 
 # Install JavaScript dependencies
 RUN npm install
+
+# Rename idnits v3 binary
+RUN mv ./node_modules/.bin/idnits ./node_modules/.bin/idnits3
 
 # Install Python dependencies
 RUN apt-get remove -y python3-blinker
