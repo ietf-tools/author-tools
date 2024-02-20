@@ -45,27 +45,11 @@ function reset() {
   for (let tooltip of tooltipList) {
     tooltip.hide();
   }
-
-  resetButtons();
 }
 
-function resetButtons() {
-  buttonIdnits.disabled = false;
-  buttonIdnits.innerText = buttonIdnits.dataset.title;
-  buttonSubmissionCheck.disabled = false;
-  buttonSubmissionCheck.innerText = buttonSubmissionCheck.dataset.title;
-}
-
-function disableButtons() {
-  buttonIdnits.disabled = true;
-  buttonSubmissionCheck.disabled = true;
-}
 
 function idnits() {
   reset();
-
-  buttonIdnits.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' + buttonIdnits.innerHTML;
-  disableButtons();
 
   if (formURL.value.length > 0) {
     if (formURL.checkValidity()) {
@@ -96,9 +80,6 @@ function idnits() {
 
 function submissionCheck() {
   reset();
-
-  buttonSubmissionCheck.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' + buttonSubmissionCheck.innerHTML;
-  disableButtons();
 
   if (formURL.value.length > 0) {
     if (formURL.checkValidity()) {
