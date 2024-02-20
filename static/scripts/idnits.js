@@ -80,7 +80,7 @@ function idnits() {
         url += '&hidetext=True';
       }
       if (!switchSubmissionCheck.checked) {
-        url += '&submissioncheck=True';
+        url += '&submitcheck=True';
       }
 
       window.location.href = url;
@@ -103,7 +103,7 @@ function submissionCheck() {
   if (formURL.value.length > 0) {
     if (formURL.checkValidity()) {
       url = '/api/idnits?url=' + formURL.value;
-      url += '&submissioncheck=True&hidetext=True';
+      url += '&submitcheck=True&hidetext=True';
       window.location.href = url;
     } else {
       formURL.classList.add('is-invalid');
@@ -120,7 +120,7 @@ function idnitsPost(submissionCheck) {
   const formData = new FormData();
 
   if (submissionCheck) {
-    formData.append('submissioncheck', 'True');
+    formData.append('submitcheck', 'True');
   } else {
     if (switchVeryVerbose.checked) {
       formData.append('verbose', '2');
@@ -131,7 +131,7 @@ function idnitsPost(submissionCheck) {
       formData.append('hidetext', 'True');
     }
     if (!switchSubmissionCheck.checked) {
-      formData.append('submissioncheck', 'True');
+      formData.append('submitcheck', 'True');
     }
   }
 
