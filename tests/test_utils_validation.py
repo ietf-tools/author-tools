@@ -7,8 +7,8 @@ from unittest import TestCase
 from werkzeug.datastructures import FileStorage
 
 from at.utils.validation import (
-        convert_v2v3, get_non_ascii_chars, idnits, svgcheck, validate_draft,
-        validate_xml, xml2rfc_validation)
+        convert_v2v3, get_non_ascii_chars, idnits, idnits3, svgcheck,
+        validate_draft, validate_xml, xml2rfc_validation)
 
 TEST_DATA_DIR = './tests/data/'
 TEST_XML_DRAFT = 'draft-smoke-signals-00.xml'
@@ -202,3 +202,24 @@ class TestUtilsValidation(TestCase):
                                            TEST_XML_DRAFT]))
 
         self.assertIn('Sinhala', log)
+
+    def test_idnits3(self):
+        for draft in TEST_DATA:
+            file = ''.join([TEMPORARY_DATA_DIR, draft])
+            idnits_log = idnits3(file)
+            self.assertIsNotNone(idnits_log)
+            self.assertGreater(len(idnits_log), 0)
+
+    def test_idnits3_year(self):
+        for draft in TEST_DATA:
+            file = ''.join([TEMPORARY_DATA_DIR, draft])
+            idnits_log = idnits3(file, year=2023)
+            self.assertIsNotNone(idnits_log)
+            self.assertGreater(len(idnits_log), 0)
+
+    def test_idnits3_submit_check(self):
+        for draft in TEST_DATA:
+            file = ''.join([TEMPORARY_DATA_DIR, draft])
+            idnits_log = idnits3(file, submit_check=True)
+            self.assertIsNotNone(idnits_log)
+            self.assertGreater(len(idnits_log), 0)

@@ -51,6 +51,7 @@ pip install -r requirements.txt
 * Install npm dependencies
 ```
 npm install
+mv ./node_modules/.bin/idnits ./node_modules/.bin/idnits3
 ```
 
 * Install [kramdown-rfc2629](https://github.com/cabo/kramdown-rfc2629).

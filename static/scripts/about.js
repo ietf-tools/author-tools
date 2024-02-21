@@ -25,6 +25,7 @@ fetch(request)
     document.getElementById('spanBap').textContent = json.versions.bap;
     document.getElementById('spanSvgcheck').textContent = json.versions.svgcheck;
     document.getElementById('spanRfcdiff').textContent = json.versions.rfcdiff;
+    document.getElementById('spanIdnits3').textContent = json.versions.idnits3;
   })
   .catch(error => {
       alertError.style.display = 'block';

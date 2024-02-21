@@ -19,6 +19,10 @@
       <priority>1.00</priority>
     </url>
     <url>
+      <loc>https://author-tools.ietf.org/idnits3</loc>
+      <priority>1.00</priority>
+    </url>
+    <url>
       <loc>https://author-tools.ietf.org/svgcheck</loc>
       <priority>1.00</priority>
     </url>

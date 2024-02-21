@@ -4,6 +4,8 @@ Allow: /iddiff$
 Disallow: /api/
 Disallow: /diff
 Disallow: /iddiff?*
+Disallow: /idnits?*
+Disallow: /idnits3?*
 
 Sitemap: https://author-tools.ietf.org/sitemap.xml
 
