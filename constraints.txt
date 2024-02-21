@@ -9,7 +9,7 @@ cssselect2==0.7.0
 decorator==5.1.1
 Flask==3.0.2
 Flask-Cors==4.0.0
-fonttools==4.48.1
+fonttools==4.49.0
 gevent==23.9.1
 google-i18n-address==3.1.0
 greenlet==3.0.3
@@ -38,12 +38,12 @@ six==1.16.0
 sortedcontainers==2.4.0
 svgcheck==0.7.1
 tinycss2==1.2.1
-urllib3==2.2.0
+urllib3==2.2.1
 wcwidth==0.2.13
 weasyprint==60.2
 webencodings==0.5.1
 Werkzeug==3.0.1
-xml2rfc==3.19.4
+xml2rfc==3.20.0
 zope.event==5.0
-zope.interface==6.1
+zope.interface==6.2
 zopfli==0.2.3
