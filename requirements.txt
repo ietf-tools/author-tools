@@ -9,4 +9,4 @@ requests>=2.31.0
 sentry-sdk[flask]>=1.40.1
 svgcheck>=0.7.1
 weasyprint>=60.2
-xml2rfc>=3.19.4
+xml2rfc>=3.20.0
