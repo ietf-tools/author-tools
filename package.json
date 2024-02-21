@@ -1,5 +1,5 @@
 {
-  "name": "ietf-at",
+  "name": "author-tools",
   "version": "1.2.0",
   "description": "IETF Author Tools API",
   "main": "",
@@ -7,14 +7,14 @@
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ietf-tools/ietf-at.git"
+    "url": "git+https://github.com/ietf-tools/author-tools.git"
   },
   "author": "Kesara Rathnayake",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
-    "url": "https://github.com/ietf-tools/ietf-at/issues"
+    "url": "https://github.com/ietf-tools/author-tools/issues"
   },
-  "homepage": "https://github.com/ietf-tools/ietf-at#readme",
+  "homepage": "https://github.com/ietf-tools/author-tools#readme",
   "dependencies": {
     "@ietf-tools/idnits": "^3.0.0-alpha.33",
     "aasvg": "^0.4.0"

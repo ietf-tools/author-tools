@@ -2,17 +2,17 @@
   
 <img src="https://raw.githubusercontent.com/ietf-tools/common/main/assets/logos/authortools.svg" alt="IETF Author Tools" height="125" />
 
-[![Release](https://img.shields.io/github/release/ietf-tools/ietf-at.svg?style=flat&maxAge=300)](https://github.com/ietf-tools/ietf-at/releases)
-[![License](https://img.shields.io/github/license/ietf-tools/ietf-at?20240110)](https://github.com/ietf-tools/ietf-at/blob/main/LICENSE)
+[![Release](https://img.shields.io/github/release/ietf-tools/author-tools.svg?style=flat&maxAge=300)](https://github.com/ietf-tools/author-tools/releases)
+[![License](https://img.shields.io/github/license/ietf-tools/author-tools?20240110)](https://github.com/ietf-tools/author-tools/blob/main/LICENSE)
 
 ##### IETF Author Tools
 
 </div>
 
 - [**Production Website**](https://datatracker.ietf.org)
-- [Changelog](https://github.com/ietf-tools/ietf-at/releases)
-- [Contributing](https://github.com/ietf-tools/ietf-at/blob/main/CONTRIBUTING.md)
-- [License](https://github.com/ietf-tools/ietf-at/blob/main/LICENSE)
+- [Changelog](https://github.com/ietf-tools/author-tools/releases)
+- [Contributing](https://github.com/ietf-tools/author-tools/blob/main/CONTRIBUTING.md)
+- [License](https://github.com/ietf-tools/author-tools/blob/main/LICENSE)
 - [Documentation](#documentation)
 - [Running Author Tools service](#running-author-tools-service)
 - [Testing Web UI](#testing-web-ui)
