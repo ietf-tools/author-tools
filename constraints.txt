@@ -10,7 +10,7 @@ decorator==5.1.1
 Flask==3.0.2
 Flask-Cors==4.0.0
 fonttools==4.49.0
-gevent==23.9.1
+gevent==24.2.1
 google-i18n-address==3.1.0
 greenlet==3.0.3
 gunicorn==21.2.0
@@ -33,14 +33,14 @@ pydyf==0.8.0
 pyphen==0.14.0
 PyYAML==6.0.1
 requests==2.31.0
-sentry-sdk==1.40.1
+sentry-sdk==1.40.5
 six==1.16.0
 sortedcontainers==2.4.0
 svgcheck==0.7.1
 tinycss2==1.2.1
 urllib3==2.2.1
 wcwidth==0.2.13
-weasyprint==60.2
+weasyprint==61.0
 webencodings==0.5.1
 Werkzeug==3.0.1
 xml2rfc==3.20.0
