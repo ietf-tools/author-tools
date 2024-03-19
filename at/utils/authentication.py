@@ -24,14 +24,13 @@ def require_api_key(f, *args, **kwargs):
                 logger.error('missing api key')
                 return jsonify(error='API key is missing'), UNAUTHORIZED
 
-        response = post(
-                    config['DT_APPAUTH_URL'],
-                    data={'apikey': apikey.strip()})
-
-        if response.status_code == OK and response.json()['success'] is True:
-            logger.debug('valid apikey')
-        else:
-            logger.error('invalid api key')
-            return jsonify(error='API key is invalid'), UNAUTHORIZED
+        with post(config['DT_APPAUTH_URL'],
+                  data={'apikey': apikey.strip()}) as response:
+            if (response.status_code == OK and
+                    response.json()['success'] is True):
+                logger.debug('valid apikey')
+            else:
+                logger.error('invalid api key')
+                return jsonify(error='API key is invalid'), UNAUTHORIZED
 
     return f(*args, **kwargs)
