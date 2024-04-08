@@ -11,7 +11,7 @@ dnspython==2.6.1
 eventlet==0.36.1
 Flask==3.0.2
 Flask-Cors==4.0.0
-fonttools==4.50.0
+fonttools==4.51.0
 google-i18n-address==3.1.0
 greenlet==3.0.3
 gunicorn==21.2.0
@@ -44,5 +44,5 @@ wcwidth==0.2.13
 weasyprint==61.2
 webencodings==0.5.1
 Werkzeug==3.0.2
-xml2rfc==3.20.1
+xml2rfc==3.21.0
 zopfli==0.2.3
