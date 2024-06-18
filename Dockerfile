@@ -21,6 +21,8 @@ RUN apt-get update && \
 RUN apt-get update && \
     apt-get install -y \
         software-properties-common \
+        build-essential \
+        ruby-dev \
         gcc \
         wget \
         ruby \
@@ -86,6 +88,7 @@ RUN pip3 install -r requirements.txt -c constraints.txt
 
 # Install Ruby dependencies
 RUN gem install bundler && bundle install
+RUN apt-get remove -y build-essential ruby-dev
 
 RUN mkdir -p tmp && \
     echo "UPLOAD_DIR = '$PWD/tmp'" > at/config.py && \
