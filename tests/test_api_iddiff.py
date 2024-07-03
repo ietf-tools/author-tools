@@ -998,7 +998,8 @@ class TestApiIddiff(TestCase):
             with self.app.app_context():
                 result = client.post(
                         '/api/iddiff',
-                        data={'url_1': 'https://ietf.org/robots.txt'})
+                        data={
+                            'url_1': 'https://www.ietf.org/rfc/fyi-index.txt'})
                 json_data = result.get_json()
 
                 self.assertEqual(result.status_code, 400)
