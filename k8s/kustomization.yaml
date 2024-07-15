@@ -1,0 +1,4 @@
+namespace: author-tools
+namePrefix: author-tools-
+resources:
+  - author-tools.yaml

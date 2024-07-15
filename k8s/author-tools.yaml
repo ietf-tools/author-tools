@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: author-tools
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: author-tools
+  template:
+    metadata:
+      labels:
+        app: author-tools
+    spec:
+      securityContext:
+        fsGroup: 1000
+        runAsNonRoot: true
+      containers:
+        - name: author-tools
+          image: "ghcr.io/ietf-tools/author-tools:$APP_IMAGE_TAG"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              name: http
+              protocol: TCP
+          volumeMounts:
+            - name: at-tmp
+              mountPath: /tmp
+            - name: at-app-tmp
+              mountPath: /usr/src/app/tmp
+          env:
+            - name: "CONTAINER_ROLE"
+              value: "author-tools"
+            # ensures the pod gets recreated on every deploy:
+            - name: "DEPLOY_UID"
+              value: "$DEPLOY_UID"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsUser: 1000
+            runAsGroup: 1000
+      volumes:
+        - name: at-tmp
+          emptyDir:
+            sizeLimit: "1Gi"
+        - name: at-app-tmp
+          emptyDir:
+            sizeLimit: "4Gi"
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: author-tools
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: author-tools
