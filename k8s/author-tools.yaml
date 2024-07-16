@@ -44,10 +44,11 @@ spec:
             readOnlyRootFilesystem: true
             runAsUser: 1000
             runAsGroup: 1000
-          resources:
-            limits:
-              memory: "4Gi"
-              cpu: "1000m"
+          # author tools has it's own node for now
+          #resources:
+          #  limits:
+          #    memory: "4Gi"
+          #    cpu: "1000m"
       volumes:
         - name: at-tmp
           emptyDir:
