@@ -29,6 +29,9 @@ spec:
               mountPath: /tmp
             - name: at-app-tmp
               mountPath: /usr/src/app/tmp
+            - name: at-cfg
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
           env:
             - name: "CONTAINER_ROLE"
               value: "author-tools"
@@ -56,6 +59,9 @@ spec:
         - name: at-app-tmp
           emptyDir:
             sizeLimit: "4Gi"
+        - name: at-cfg
+          configMap:
+            name: files-cfgmap
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
