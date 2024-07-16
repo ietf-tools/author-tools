@@ -3,7 +3,7 @@ LABEL maintainer="Kesara Rathnayake <kesara@staff.ietf.org>"
 
 ARG VERSION=6.6.6
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 ENV PATH=$PATH:./node_modules/.bin
 # Disable local file read for kramdown-rfc
 ENV KRAMDOWN_SAFE=1
