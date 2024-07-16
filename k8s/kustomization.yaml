@@ -4,5 +4,6 @@ configMapGenerator:
   - name: files-cfgmap
     files:
       - nginx.conf
+      - nginx-default-site.conf
 resources:
   - author-tools.yaml

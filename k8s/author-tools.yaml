@@ -21,7 +21,7 @@ spec:
           image: "ghcr.io/ietf-tools/author-tools:$APP_IMAGE_TAG"
           imagePullPolicy: Always
           ports:
-            - containerPort: 80
+            - containerPort: 8080
               name: http
               protocol: TCP
           volumeMounts:
@@ -32,6 +32,9 @@ spec:
             - name: at-cfg
               mountPath: /etc/nginx/nginx.conf
               subPath: nginx.conf
+            - name: at-cfg
+              mountPath: /etc/nginx/sites-enabled/default
+              subPath: nginx-default-site.conf
           env:
             - name: "CONTAINER_ROLE"
               value: "author-tools"
