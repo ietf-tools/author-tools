@@ -1,5 +1,4 @@
 ---
-version: '3.3'
 services:
   author-tools:
     build: .
