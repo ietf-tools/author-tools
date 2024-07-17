@@ -10,9 +10,9 @@ GEM
       rexml
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
-    kramdown-rfc (1.7.17)
-      kramdown-rfc2629 (= 1.7.17)
-    kramdown-rfc2629 (1.7.17)
+    kramdown-rfc (1.7.18)
+      kramdown-rfc2629 (= 1.7.18)
+    kramdown-rfc2629 (1.7.18)
       base64 (>= 0.1)
       certified (~> 1.0)
       differ (~> 0.1)
@@ -25,7 +25,7 @@ GEM
       unicode-scripts (~> 1.0)
     net-http-persistent (4.0.2)
       connection_pool (~> 2.2)
-    rexml (3.3.0)
+    rexml (3.3.2)
       strscan
     strscan (3.1.0)
     unicode-blocks (1.9.0)
