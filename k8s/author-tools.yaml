@@ -14,7 +14,7 @@ spec:
         app: author-tools
     spec:
       securityContext:
-        fsGroup: 1000
+        fsGroup: 33
         runAsNonRoot: true
       containers:
         - name: author-tools
@@ -48,8 +48,8 @@ spec:
               drop:
               - ALL
             readOnlyRootFilesystem: true
-            runAsUser: 1000
-            runAsGroup: 1000
+            runAsUser: 33
+            runAsGroup: 33
           # author tools has it's own node for now
           #resources:
           #  limits:
