@@ -35,6 +35,9 @@ spec:
             - name: at-cfg
               mountPath: /etc/nginx/sites-enabled/default
               subPath: nginx-default-site.conf
+            - name: at-cfg
+              mountPath: /usr/src/app/supervisord.conf
+              subPath: supervisord.conf
           env:
             - name: "CONTAINER_ROLE"
               value: "author-tools"
