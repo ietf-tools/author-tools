@@ -20,6 +20,7 @@ spec:
         - name: author-tools
           image: "ghcr.io/ietf-tools/author-tools:$APP_IMAGE_TAG"
           imagePullPolicy: Always
+          command: ["supervisord"]
           ports:
             - containerPort: 8080
               name: http
@@ -27,6 +28,12 @@ spec:
           volumeMounts:
             - name: at-tmp
               mountPath: /tmp
+            - name: at-nginx
+              mountPath: /var/lib/nginx
+            - name: at-nginx
+              mountPath: /var/log/nginx
+            - name: at-run
+              mountPath: /run
             - name: at-app-tmp
               mountPath: /usr/src/app/tmp
             - name: at-cfg
@@ -36,7 +43,7 @@ spec:
               mountPath: /etc/nginx/sites-available/default
               subPath: nginx-default-site.conf
             - name: at-cfg
-              mountPath: /etc/supervisor/conf.d/supervisord.conf
+              mountPath: /etc/supervisor/supervisord.conf
               subPath: supervisord.conf
           env:
             - name: "CONTAINER_ROLE"
@@ -62,6 +69,12 @@ spec:
         - name: at-tmp
           emptyDir:
             sizeLimit: "1Gi"
+        - name: at-nginx
+          emptyDir:
+            sizeLimit: "1Gi"
+        - name: at-run
+          emptyDir:
+            sizeLimit: "4Mi"
         - name: at-app-tmp
           emptyDir:
             sizeLimit: "4Gi"
