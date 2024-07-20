@@ -33,10 +33,10 @@ spec:
               mountPath: /etc/nginx/nginx.conf
               subPath: nginx.conf
             - name: at-cfg
-              mountPath: /etc/nginx/sites-enabled/default
+              mountPath: /etc/nginx/sites-available/default
               subPath: nginx-default-site.conf
             - name: at-cfg
-              mountPath: /usr/src/app/supervisord.conf
+              mountPath: /etc/supervisor/conf.d/supervisord.conf
               subPath: supervisord.conf
           env:
             - name: "CONTAINER_ROLE"
