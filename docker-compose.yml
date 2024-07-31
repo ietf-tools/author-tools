@@ -10,5 +10,5 @@ services:
     env_file:
       - '.env'
     ports:
-      - '${AT_PORT}:80'
+      - '${AT_PORT}:8080'
     mem_limit: 4gb
