@@ -59,7 +59,9 @@ spec:
             # ensures the pod gets recreated on every deploy:
             - name: "DEPLOY_UID"
               value: "$DEPLOY_UID"
-          envFrom: []
+          envFrom:
+            - secretRef:
+                name: author-tools-secrets-env
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
