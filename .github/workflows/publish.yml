@@ -23,7 +23,7 @@ jobs:
         uses: ietf-tools/semver-action@v1
         with:
           token: ${{ github.token }}
-          patchList: fix, bugfix, perf, refactor, test, tests, chore, ci
+          patchList: fix, bugfix, perf, refactor, test, tests, chore, ci, build
           branch: main
           skipInvalidTags: true
 
