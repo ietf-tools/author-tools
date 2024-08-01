@@ -15,7 +15,24 @@ spec:
     spec:
       securityContext:
         fsGroup: 33
+        runAsUser: 33
+        runAsGroup: 33
         runAsNonRoot: true
+      initContainers:
+      - args:
+        - -c
+        - chmod 770 /tmp;
+        - chown -R 33:33 /tmp;
+        command:
+        - /bin/sh
+        image: alpine:latest
+        name: setup-volumes
+        volumeMounts:
+          - name: at-tmp
+            mountPath: /tmp
+        securityContext:
+          runAsUser: 0
+          runAsNonRoot: false
       containers:
         - name: author-tools
           image: "ghcr.io/ietf-tools/author-tools:$APP_IMAGE_TAG"
@@ -28,23 +45,14 @@ spec:
           volumeMounts:
             - name: at-tmp
               mountPath: /tmp
-            - name: at-nginx
-              mountPath: /var/lib/nginx
-            - name: at-nginx
-              mountPath: /var/log/nginx
-            - name: at-run
-              mountPath: /run
+            - name: at-kramdown
+              mountPath: /tmp/cache/refcache
+            - name: at-xml2rfc
+              mountPath: /tmp/cache/xml2rfc
+            - name: at-idnits
+              mountPath: /var/www/.idnits
             - name: at-app-tmp
               mountPath: /usr/src/app/tmp
-            - name: at-cfg
-              mountPath: /etc/nginx/nginx.conf
-              subPath: nginx.conf
-            - name: at-cfg
-              mountPath: /etc/nginx/sites-available/default
-              subPath: nginx-default-site.conf
-            - name: at-cfg
-              mountPath: /etc/supervisor/supervisord.conf
-              subPath: supervisord.conf
           env:
             - name: "CONTAINER_ROLE"
               value: "author-tools"
@@ -68,19 +76,19 @@ spec:
       volumes:
         - name: at-tmp
           emptyDir:
-            sizeLimit: "1Gi"
-        - name: at-nginx
+            sizeLimit: "2Gi"
+        - name: at-kramdown
           emptyDir:
             sizeLimit: "1Gi"
-        - name: at-run
+        - name: at-xml2rfc
           emptyDir:
-            sizeLimit: "4Mi"
+            sizeLimit: "1Gi"
+        - name: at-idnits
+          emptyDir:
+            sizeLimit: "1Gi"
         - name: at-app-tmp
           emptyDir:
             sizeLimit: "4Gi"
-        - name: at-cfg
-          configMap:
-            name: files-cfgmap
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       terminationGracePeriodSeconds: 30

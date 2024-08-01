@@ -1,10 +1,4 @@
 namespace: author-tools
 namePrefix: at-
-configMapGenerator:
-  - name: files-cfgmap
-    files:
-      - nginx.conf
-      - nginx-default-site.conf
-      - supervisord.conf
 resources:
   - author-tools.yaml
