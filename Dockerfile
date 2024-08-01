@@ -43,12 +43,15 @@ RUN apt-get update && \
     apt-get clean -y
 
 # Install required fonts
-RUN mkdir -p ~/.fonts/opentype /tmp/fonts && \
+
+RUN mkdir -p /var/www/.fonts/opentype /tmp/fonts && \
     wget -q -O /tmp/fonts.tar.gz https://github.com/ietf-tools/xml2rfc-fonts/archive/refs/tags/3.22.0.tar.gz && \
     tar zxf /tmp/fonts.tar.gz -C /tmp/fonts && \
-    mv /tmp/fonts/*/noto/* ~/.fonts/opentype/ && \
-    mv /tmp/fonts/*/roboto_mono/* ~/.fonts/opentype/ && \
-    rm -rf /tmp/fonts.tar.gz /tmp/fonts/
+    mv /tmp/fonts/*/noto/* /var/www/.fonts/opentype/ && \
+    mv /tmp/fonts/*/roboto_mono/* /var/www/.fonts/opentype/ && \
+    chown -R www-data:0 /var/www/.fonts && \
+    rm -rf /tmp/fonts.tar.gz /tmp/fonts/ && \
+    fc-cache -f
 
 # Install bap
 RUN wget https://github.com/ietf-tools/bap/archive/refs/heads/master.zip && \
@@ -90,13 +93,31 @@ RUN pip3 install -r requirements.txt -c constraints.txt
 RUN gem install bundler && bundle install
 RUN apt-get remove -y build-essential ruby-dev
 
+# nginx unprivileged setup
+RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
+    ln -sf /dev/stderr /var/log/nginx/error.log && \
+    sed -i '/user www-data;/d' /etc/nginx/nginx.conf && \
+    sed -i 's,/run/nginx.pid,/tmp/nginx.pid,' /etc/nginx/nginx.conf && \
+    sed -i "/^http {/a \    proxy_temp_path /tmp/proxy_temp;\n    client_body_temp_path /tmp/client_temp;\n    fastcgi_temp_path /tmp/fastcgi_temp;\n    uwsgi_temp_path /tmp/uwsgi_temp;\n    scgi_temp_path /tmp/scgi_temp;\n" /etc/nginx/nginx.conf && \
+    mkdir -p /var/cache/nginx && \
+    chown -R www-data:0 /var/cache/nginx && \
+    chmod -R g+w /var/cache/nginx
+
 RUN mkdir -p tmp && \
     echo "UPLOAD_DIR = '$PWD/tmp'" > at/config.py && \
     echo "VERSION = '${VERSION}'" >> at/config.py && \
     echo "REQUIRE_AUTH = False" >> at/config.py && \
     echo "DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/api/rfcdiff-latest-json'" >> at/config.py && \
     echo "ALLOWED_DOMAINS = ['ietf.org', 'rfc-editor.org', 'github.com', 'githubusercontent.com', 'github.io', 'gitlab.com', 'gitlab.io', 'codeberg.page']" >> at/config.py && \
-    python3 version.py >> at/config.py
+    python3 version.py >> at/config.py && \
+    chown -R www-data:0 /usr/src/app/tmp
+
+# cache configuration
+RUN mkdir -p /tmp/cache/xml2rfc && \
+    mkdir -p /tmp/cache/refcache && \
+    ln -sf /tmp/cache/xml2rfc /var/cache/xml2rfc && \
+    chown -R www-data:0 /tmp/cache
+ENV KRAMDOWN_REFCACHEDIR=/tmp/cache/refcache
 
 
 # COPY required files
@@ -104,6 +125,10 @@ COPY static /usr/share/nginx/html/
 COPY api.yml /usr/share/nginx/html/
 COPY docker/gunicorn.py /usr/src/app/
 COPY docker/nginx-default-site.conf /etc/nginx/sites-available/default
-COPY docker/supervisord.conf /etc/supervisor/conf.d/
+COPY docker/supervisord.conf /etc/supervisor/
+
+USER www-data
+EXPOSE 8080
+WORKDIR /usr/src/app/
 
 CMD ["supervisord"]
