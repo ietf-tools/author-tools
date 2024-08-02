@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: author-tools
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: author-tools
+  template:
+    metadata:
+      labels:
+        app: author-tools
+    spec:
+      securityContext:
+        fsGroup: 33
+        runAsUser: 33
+        runAsGroup: 33
+        runAsNonRoot: true
+      initContainers:
+      - args:
+        - -c
+        - chmod 770 /tmp;
+        - chown -R 33:33 /tmp;
+        command:
+        - /bin/sh
+        image: alpine:latest
+        name: setup-volumes
+        volumeMounts:
+          - name: at-tmp
+            mountPath: /tmp
+        securityContext:
+          runAsUser: 0
+          runAsNonRoot: false
+      containers:
+        - name: author-tools
+          image: "ghcr.io/ietf-tools/author-tools:$APP_IMAGE_TAG"
+          imagePullPolicy: Always
+          command: ["supervisord"]
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          volumeMounts:
+            - name: at-tmp
+              mountPath: /tmp
+            - name: at-kramdown
+              mountPath: /tmp/cache/refcache
+            - name: at-xml2rfc
+              mountPath: /tmp/cache/xml2rfc
+            - name: at-idnits
+              mountPath: /var/www/.idnits
+            - name: at-app-tmp
+              mountPath: /usr/src/app/tmp
+          env:
+            - name: "CONTAINER_ROLE"
+              value: "author-tools"
+            # ensures the pod gets recreated on every deploy:
+            - name: "DEPLOY_UID"
+              value: "$DEPLOY_UID"
+          envFrom:
+            - secretRef:
+                name: author-tools-secrets-env
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsUser: 33
+            runAsGroup: 33
+          # author tools has it's own node for now
+          #resources:
+          #  limits:
+          #    memory: "4Gi"
+          #    cpu: "1000m"
+      volumes:
+        - name: at-tmp
+          emptyDir:
+            sizeLimit: "2Gi"
+        - name: at-kramdown
+          emptyDir:
+            sizeLimit: "1Gi"
+        - name: at-xml2rfc
+          emptyDir:
+            sizeLimit: "1Gi"
+        - name: at-idnits
+          emptyDir:
+            sizeLimit: "1Gi"
+        - name: at-app-tmp
+          emptyDir:
+            sizeLimit: "4Gi"
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: author-tools
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: author-tools
