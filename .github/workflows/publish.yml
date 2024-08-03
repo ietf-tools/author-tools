@@ -38,14 +38,6 @@ jobs:
           body: '*pending*'
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set Helm Chart and OpenAPI Version
-        env:
-          DEBIAN_FRONTEND: noninteractive
-        run: |
-          echo "Setting version ${{ steps.semver.outputs.nextStrict }}..."
-          sed -i -r -e "s|^version: .*$|version: '${{ steps.semver.outputs.nextStrict }}'|" -e "s|^appVersion: .*$|appVersion: '${{ steps.semver.outputs.nextStrict }}'|" helm/Chart.yaml
-          sed -i -r -e "s|version: .*$|version: ${{ steps.semver.outputs.nextStrict }}|" api.yml
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -69,13 +61,6 @@ jobs:
             VERSION=${{ steps.semver.outputs.nextStrict }}
           platforms: linux/amd64,linux/arm64
           tags: ghcr.io/${{ github.repository }}:${{ steps.semver.outputs.nextStrict }}, ghcr.io/${{ github.repository }}:latest
-
-      - name: Package and Push Chart
-        run: |
-          helm plugin install https://github.com/chartmuseum/helm-push.git
-          helm repo add chartmuseum https://charts.ietf.org
-          helm cm-push --version="${{ steps.semver.outputs.nextStrict }}" --username="${{ secrets.HELM_REPO_USERNAME }}" --password="${{ secrets.HELM_REPO_PASSWORD }}" helm/ chartmuseum
-          helm repo remove chartmuseum
 
       - name: Update CHANGELOG
         id: changelog
