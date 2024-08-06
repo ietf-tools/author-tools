@@ -7,7 +7,6 @@ on:
       - 'static/**'
       - 'helm/**'
       - 'docker/**'
-      - 'Dockerfile'
       - '**.md'
       - '**.yml'
   pull_request:
@@ -16,7 +15,6 @@ on:
       - 'static/**'
       - 'helm/**'
       - 'docker/**'
-      - 'Dockerfile'
       - '**.md'
       - '**.yml'
 
