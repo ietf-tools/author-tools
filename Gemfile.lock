@@ -25,7 +25,7 @@ GEM
       unicode-scripts (~> 1.0)
     net-http-persistent (4.0.2)
       connection_pool (~> 2.2)
-    rexml (3.3.4)
+    rexml (3.3.6)
       strscan
     strscan (3.1.0)
     unicode-blocks (1.9.0)
