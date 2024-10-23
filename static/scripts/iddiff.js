@@ -16,6 +16,7 @@ const buttonOpen = document.getElementById('buttonOpen');
 const buttonShare = document.getElementById('buttonShare');
 const tabLinks = document.getElementsByClassName('tab-link');
 const switchRaw = document.getElementById('switchRaw');
+const switchIdDiff = document.getElementById('switchIdDiff');
 
 // enable Bootstrap/Popper tooltips
 var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle2="tooltip"]'));
@@ -137,6 +138,10 @@ function getShareableURL(button) {
     url += '&raw=1'
   }
 
+  if (switchIdDiff.checked) {
+    url += '&iddiff=1'
+  }
+
   return url;
 }
 
@@ -206,6 +211,9 @@ function compare(event) {
   }
   if (switchRaw.checked) {
     formData.append('raw', 1);
+  }
+  if (switchIdDiff.checked) {
+    formData.append('iddiff', 1);
   }
 
   const apiCall = '/api/iddiff';

@@ -151,6 +151,18 @@
           </div>
         </div>
         <div class="row mt-2">
+          <div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="switchDiffTool" id="switchRfcDiff" checked>
+              <label class="form-check-label" for="switchRfcDiff">Use rfcdiff</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="switchDiffTool" id="switchIdDiff">
+              <label class="form-check-label" for="switchIdDiff">Use iddiff</label>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-2">
           <div class="d-grid gap-2 d-md-flex justify-content-md-center">
             <button class="btn btn-primary btn-lg flex-grow-1" type="button" value="compare" id="buttonCompare" data-title="Compare (side by side)" data-bs-toggle2="tooltip" data-bs-placement="bottom">Compare (side by side)</button>
             <button class="btn btn-primary btn-lg flex-grow-1" type="button" value="abdiff" id="buttonAbdiff" data-title="Before-after" data-bs-toggle2="tooltip" data-bs-placement="bottom" title="Get before-after difference.">abdiff</button>
