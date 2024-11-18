@@ -5,14 +5,14 @@ GEM
     certified (1.0.0)
     connection_pool (2.4.1)
     differ (0.1.2)
-    json_pure (2.7.2)
+    json_pure (2.8.1)
     kramdown (2.4.0)
       rexml
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
-    kramdown-rfc (1.7.19)
-      kramdown-rfc2629 (= 1.7.19)
-    kramdown-rfc2629 (1.7.19)
+    kramdown-rfc (1.7.21)
+      kramdown-rfc2629 (= 1.7.21)
+    kramdown-rfc2629 (1.7.21)
       base64 (>= 0.1)
       certified (~> 1.0)
       differ (~> 0.1)
@@ -23,20 +23,19 @@ GEM
       unicode-blocks (~> 1.0)
       unicode-name (~> 1.0)
       unicode-scripts (~> 1.0)
-    net-http-persistent (4.0.2)
+    net-http-persistent (4.0.4)
       connection_pool (~> 2.2)
-    rexml (3.3.6)
-      strscan
-    strscan (3.1.0)
-    unicode-blocks (1.9.0)
-    unicode-name (1.12.0)
-      unicode-types (~> 1.9)
-    unicode-scripts (1.9.0)
-    unicode-types (1.9.0)
+    rexml (3.3.9)
+    unicode-blocks (1.10.0)
+    unicode-name (1.13.5)
+      unicode-types (~> 1.10)
+    unicode-scripts (1.11.0)
+    unicode-types (1.10.0)
 
 PLATFORMS
   arm64-darwin-20
   arm64-darwin-23
+  arm64-darwin-24
   x86_64-linux
 
 DEPENDENCIES

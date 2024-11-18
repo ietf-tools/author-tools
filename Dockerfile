@@ -21,8 +21,6 @@ RUN apt-get update && \
 RUN apt-get update && \
     apt-get install -y \
         software-properties-common \
-        build-essential \
-        ruby-dev \
         gcc \
         wget \
         ruby \
@@ -75,7 +73,7 @@ RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
     tar zxf mmark_*.tgz -C /bin/ && \
     rm mmark_*.tgz
 
-COPY Gemfile Gemfile.lock LICENSE README.md api.yml constraints.txt package-lock.json package.json requirements.txt docker/version.py .
+COPY Gemfile Gemfile.lock LICENSE README.md api.yml constraints.txt package-lock.json package.json requirements.txt docker/version.py ./
 COPY at ./at
 
 # Install JavaScript dependencies
@@ -91,7 +89,6 @@ RUN pip3 install -r requirements.txt -c constraints.txt
 
 # Install Ruby dependencies
 RUN gem install bundler && bundle install
-RUN apt-get remove -y build-essential ruby-dev
 
 # nginx unprivileged setup
 RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
