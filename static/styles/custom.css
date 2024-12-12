@@ -158,3 +158,6 @@ textarea.monospace {
   color: #008000;
   font-weight: bold;
 }
+.bg-light-subtle {
+  background-color: #fcfcfd !important;
+}
