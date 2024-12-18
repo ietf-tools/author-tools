@@ -31,10 +31,15 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y software-properties-common gcc
         sudo apt-get install -y python3-cffi python3-brotli libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0 libcairo2-dev libpangocairo-1.0-0
-        sudo apt-get install -y rfcdiff wdiff gawk
+        sudo apt-get install -y wdiff gawk
         sudo wget https://raw.githubusercontent.com/ietf-tools/idnits-mirror/main/idnits
         sudo cp idnits /bin
         sudo chmod +x /bin/idnits
+        wget https://github.com/ietf-tools/rfcdiff/archive/refs/tags/1.48.tar.gz
+        sudo tar zxf 1.48.tar.gz -C /tmp/
+        sudo mv /tmp/rfcdiff-1.48/rfcdiff /bin/
+        sudo chmod +x /bin/rfcdiff
+        sudo cp idnits /bin
         arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)
         wget "https://github.com/mmarkdown/mmark/releases/download/v2.2.45/mmark_2.2.45_linux_$arch.tgz"
         sudo tar zxf mmark_*.tgz -C /bin/
