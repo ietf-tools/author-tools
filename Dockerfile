@@ -29,7 +29,6 @@ RUN apt-get update && \
         libpango-1.0-0 \
         libpango1.0-dev \
         wdiff \
-        rfcdiff \
         nodejs \
         gawk \
         bison \
@@ -41,7 +40,6 @@ RUN apt-get update && \
     apt-get clean -y
 
 # Install required fonts
-
 RUN mkdir -p /var/www/.fonts/opentype /tmp/fonts && \
     wget -q -O /tmp/fonts.tar.gz https://github.com/ietf-tools/xml2rfc-fonts/archive/refs/tags/3.22.0.tar.gz && \
     tar zxf /tmp/fonts.tar.gz -C /tmp/fonts && \
@@ -50,6 +48,13 @@ RUN mkdir -p /var/www/.fonts/opentype /tmp/fonts && \
     chown -R www-data:0 /var/www/.fonts && \
     rm -rf /tmp/fonts.tar.gz /tmp/fonts/ && \
     fc-cache -f
+
+# Install rfcdiff
+RUN wget https://github.com/ietf-tools/rfcdiff/archive/refs/tags/1.48.tar.gz && \
+    tar zxf 1.48.tar.gz -C /tmp/ && \
+    mv /tmp/rfcdiff-1.48/rfcdiff /bin && \
+    chmod +x /bin/rfcdiff && \
+    rm -rf 1.48.tar.gz /tmp/rfcdiff-1.48
 
 # Install bap
 RUN wget https://github.com/ietf-tools/bap/archive/refs/heads/master.zip && \
