@@ -50,11 +50,11 @@ RUN mkdir -p /var/www/.fonts/opentype /tmp/fonts && \
     fc-cache -f
 
 # Install rfcdiff
-RUN wget https://github.com/ietf-tools/rfcdiff/archive/refs/tags/1.48.tar.gz && \
-    tar zxf 1.48.tar.gz -C /tmp/ && \
-    mv /tmp/rfcdiff-1.48/rfcdiff /bin && \
+RUN wget https://github.com/ietf-tools/rfcdiff/archive/refs/tags/1.49.tar.gz && \
+    tar zxf 1.49.tar.gz -C /tmp/ && \
+    mv /tmp/rfcdiff-1.49/rfcdiff /bin && \
     chmod +x /bin/rfcdiff && \
-    rm -rf 1.48.tar.gz /tmp/rfcdiff-1.48
+    rm -rf 1.49.tar.gz /tmp/rfcdiff-1.49
 
 # Install bap
 RUN wget https://github.com/ietf-tools/bap/archive/refs/heads/master.zip && \

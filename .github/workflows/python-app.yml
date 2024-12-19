@@ -35,9 +35,9 @@ jobs:
         sudo wget https://raw.githubusercontent.com/ietf-tools/idnits-mirror/main/idnits
         sudo cp idnits /bin
         sudo chmod +x /bin/idnits
-        wget https://github.com/ietf-tools/rfcdiff/archive/refs/tags/1.48.tar.gz
-        sudo tar zxf 1.48.tar.gz -C /tmp/
-        sudo mv /tmp/rfcdiff-1.48/rfcdiff /bin/
+        wget https://github.com/ietf-tools/rfcdiff/archive/refs/tags/1.49.tar.gz
+        sudo tar zxf 1.49.tar.gz -C /tmp/
+        sudo mv /tmp/rfcdiff-1.49/rfcdiff /bin/
         sudo chmod +x /bin/rfcdiff
         sudo cp idnits /bin
         arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)
