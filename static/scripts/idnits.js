@@ -63,7 +63,7 @@ function idnits() {
       if (!switchShowText.checked) {
         url += '&hidetext=True';
       }
-      if (!switchSubmissionCheck.checked) {
+      if (switchSubmissionCheck.checked) {
         url += '&submitcheck=True';
       }
 
@@ -111,7 +111,7 @@ function idnitsPost(submissionCheck) {
     if (!switchShowText.checked) {
       formData.append('hidetext', 'True');
     }
-    if (!switchSubmissionCheck.checked) {
+    if (switchSubmissionCheck.checked) {
       formData.append('submitcheck', 'True');
     }
   }
