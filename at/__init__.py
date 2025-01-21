@@ -13,38 +13,36 @@ def create_app(config=None):
     CORS(app)
 
     if config is None:
-        app.logger.info('Using configuration settings from at/config.py')
-        app.config.from_object('at.config')
+        app.logger.info("Using configuration settings from at/config.py")
+        app.config.from_object("at.config")
     else:
-        app.logger.info('Using configuration settings from {}'.format(
-            str(config)))
+        app.logger.info(f"Using configuration settings from {str(config)}")
         app.config.from_mapping(config)
 
     from . import api
+
     app.register_blueprint(api.bp)
 
-    SENTRY_DSN = getenv('SENTRY_DSN')
+    if site_url := getenv("SITE_URL"):
+        app.logger.info("Using SITE_URL from ENV.")
+        app.config["SITE_URL"] = site_url
+    elif "SITE_URL" not in app.config.keys():
+        app.logger.info("SITE_URL not set. Using default.")
+        app.config["SITE_URL"] = "http://localhost"
 
-    if site_url := getenv('SITE_URL'):
-        app.logger.info('Using SITE_URL from ENV.')
-        app.config['SITE_URL'] = site_url
-    elif 'SITE_URL' not in app.config.keys():
-        app.logger.info('SITE_URL not set. Using default.')
-        app.config['SITE_URL'] = 'http://localhost'
+    app.logger.info(f"SITE_URL: {app.config['SITE_URL']}")
 
-    app.logger.info('SITE_URL: {}'.format(app.config['SITE_URL']))
-
-    if SENTRY_DSN:
+    if sentry_dsn := getenv("SENTRY_DSN"):
         sentry_init(
-                dsn=SENTRY_DSN,
-                integrations=[
-                    FlaskIntegration(),
-                    LoggingIntegration(
-                        level=LOG_ERROR,
-                        event_level=LOG_ERROR)],
-                traces_sample_rate=1.0)
-        app.logger.info('Sentry is enabled.')
+            dsn=sentry_dsn,
+            integrations=[
+                FlaskIntegration(),
+                LoggingIntegration(level=LOG_ERROR, event_level=LOG_ERROR),
+            ],
+            traces_sample_rate=1.0,
+        )
+        app.logger.info("Sentry is enabled.")
     else:
-        app.logger.info('Sentry is disabled.')
+        app.logger.info("Sentry is disabled.")
 
     return app
