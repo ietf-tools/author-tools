@@ -1,4 +1,4 @@
-FROM ubuntu:jammy
+FROM ubuntu:noble
 LABEL maintainer="Kesara Rathnayake <kesara@staff.ietf.org>"
 
 ARG VERSION=6.6.6
@@ -24,8 +24,8 @@ RUN apt-get update && \
         gcc \
         wget \
         ruby \
-        python3.10 \
-        python3-pip \
+        python3 \
+        python3-venv \
         libpango-1.0-0 \
         libpango1.0-dev \
         wdiff \
@@ -33,6 +33,7 @@ RUN apt-get update && \
         gawk \
         bison \
         flex \
+        make \
         nginx \
         supervisor && \
     rm -rf /var/lib/apt/lists/* /var/log/dpkg.log && \
@@ -88,9 +89,12 @@ RUN npm install
 RUN mv ./node_modules/.bin/idnits ./node_modules/.bin/idnits3
 
 # Install Python dependencies
-RUN apt-get remove -y python3-blinker
-RUN pip3 install --upgrade pip
-RUN pip3 install -r requirements.txt -c constraints.txt
+ENV PYTHONUNBUFFERED=1
+ENV VENV_DIR=/usr/src/app/venv
+RUN python3 -m venv $VENV_DIR
+ENV PATH="$VENV_DIR/bin:$PATH"
+RUN python -m pip install --upgrade pip
+RUN python -m pip install -r requirements.txt -c constraints.txt
 
 # Install Ruby dependencies
 RUN gem install bundler && bundle install
@@ -130,6 +134,7 @@ COPY docker/nginx-default-site.conf /etc/nginx/sites-available/default
 COPY docker/supervisord.conf /etc/supervisor/
 
 USER www-data
+
 EXPOSE 8080
 WORKDIR /usr/src/app/
 
