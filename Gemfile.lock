@@ -3,16 +3,16 @@ GEM
   specs:
     base64 (0.2.0)
     certified (1.0.0)
-    connection_pool (2.4.1)
+    connection_pool (2.5.0)
     differ (0.1.2)
     json_pure (2.8.1)
     kramdown (2.4.0)
       rexml
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
-    kramdown-rfc (1.7.21)
-      kramdown-rfc2629 (= 1.7.21)
-    kramdown-rfc2629 (1.7.21)
+    kramdown-rfc (1.7.22)
+      kramdown-rfc2629 (= 1.7.22)
+    kramdown-rfc2629 (1.7.22)
       base64 (>= 0.1)
       certified (~> 1.0)
       differ (~> 0.1)
@@ -23,9 +23,9 @@ GEM
       unicode-blocks (~> 1.0)
       unicode-name (~> 1.0)
       unicode-scripts (~> 1.0)
-    net-http-persistent (4.0.4)
+    net-http-persistent (4.0.5)
       connection_pool (~> 2.2)
-    rexml (3.3.9)
+    rexml (3.4.0)
     unicode-blocks (1.10.0)
     unicode-name (1.13.5)
       unicode-types (~> 1.10)
@@ -42,4 +42,4 @@ DEPENDENCIES
   kramdown-rfc
 
 BUNDLED WITH
-   2.2.3
+   2.6.2
