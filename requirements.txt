@@ -1,4 +1,4 @@
-eventlet>=0.38.0
+eventlet>=0.39.0
 decorator>=5.1.1
 Flask>=3.1.0
 Flask-Cors>=5.0.0
@@ -6,6 +6,6 @@ gunicorn>=23.0.0
 id2xml>=1.5.2
 iddiff>=0.4.3
 requests>=2.32.3
-sentry-sdk[flask]>=2.19.0
+sentry-sdk[flask]>=2.20.0
 svgcheck>=0.10.0
-xml2rfc[pdf]>=3.25.0
+xml2rfc[pdf]>=3.26.0
