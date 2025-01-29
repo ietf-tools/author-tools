@@ -51,6 +51,8 @@ spec:
               mountPath: /tmp/cache/xml2rfc
             - name: at-idnits
               mountPath: /var/www/.idnits
+            - name: at-cache
+              mountPath: /var/www/.cache
             - name: at-app-tmp
               mountPath: /usr/src/app/tmp
           env:
@@ -86,6 +88,9 @@ spec:
           emptyDir:
             sizeLimit: "1Gi"
         - name: at-idnits
+          emptyDir:
+            sizeLimit: "1Gi"
+        - name: at-cache
           emptyDir:
             sizeLimit: "1Gi"
         - name: at-app-tmp
