@@ -121,8 +121,9 @@ RUN mkdir -p tmp && \
 # cache configuration
 RUN mkdir -p /tmp/cache/xml2rfc && \
     mkdir -p /tmp/cache/refcache && \
+    mkdir /var/www/.cache && \
     ln -sf /tmp/cache/xml2rfc /var/cache/xml2rfc && \
-    chown -R www-data:0 /tmp/cache
+    chown -R www-data:0 /tmp/cache /var/www/.cache
 ENV KRAMDOWN_REFCACHEDIR=/tmp/cache/refcache
 
 
