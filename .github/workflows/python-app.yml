@@ -81,6 +81,8 @@ jobs:
         npm install
         mv ./node_modules/.bin/idnits ./node_modules/.bin/idnits3
     # Tests
+    - name: Run Black
+      run: black --check .
     - name: Run Pyflakes
       run: pyflakes at tests
     - name: Run tests and collect coverage
