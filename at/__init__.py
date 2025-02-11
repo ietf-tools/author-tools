@@ -32,8 +32,7 @@ def create_app(config=None):
     app.logger.info(f"SITE_URL: {app.config['SITE_URL']}")
 
     if dt_latest_draft_url := getenv("DT_LATEST_DRAFT_URL"):
-        app.logger.info(
-                f"Using DT_LATEST_DRAFT_URL from ENV: {dt_latest_draft_url}")
+        app.logger.info(f"Using DT_LATEST_DRAFT_URL from ENV: {dt_latest_draft_url}")
         app.config["DT_LATEST_DRAFT_URL"] = dt_latest_draft_url
 
     if sentry_dsn := getenv("SENTRY_DSN"):
