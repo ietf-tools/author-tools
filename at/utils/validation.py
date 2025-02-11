@@ -11,53 +11,48 @@ from at.utils.text import get_text_id_from_file
 
 
 def validate_draft(file, upload_dir, logger=getLogger()):
-    '''Validate uploaded file.'''
+    """Validate uploaded file."""
 
     file_ext = get_extension(file.filename)
 
-    if file_ext.lower() == '.txt':
+    if file_ext.lower() == ".txt":
         # don't try to convert text files to XML
-        _, filename = get_text_id_from_file(
-                        file=file,
-                        upload_dir=upload_dir)
-        log = {'idnits': idnits(filename, logger)}
+        _, filename = get_text_id_from_file(file=file, upload_dir=upload_dir)
+        log = {"idnits": idnits(filename, logger)}
     else:
-        _, filename = process_file(
-                        file=file,
-                        upload_dir=upload_dir,
-                        logger=logger)
+        _, filename = process_file(file=file, upload_dir=upload_dir, logger=logger)
         log = validate_xml(filename, logger=logger)
 
     # get list of non ASCII chars
-    log['non_ascii'] = get_non_ascii_chars(filename=filename, logger=logger)
+    log["non_ascii"] = get_non_ascii_chars(filename=filename, logger=logger)
 
     return log
 
 
 def validate_xml(filename, logger=getLogger()):
-    '''Validate XML2RFC
-    NOTE: if file is XML2RFC v2 that will get converted to v3'''
+    """Validate XML2RFC
+    NOTE: if file is XML2RFC v2 that will get converted to v3"""
 
     try:
         log = None
 
-        logger.debug('invoking xml2rfc parser')
+        logger.debug("invoking xml2rfc parser")
 
         parser = XmlRfcParser(filename, quiet=True)
         xmltree = parser.parse(remove_comments=False, quiet=True)
         xmlroot = xmltree.getroot()
-        xml2rfc_version = xmlroot.get('version', '2')
+        xml2rfc_version = xmlroot.get("version", "2")
         v2_processed_log = None
 
-        if xml2rfc_version == '2':
+        if xml2rfc_version == "2":
             filename, output = convert_v2v3(filename, logger)
             v2_processed_log = process_xml2rfc_log(output, filename)
 
     except XMLSyntaxError as e:
-        logger.info('xml2rfc error: {}'.format(str(e)))
+        logger.info("xml2rfc error: {}".format(str(e)))
         raise XML2RFCError(e)
 
-    logger.info('new file saved at {}'.format(filename))
+    logger.info("new file saved at {}".format(filename))
 
     log, text_file = xml2rfc_validation(filename, logger)
     processed_log = process_xml2rfc_log(log, filename)
@@ -65,118 +60,124 @@ def validate_xml(filename, logger=getLogger()):
     idnits_log = idnits(text_file, logger)
 
     if v2_processed_log:
-        processed_log = {
-                k: v2_processed_log[k] + v for k, v in processed_log.items()}
+        processed_log = {k: v2_processed_log[k] + v for k, v in processed_log.items()}
 
-    processed_log['idnits'] = idnits_log
+    processed_log["idnits"] = idnits_log
 
     return processed_log
 
 
 def xml2rfc_validation(filename, logger=getLogger()):
-    '''Run xml2rfc to validate the document and return output and text file'''
+    """Run xml2rfc to validate the document and return output and text file"""
 
-    logger.debug('running xml2rfc')
+    logger.debug("running xml2rfc")
 
-    text_file = get_filename(filename, 'txt')
+    text_file = get_filename(filename, "txt")
 
     output = proc_run(
-                args=['xml2rfc', '--warn-bare-unicode', '--out', text_file,
-                      filename],
-                capture_output=True)
+        args=["xml2rfc", "--warn-bare-unicode", "--out", text_file, filename],
+        capture_output=True,
+    )
 
     try:
         output.check_returncode()
     except CalledProcessError:
         if output.stderr:
-            logger.info('xml2rfc error: {}'.format(output.stderr))
+            logger.info("xml2rfc error: {}".format(output.stderr))
         else:
-            logger.info('xml2rfc error: no stderr output')
+            logger.info("xml2rfc error: no stderr output")
 
     return (output, text_file)
 
 
 def convert_v2v3(filename, logger=getLogger()):
-    '''Convert XML2RFC v2 file to v3 and return file name output'''
+    """Convert XML2RFC v2 file to v3 and return file name output"""
 
-    logger.debug('converting v2 XML to v3 XML')
+    logger.debug("converting v2 XML to v3 XML")
 
-    xml_file = get_filename(filename, 'xml')
+    xml_file = get_filename(filename, "xml")
 
     output = proc_run(
-                args=['xml2rfc', '--v2v3', '--out', xml_file, filename],
-                capture_output=True)
+        args=["xml2rfc", "--v2v3", "--out", xml_file, filename], capture_output=True
+    )
 
     try:
         output.check_returncode()
     except CalledProcessError:
         if output.stderr:
-            error = output.stderr.decode('utf-8')
-            logger.info('xml2rfc v2v3 error: {}'.format(error))
+            error = output.stderr.decode("utf-8")
+            logger.info("xml2rfc v2v3 error: {}".format(error))
         else:
-            error = 'v2v3 conversion error'
-            logger.info('xml2rfc v2v3 error: no stderr output')
+            error = "v2v3 conversion error"
+            logger.info("xml2rfc v2v3 error: no stderr output")
         raise XML2RFCError(error)
 
-    logger.info('new file saved at {}'.format(xml_file))
+    logger.info("new file saved at {}".format(xml_file))
     return xml_file, output
 
 
-def idnits(filename,
-           logger=getLogger(),
-           verbose='0',
-           show_text=False,
-           year=False,
-           submit_check=False):
-    '''Run idnits and return output'''
+def idnits(
+    filename,
+    logger=getLogger(),
+    verbose="0",
+    show_text=False,
+    year=False,
+    submit_check=False,
+):
+    """Run idnits and return output"""
 
-    logger.debug('running idnits')
+    logger.debug("running idnits")
 
-    args = ['idnits']
-    if verbose == '1':
-        args.append('--verbose')
-    elif verbose == '2':
-        args.append('--verbose')
-        args.append('--verbose')    # add --verbose twice
+    args = ["idnits"]
+    if verbose == "1":
+        args.append("--verbose")
+    elif verbose == "2":
+        args.append("--verbose")
+        args.append("--verbose")  # add --verbose twice
     if show_text:
-        args.append('--showtext')
+        args.append("--showtext")
     if year:
-        args.append('--year')
+        args.append("--year")
         args.append(str(year))
     if submit_check:
-        args.append('--submitcheck')
+        args.append("--submitcheck")
     args.append(filename)
 
-    output = proc_run(
-                args=args,
-                capture_output=True)
+    output = proc_run(args=args, capture_output=True)
     error = None
 
     try:
         output.check_returncode()
     except CalledProcessError:
         if output.stderr:
-            error = output.stderr.decode('utf-8')
-            logger.info('idnits error: {}'.format(error))
+            error = output.stderr.decode("utf-8")
+            logger.info("idnits error: {}".format(error))
         else:
-            error = 'Error occured while running idnits'
-            logger.info('idnits error: no stderr output')
+            error = "Error occured while running idnits"
+            logger.info("idnits error: no stderr output")
 
     if output.stdout:
-        stdout = output.stdout.decode('utf-8', errors='ignore')
+        stdout = output.stdout.decode("utf-8", errors="ignore")
         return cleanup_output(filename, stdout)
     else:
         return error
 
 
 def svgcheck(filename, logger=getLogger()):
-    '''Run svgcheck and return output'''
+    """Run svgcheck and return output"""
 
-    logger.debug('running svgcheck')
+    logger.debug("running svgcheck")
 
-    parsed_svg_file = get_filename(filename, 'parsed.svg')
-    args = ['svgcheck', '--no-network', '--always-emit', '--repair',
-            '--out', parsed_svg_file, filename]
+    parsed_svg_file = get_filename(filename, "parsed.svg")
+    args = [
+        "svgcheck",
+        "--no-network",
+        "--always-emit",
+        "--repair",
+        "--out",
+        parsed_svg_file,
+        filename,
+    ]
     output = proc_run(args=args, capture_output=True)
     result = None
     errors = None
@@ -186,69 +187,66 @@ def svgcheck(filename, logger=getLogger()):
         output.check_returncode()
     except CalledProcessError:
         if output.stderr:
-            errors = output.stderr.decode('utf-8')
-            logger.info('svgcheck error: {}'.format(errors))
+            errors = output.stderr.decode("utf-8")
+            logger.info("svgcheck error: {}".format(errors))
         else:
-            errors = 'Error occured while running svgcheck'
-            logger.info('svgcheck error: no stderr output')
+            errors = "Error occured while running svgcheck"
+            logger.info("svgcheck error: no stderr output")
 
     if not errors:
         if output.stderr:
             # svgcheck writes to stderr
-            result = output.stderr.decode('utf-8', errors='ignore')
+            result = output.stderr.decode("utf-8", errors="ignore")
 
         with open(parsed_svg_file) as file:
-            parsed_svg = '\n'.join(file.readlines())
+            parsed_svg = "\n".join(file.readlines())
 
-    return (parsed_svg,
-            cleanup_output(filename, result),
-            cleanup_output(filename, errors))
+    return (
+        parsed_svg,
+        cleanup_output(filename, result),
+        cleanup_output(filename, errors),
+    )
 
 
 def get_non_ascii_chars(filename, logger=getLogger()):
-    '''Run kramdown-rfc echars and return output'''
+    """Run kramdown-rfc echars and return output"""
 
-    logger.debug('running echars')
+    logger.debug("running echars")
 
-    output = proc_run(['echars', filename], capture_output=True)
+    output = proc_run(["echars", filename], capture_output=True)
 
-    return output.stdout.decode('utf-8')
+    return output.stdout.decode("utf-8")
 
 
-def idnits3(filename,
-            logger=getLogger(),
-            year=False,
-            submit_check=False):
-    '''Run idnits3 and return output'''
+def idnits3(filename, logger=getLogger(), year=False, submit_check=False):
+    """Run idnits3 and return output"""
 
-    logger.debug('running idnits3')
+    logger.debug("running idnits3")
 
-    args = ['idnits3', '--output', 'pretty', '--no-progress']
+    args = ["idnits3", "--output", "pretty", "--no-progress"]
     if year:
-        args.append('--year')
+        args.append("--year")
         args.append(str(year))
     if submit_check:
-        args.append('--mode')
-        args.append('submission')
+        args.append("--mode")
+        args.append("submission")
     args.append(filename)
 
-    output = proc_run(
-                args=args,
-                capture_output=True)
+    output = proc_run(args=args, capture_output=True)
     error = None
 
     try:
         output.check_returncode()
     except CalledProcessError:  # pragma: no cover
         if output.stderr:
-            error = output.stderr.decode('utf-8')
-            logger.info('idnits3 error: {}'.format(error))
+            error = output.stderr.decode("utf-8")
+            logger.info("idnits3 error: {}".format(error))
         else:
-            error = 'Error occured while running idnits3'
-            logger.info('idnits3 error: no stderr output')
+            error = "Error occured while running idnits3"
+            logger.info("idnits3 error: no stderr output")
 
     if output.stdout:
-        stdout = output.stdout.decode('utf-8', errors='ignore')
+        stdout = output.stdout.decode("utf-8", errors="ignore")
         return cleanup_output(filename, stdout)
     else:
-        return error    # pragma: no cover
+        return error  # pragma: no cover
