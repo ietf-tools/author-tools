@@ -1,5 +1,7 @@
 from logging import getLogger
-from subprocess import run as proc_run, CalledProcessError, TimeoutExpired
+from subprocess import CalledProcessError
+
+from at.utils.runner import proc_run, RunnerError
 
 
 OK = 200
@@ -67,10 +69,12 @@ def get_id_diff(
             output = proc_run(
                 args=diff + [old_draft, new_draft], timeout=TIMEOUT, capture_output=True
             )
-    except TimeoutExpired:
+        output.check_returncode()
+    except RunnerError as e:
         if diff_tool == "rfcdiff":
-            logger.info("iddiff error: Timeout error.")
-            raise IddiffError("Timeout while running comparison.")
+            error = f"iddiff error: {str(e)}"
+            logger.info(error)
+            raise IddiffError(error)
         else:
             # try again with rfcdiff
             return get_id_diff(
@@ -83,9 +87,6 @@ def get_id_diff(
                 abdiff=abdiff,
                 logger=logger,
             )
-
-    try:
-        output.check_returncode()
     except CalledProcessError:
         logger.info("iddiff error: {}".format(output.stderr.decode("utf-8")))
         raise IddiffError(output.stderr.decode("utf-8"))

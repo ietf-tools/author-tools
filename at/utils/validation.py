@@ -1,5 +1,5 @@
 from logging import getLogger
-from subprocess import run as proc_run, CalledProcessError
+from subprocess import CalledProcessError
 
 from xml2rfc import XmlRfcParser
 from lxml.etree import XMLSyntaxError
@@ -8,6 +8,7 @@ from at.utils.file import cleanup_output, get_extension, get_filename
 from at.utils.logs import process_xml2rfc_log
 from at.utils.processor import process_file, XML2RFCError
 from at.utils.text import get_text_id_from_file
+from at.utils.runner import proc_run, RunnerError
 
 
 def validate_draft(file, upload_dir, logger=getLogger()):
@@ -74,13 +75,14 @@ def xml2rfc_validation(filename, logger=getLogger()):
 
     text_file = get_filename(filename, "txt")
 
-    output = proc_run(
-        args=["xml2rfc", "--warn-bare-unicode", "--out", text_file, filename],
-        capture_output=True,
-    )
-
     try:
+        output = proc_run(
+            args=["xml2rfc", "--warn-bare-unicode", "--out", text_file, filename],
+            capture_output=True,
+        )
         output.check_returncode()
+    except RunnerError as e:  # pragma: no cover
+        logger.info(f"process error: {str(e)}")
     except CalledProcessError:
         if output.stderr:
             logger.info("xml2rfc error: {}".format(output.stderr))
@@ -97,12 +99,14 @@ def convert_v2v3(filename, logger=getLogger()):
 
     xml_file = get_filename(filename, "xml")
 
-    output = proc_run(
-        args=["xml2rfc", "--v2v3", "--out", xml_file, filename], capture_output=True
-    )
-
     try:
+        output = proc_run(
+            args=["xml2rfc", "--v2v3", "--out", xml_file, filename], capture_output=True
+        )
         output.check_returncode()
+    except RunnerError as e:  # pragma: no cover
+        logger.info(f"process error: {str(e)}")
+        raise XML2RFCError(str(e))
     except CalledProcessError:
         if output.stderr:
             error = output.stderr.decode("utf-8")
@@ -143,11 +147,14 @@ def idnits(
         args.append("--submitcheck")
     args.append(filename)
 
-    output = proc_run(args=args, capture_output=True)
     error = None
-
+    output = None
     try:
+        output = proc_run(args=args, capture_output=True)
         output.check_returncode()
+    except RunnerError as e:  # pragma: no cover
+        error = str(e)
+        logger.info(f"process error: {error}")
     except CalledProcessError:
         if output.stderr:
             error = output.stderr.decode("utf-8")
@@ -156,7 +163,7 @@ def idnits(
             error = "Error occured while running idnits"
             logger.info("idnits error: no stderr output")
 
-    if output.stdout:
+    if output and output.stdout:
         stdout = output.stdout.decode("utf-8", errors="ignore")
         return cleanup_output(filename, stdout)
     else:
@@ -178,13 +185,15 @@ def svgcheck(filename, logger=getLogger()):
         parsed_svg_file,
         filename,
     ]
-    output = proc_run(args=args, capture_output=True)
     result = None
     errors = None
     parsed_svg = None
-
     try:
+        output = proc_run(args=args, capture_output=True)
         output.check_returncode()
+    except RunnerError as e:  # pragma: no cover
+        errors = str(e)
+        logger.info(f"process error: {errors}")
     except CalledProcessError:
         if output.stderr:
             errors = output.stderr.decode("utf-8")
@@ -212,10 +221,19 @@ def get_non_ascii_chars(filename, logger=getLogger()):
     """Run kramdown-rfc echars and return output"""
 
     logger.debug("running echars")
+    output = None
+    error = None
 
-    output = proc_run(["echars", filename], capture_output=True)
+    try:
+        output = proc_run(["echars", filename], capture_output=True)
+    except RunnerError as e:  # pragma: no cover
+        error = str(e)
+        logger.info(f"process error: {error}")
 
-    return output.stdout.decode("utf-8")
+    if output:
+        return output.stdout.decode("utf-8")
+    else:
+        return error
 
 
 def idnits3(filename, logger=getLogger(), year=False, submit_check=False):
@@ -232,11 +250,14 @@ def idnits3(filename, logger=getLogger(), year=False, submit_check=False):
         args.append("submission")
     args.append(filename)
 
-    output = proc_run(args=args, capture_output=True)
+    output = None
     error = None
-
     try:
+        output = proc_run(args=args, capture_output=True)
         output.check_returncode()
+    except RunnerError as e:  # pragma: no cover
+        error = str(e)
+        logger.info(f"process error: {error}")
     except CalledProcessError:  # pragma: no cover
         if output.stderr:
             error = output.stderr.decode("utf-8")
@@ -245,7 +266,7 @@ def idnits3(filename, logger=getLogger(), year=False, submit_check=False):
             error = "Error occured while running idnits3"
             logger.info("idnits3 error: no stderr output")
 
-    if output.stdout:
+    if output and output.stdout:
         stdout = output.stdout.decode("utf-8", errors="ignore")
         return cleanup_output(filename, stdout)
     else:
