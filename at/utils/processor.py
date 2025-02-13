@@ -29,6 +29,12 @@ class MmarkError(Exception):
     pass
 
 
+class RstError(Exception):
+    """Error class for rst2rfcxml errors"""
+
+    pass
+
+
 class TextError(Exception):
     """Error class for id2xml errors"""
 
@@ -49,6 +55,8 @@ def process_file(file, upload_dir, logger=getLogger()):
         filename = md2xml(filename, logger)
     elif file_ext.lower() == ".txt":
         filename = txt2xml(filename, logger)
+    elif file_ext.lower() == ".rst":
+        filename = rst2xml(filename, logger)
 
     return (dir_path, filename)
 
@@ -112,6 +120,29 @@ def mmark2xml(filename, logger=getLogger()):
     xml_file = get_filename(filename, "xml")
     with open(xml_file, "wb") as file:
         file.write(output.stdout)
+
+    logger.info("new file saved at {}".format(xml_file))
+    return xml_file
+
+
+def rst2xml(filename, logger=getLogger()):
+    """Convert rst file to XML"""
+
+    logger.debug("processing RST file")
+
+    xml_file = get_filename(filename, "xml")
+
+    try:
+        output = proc_run(
+            args=["rst2rfcxml", "-i", filename, "-o", xml_file], capture_output=True
+        )
+        output.check_returncode()
+    except RunnerError as e:  # pragma: no cover
+        logger.info(f"process error: {str(e)}")
+        raise RstError(str(e))
+    except CalledProcessError:
+        logger.info("rst2rfcxml error: {}".format(output.stderr.decode("utf-8")))
+        raise RstError(output.stderr.decode("utf-8"))
 
     logger.info("new file saved at {}".format(xml_file))
     return xml_file

@@ -141,6 +141,24 @@ def get_rfcdiff_version(logger=getLogger()):
         return None
 
 
+def get_rst2rfcxml_version(logger=getLogger()):
+    """Return rst2rfcxml version"""
+
+    output = proc_run(args=["rst2rfcxml", "--version"], capture_output=True)
+
+    try:
+        output.check_returncode()
+        return (
+            output.stdout.decode("utf-8")
+            .split("\n")[0]
+            .replace("rst2rfcxml", "")
+            .strip()
+        )
+    except CalledProcessError:  # pragma: no cover
+        logger.info("rst2rfcxml error: {}".format(output.stderr.decode("utf-8")))
+        return None
+
+
 if __name__ == "__main__":
     VERSION_INFORMATION = {
         "xml2rfc": get_xml2rfc_version(),
@@ -154,6 +172,7 @@ if __name__ == "__main__":
         "aasvg": get_aasvg_version(),
         "svgcheck": get_svgcheck_version(),
         "rfcdiff": get_rfcdiff_version(),
+        "rst2rfcxml": get_rst2rfcxml_version(),
         "bap": "1.4",
     }  # bap does not provide a switch to get version
     print(f"VERSION_INFORMATION = {VERSION_INFORMATION}")

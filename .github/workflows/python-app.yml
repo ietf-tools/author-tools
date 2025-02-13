@@ -45,6 +45,9 @@ jobs:
         sudo tar zxf mmark_*.tgz -C /bin/
         wget https://github.com/ietf-tools/bap/archive/refs/heads/master.zip
         unzip -q master.zip -d /tmp/bap
+        wget "https://github.com/dthaler/rst2rfcxml/releases/download/v1.5.0/Ubuntu.Release.rst2rfcxml.zip"
+        sudo unzip Ubuntu.Release.rst2rfcxml.zip -d /bin/
+        sudo chmod +x /bin/rst2rfcxml
 
     - name: Build bap
       working-directory: /tmp/bap/bap-master/
