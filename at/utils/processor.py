@@ -1,5 +1,5 @@
 from logging import getLogger
-from subprocess import run as proc_run, CalledProcessError
+from subprocess import CalledProcessError
 
 from xml2rfc import XmlRfcParser
 from xml2rfc.parser import XmlRfcError
@@ -7,6 +7,7 @@ from lxml.etree import XMLSyntaxError
 
 from at.utils.file import get_extension, get_filename, save_file
 from at.utils.logs import get_errors, process_xml2rfc_log
+from at.utils.runner import proc_run, RunnerError
 
 
 # Exceptions
@@ -68,10 +69,12 @@ def kramdown2xml(filename, logger=getLogger()):
 
     logger.debug("processing kramdown-rfc file")
 
-    output = proc_run(args=["kramdown-rfc", "--v3", filename], capture_output=True)
-
     try:
+        output = proc_run(args=["kramdown-rfc", "--v3", filename], capture_output=True)
         output.check_returncode()
+    except RunnerError as e:  # pragma: no cover
+        logger.info(f"process error: {str(e)}")
+        raise KramdownError(str(e))
     except CalledProcessError:
         logger.info("kramdown-rfc error: {}".format(output.stderr.decode("utf-8")))
         raise KramdownError(output.stderr.decode("utf-8"))
@@ -90,10 +93,12 @@ def mmark2xml(filename, logger=getLogger()):
 
     logger.debug("processing mmark file")
 
-    output = proc_run(args=["mmark", filename], capture_output=True)
-
     try:
+        output = proc_run(args=["mmark", filename], capture_output=True)
         output.check_returncode()
+    except RunnerError as e:  # pragma: no cover
+        logger.info(f"process error: {str(e)}")
+        raise MmarkError(str(e))
     except CalledProcessError:
         if output.stderr:
             error = output.stderr.decode("utf-8")
@@ -119,12 +124,14 @@ def txt2xml(filename, logger=getLogger()):
 
     xml_file = get_filename(filename, "xml")
 
-    output = proc_run(
-        args=["id2xml", "--v2", "--out", xml_file, filename], capture_output=True
-    )
-
     try:
+        output = proc_run(
+            args=["id2xml", "--v2", "--out", xml_file, filename], capture_output=True
+        )
         output.check_returncode()
+    except RunnerError as e:  # pragma: no cover
+        logger.info(f"process error: {str(e)}")
+        raise TextError(str(e))
     except CalledProcessError:
         logger.info("id2xml error: {}".format(output.stderr.decode("utf-8")))
         raise TextError(output.stderr.decode("utf-8"))
@@ -139,12 +146,14 @@ def convert_v2v3(filename, logger=getLogger()):
 
     xml_file = get_filename(filename, "xml")
 
-    output = proc_run(
-        args=["xml2rfc", "--v2v3", "--out", xml_file, filename], capture_output=True
-    )
-
     try:
+        output = proc_run(
+            args=["xml2rfc", "--v2v3", "--out", xml_file, filename], capture_output=True
+        )
         output.check_returncode()
+    except RunnerError as e:  # pragma: no cover
+        logger.info(f"process error: {str(e)}")
+        raise XML2RFCError(str(e))
     except CalledProcessError:
         errors = get_errors(output, filename)
         if errors:
@@ -190,12 +199,15 @@ def get_html(filename, logger=getLogger()):
 
     html_file = get_filename(filename, "html")
 
-    output = proc_run(
-        args=["xml2rfc", "--html", "--out", html_file, filename], capture_output=True
-    )
-
     try:
+        output = proc_run(
+            args=["xml2rfc", "--html", "--out", html_file, filename],
+            capture_output=True,
+        )
         output.check_returncode()
+    except RunnerError as e:  # pragma: no cover
+        logger.info(f"process error: {str(e)}")
+        raise XML2RFCError(str(e))
     except CalledProcessError:
         errors = get_errors(output, filename)
         if errors:
@@ -213,12 +225,15 @@ def get_text(filename, logger=getLogger()):
 
     text_file = get_filename(filename, "txt")
 
-    output = proc_run(
-        args=["xml2rfc", "--text", "--out", text_file, filename], capture_output=True
-    )
-
     try:
+        output = proc_run(
+            args=["xml2rfc", "--text", "--out", text_file, filename],
+            capture_output=True,
+        )
         output.check_returncode()
+    except RunnerError as e:  # pragma: no cover
+        logger.info(f"process error: {str(e)}")
+        raise XML2RFCError(str(e))
     except CalledProcessError:
         errors = get_errors(output, filename)
         if errors:
@@ -238,12 +253,14 @@ def get_pdf(filename, logger=getLogger()):
 
     pdf_file = get_filename(filename, "pdf")
 
-    output = proc_run(
-        args=["xml2rfc", "--pdf", "--out", pdf_file, filename], capture_output=True
-    )
-
     try:
+        output = proc_run(
+            args=["xml2rfc", "--pdf", "--out", pdf_file, filename], capture_output=True
+        )
         output.check_returncode()
+    except RunnerError as e:  # pragma: no cover
+        logger.info(f"process error: {str(e)}")
+        raise XML2RFCError(str(e))
     except CalledProcessError:
         errors = get_errors(output, filename)
         if errors:
@@ -261,14 +278,19 @@ def clean_svg_ids(filename, logger=getLogger()):
     """Clean SVGs with duplicates IDs in XML"""
     logger.debug("invoking kramdown-rfc-clean-svg-ids")
 
-    output = proc_run(
-        args=["kramdown-rfc-clean-svg-ids", filename], capture_output=True
-    )
+    output = None
+    try:
+        output = proc_run(
+            args=["kramdown-rfc-clean-svg-ids", filename], capture_output=True
+        )
+    except RunnerError as e:  # pragma: no cover
+        logger.info(f"process error: {str(e)}")
 
     # write output to XML file
     xml_file = get_filename(filename, "xml")
-    with open(xml_file, "wb") as file:
-        file.write(output.stdout)
+    if output:
+        with open(xml_file, "wb") as file:
+            file.write(output.stdout)
 
     logger.info("new file saved at {}".format(xml_file))
     return xml_file
