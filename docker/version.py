@@ -151,7 +151,7 @@ def get_rst2rfcxml_version(logger=getLogger()):
         return (
             output.stdout.decode("utf-8")
             .split("\n")[0]
-            .replace("rst2rfcxml", "")
+            .replace("rst2xmlrfc", "")
             .strip()
         )
     except CalledProcessError:  # pragma: no cover
