@@ -30,67 +30,17 @@ See [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Setting up development environment
 
-* Set up Python 3.8+ environment.
-```
-python3.8 -m venv venv
-. venv/bin/activate
-```
-
-* Install required dependencies.
-```
-pip install -r requirements.txt
+* Build docker image
+```sh
+docker build -f dev.Dockerfile -t author-tools:dev .
 ```
 
-> **NOTE:** Known issue with Jinja conflict.
-
-* Set up other dependencies for [xml2rfc](https://pypi.org/project/xml2rfc/).
-
-* To use kramdown-rfc2629 and mmark, you need to have
-[ruby](https://www.ruby-lang.org/) and [go](https://golang.org/) installed.
-
-* Install npm dependencies
-```
-npm install
-mv ./node_modules/.bin/idnits ./node_modules/.bin/idnits3
-```
-
-* Install [kramdown-rfc2629](https://github.com/cabo/kramdown-rfc2629).
-```
-bundle install
-```
-
-* Install [mmark](https://github.com/mmarkdown/mmark).
-```
-go get github.com/mmarkdown/mmark
-```
-
-* Create a tmp directory.
-```
-mkdir tmp
-```
-
-* Create a configuration file.
-```
-echo "UPLOAD_DIR = '$PWD/tmp'" > at/config.py
-echo "VERSION = '9.9.9'" >> at/config.py
-echo "REQUIRE_AUTH = False" >> at/config.py
-echo "DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/doc/rfcdiff-latest-json'" >> at/config.py
-echo "ALLOWED_DOMAINS = ['ietf.org', 'ietf.org', 'rfc-editor.org']" >> at/config.py
-PATH=$PATH:./node_modules/.bin/ python docker/version.py >> at/config.py
-```
-
-* Run flask server.
-```
-SITE_URL='http://localhost:5000' PATH=$PATH:./node_modules/.bin/ FLASK_APP=at FLASK_DEBUG=True flask run
-```
-
-## Running tests
-* Install required dependencies for testing.
-```
-pip install -r requirements.dev.txt
+* Run the docker image
+```sh
+docker run -it author-tools:dev
 ```
 
 * Run unit tests.
-```
-PATH=$PATH:./node_modules/.bin/ python -m unittest discover tests
+```sh
+python3 -m unittest discover tests
 ```
