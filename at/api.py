@@ -36,10 +36,7 @@ from at.utils.processor import (
     get_text,
     get_xml,
     process_file,
-    KramdownError,
-    MmarkError,
-    TextError,
-    XML2RFCError,
+    ProcessingError,
 )
 from at.utils.text import (
     get_text_id_from_file,
@@ -75,27 +72,15 @@ def render(format):
     file = request.files["file"]
 
     logs = {"errors": [], "warnings": []}
+    rendered_filename = ""
 
     try:
         dir_path, filename = process_file(
             file=file, upload_dir=current_app.config["UPLOAD_DIR"], logger=logger
         )
-    except KramdownError as e:
-        return jsonify(error="kramdown-rfc error: {}".format(e)), BAD_REQUEST
-    except MmarkError as e:
-        return jsonify(error="mmark error: {}".format(e)), BAD_REQUEST
-    except TextError as e:
-        return jsonify(error="id2xml error: {}".format(e)), BAD_REQUEST
-
-    try:
         xml_file, _logs = get_xml(filename, logger=logger)
         logs = update_logs(logs, _logs)
-    except XML2RFCError as e:
-        return jsonify(error="xml2rfc error: {}".format(e)), BAD_REQUEST
 
-    rendered_filename = ""
-
-    try:
         if format == "xml":
             rendered_filename = get_file(xml_file)
         elif format == "html":
@@ -113,8 +98,8 @@ def render(format):
         else:
             logger.info("render format not supported: {}".format(format))
             return jsonify(error="Render format not supported"), BAD_REQUEST
-    except XML2RFCError as e:
-        return jsonify(error="xml2rfc error: {}".format(e)), BAD_REQUEST
+    except ProcessingError as e:
+        return jsonify(error="processing error: {}".format(e)), BAD_REQUEST
 
     if len(rendered_filename) > 0:
         url = "/".join(
@@ -154,12 +139,8 @@ def validate():
         log = validate_draft(
             file=file, upload_dir=current_app.config["UPLOAD_DIR"], logger=logger
         )
-    except KramdownError as e:
-        return jsonify(error="kramdown-rfc error: {}".format(e)), BAD_REQUEST
-    except MmarkError as e:
-        return jsonify(error="mmark error: {}".format(e)), BAD_REQUEST
-    except XML2RFCError as e:
-        return jsonify(error="xml2rfc error: {}".format(e)), BAD_REQUEST
+    except ProcessingError as e:
+        return jsonify(error="processing error: {}".format(e)), BAD_REQUEST
 
     return jsonify(log)
 

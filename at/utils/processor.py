@@ -11,32 +11,8 @@ from at.utils.runner import proc_run, RunnerError
 
 
 # Exceptions
-class XML2RFCError(Exception):
-    """Error class for xml2rfc errors"""
-
-    pass
-
-
-class KramdownError(Exception):
-    """Error class for kramdown-rfc errors"""
-
-    pass
-
-
-class MmarkError(Exception):
-    """Error class for mmark errors"""
-
-    pass
-
-
-class RstError(Exception):
-    """Error class for rst2rfcxml errors"""
-
-    pass
-
-
-class TextError(Exception):
-    """Error class for id2xml errors"""
+class ProcessingError(Exception):
+    """Error class for document processing errors"""
 
     pass
 
@@ -82,10 +58,10 @@ def kramdown2xml(filename, logger=getLogger()):
         output.check_returncode()
     except RunnerError as e:  # pragma: no cover
         logger.info(f"process error: {str(e)}")
-        raise KramdownError(str(e))
+        raise ProcessingError(str(e))
     except CalledProcessError:
         logger.info("kramdown-rfc error: {}".format(output.stderr.decode("utf-8")))
-        raise KramdownError(output.stderr.decode("utf-8"))
+        raise ProcessingError(output.stderr.decode("utf-8"))
 
     # write output to XML file
     xml_file = get_filename(filename, "xml")
@@ -106,7 +82,7 @@ def mmark2xml(filename, logger=getLogger()):
         output.check_returncode()
     except RunnerError as e:  # pragma: no cover
         logger.info(f"process error: {str(e)}")
-        raise MmarkError(str(e))
+        raise ProcessingError(str(e))
     except CalledProcessError:
         if output.stderr:
             error = output.stderr.decode("utf-8")
@@ -114,7 +90,7 @@ def mmark2xml(filename, logger=getLogger()):
         else:
             error = "mmark error"
             logger.info("mmark error: no stderr output")
-        raise MmarkError(error)
+        raise ProcessingError(error)
 
     # write output to XML file
     xml_file = get_filename(filename, "xml")
@@ -139,10 +115,10 @@ def rst2xml(filename, logger=getLogger()):
         output.check_returncode()
     except RunnerError as e:  # pragma: no cover
         logger.info(f"process error: {str(e)}")
-        raise RstError(str(e))
+        raise ProcessingError(str(e))
     except CalledProcessError:
         logger.info("rst2rfcxml error: {}".format(output.stderr.decode("utf-8")))
-        raise RstError(output.stderr.decode("utf-8"))
+        raise ProcessingError(output.stderr.decode("utf-8"))
 
     logger.info("new file saved at {}".format(xml_file))
     return xml_file
@@ -162,10 +138,10 @@ def txt2xml(filename, logger=getLogger()):
         output.check_returncode()
     except RunnerError as e:  # pragma: no cover
         logger.info(f"process error: {str(e)}")
-        raise TextError(str(e))
+        raise ProcessingError(str(e))
     except CalledProcessError:
         logger.info("id2xml error: {}".format(output.stderr.decode("utf-8")))
-        raise TextError(output.stderr.decode("utf-8"))
+        raise ProcessingError(output.stderr.decode("utf-8"))
 
     logger.info("new file saved at {}".format(xml_file))
     return xml_file
@@ -184,7 +160,7 @@ def convert_v2v3(filename, logger=getLogger()):
         output.check_returncode()
     except RunnerError as e:  # pragma: no cover
         logger.info(f"process error: {str(e)}")
-        raise XML2RFCError(str(e))
+        raise ProcessingError(str(e))
     except CalledProcessError:
         errors = get_errors(output, filename)
         if errors:
@@ -192,7 +168,7 @@ def convert_v2v3(filename, logger=getLogger()):
         else:
             errors = "v2v3 conversion error"
             logger.info("xml2rfc v2v3 error: no error output")
-        raise XML2RFCError(errors)
+        raise ProcessingError(errors)
 
     logs = process_xml2rfc_log(output, filename)
 
@@ -218,7 +194,7 @@ def get_xml(filename, logger=getLogger()):
             filename, logs = convert_v2v3(filename, logger)
     except (XmlRfcError, XMLSyntaxError) as e:
         logger.info("xml2rfc error: {}".format(str(e)))
-        raise XML2RFCError(e)
+        raise ProcessingError(e)
 
     logger.info("new file saved at {}".format(filename))
     return (filename, logs)
@@ -238,7 +214,7 @@ def get_html(filename, logger=getLogger()):
         output.check_returncode()
     except RunnerError as e:  # pragma: no cover
         logger.info(f"process error: {str(e)}")
-        raise XML2RFCError(str(e))
+        raise ProcessingError(str(e))
     except CalledProcessError:
         errors = get_errors(output, filename)
         if errors:
@@ -246,7 +222,7 @@ def get_html(filename, logger=getLogger()):
         else:
             errors = "html generation error"
             logger.info("xml2rfc html error: no error output")
-        raise XML2RFCError(errors)
+        raise ProcessingError(errors)
 
     logger.info("new file saved at {}".format(html_file))
     return (html_file, process_xml2rfc_log(output, filename))
@@ -264,7 +240,7 @@ def get_text(filename, logger=getLogger()):
         output.check_returncode()
     except RunnerError as e:  # pragma: no cover
         logger.info(f"process error: {str(e)}")
-        raise XML2RFCError(str(e))
+        raise ProcessingError(str(e))
     except CalledProcessError:
         errors = get_errors(output, filename)
         if errors:
@@ -272,7 +248,7 @@ def get_text(filename, logger=getLogger()):
         else:
             errors = "text generation error"
             logger.info("xml2rfc text error: no error output")
-        raise XML2RFCError(errors)
+        raise ProcessingError(errors)
 
     logger.info("new file saved at {}".format(text_file))
     return (text_file, process_xml2rfc_log(output, filename))
@@ -291,7 +267,7 @@ def get_pdf(filename, logger=getLogger()):
         output.check_returncode()
     except RunnerError as e:  # pragma: no cover
         logger.info(f"process error: {str(e)}")
-        raise XML2RFCError(str(e))
+        raise ProcessingError(str(e))
     except CalledProcessError:
         errors = get_errors(output, filename)
         if errors:
@@ -299,7 +275,7 @@ def get_pdf(filename, logger=getLogger()):
         else:
             errors = "pdf generation error"
             logger.info("xml2rfc pdf error: no error output")
-        raise XML2RFCError(errors)
+        raise ProcessingError(errors)
 
     logger.info("new file saved at {}".format(pdf_file))
     return (pdf_file, process_xml2rfc_log(output, filename))
