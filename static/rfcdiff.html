@@ -80,6 +80,7 @@
             <ul>
               <li>XML as .xml (automatically recognises v3 as defined in <a href="https://www.rfc-editor.org/info/rfc7991">RFC 7991</a> and v2 as defined in <a href="https://www.rfc-editor.org/info/rfc7749">RFC 7749</a>)</li>
               <li>Markdown as .md or .mkd (<a href="https://github.com/cabo/kramdown-rfc">kramdown-rfc</a> and <a href="https://mmark.miek.nl/">mmark</a> dialects are supported)</li>
+              <li>reStructuredText (RST) as .rst (Author tools uses <a href="https://github.com/dthaler/rst2rfcxml/">rst2rfcxml</a>.)</li>
               <li>Plain text as .txt</li>
             </ul>
             <label class="form-label">First Document</label>
@@ -97,7 +98,7 @@
             <div class="tab-content" id="ulDraftTabs1Content">
               <div class="tab-pane fade show active" id="file1" role="tabpanel" aria-labelledby="file-tab1">
                 <form id="form-tab-file1">
-                  <input class="form-control form-control-lg" id="formFile1" type="file" accept=".xml,.md,.mkd,.txt" data-bs-toggle2="tooltip" data-bs-placement="bottom" title="Select input file. Input file can be XML, Markdown (kramdown-rfc or mmark) or text.">
+                  <input class="form-control form-control-lg" id="formFile1" type="file" accept=".xml,.md,.mkd,.rst,.txt" data-bs-toggle2="tooltip" data-bs-placement="bottom" title="Select input file. Input file can be XML, Markdown (kramdown-rfc or mmark) or text.">
                 </form>
               </div>
               <div class="tab-pane fade" id="name1" role="tabpanel" aria-labelledby="name-tab1">
@@ -126,7 +127,7 @@
             <div class="tab-content" id="ulDraftTabs2Content">
               <div class="tab-pane fade show active" id="file2" role="tabpanel" aria-labelledby="file-tab2">
                 <form id="form-tab-file2">
-                  <input class="form-control form-control-lg" id="formFile2" type="file" accept=".xml,.md,.mkd,.txt" data-bs-toggle2="tooltip" data-bs-placement="bottom" title="Select input file. Input file can be XML, Markdown (kramdown-rfc or mmark) or text.">
+                  <input class="form-control form-control-lg" id="formFile2" type="file" accept=".xml,.md,.mkd,.rst,.txt" data-bs-toggle2="tooltip" data-bs-placement="bottom" title="Select input file. Input file can be XML, Markdown (kramdown-rfc or mmark) or text.">
                 </form>
               </div>
               <div class="tab-pane fade" id="name2" role="tabpanel" aria-labelledby="name-tab2">

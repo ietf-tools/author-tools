@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>IETF Author Tools</title>
-    <meta name="description" content="This service allows you to convert an Internet-Draft from one format into another, including rendered outputs. In the background this service uses id2xml, kramdown-rfc, mmark and xml2rfc, chaining them together as needed to deliver the requested conversion.">
+    <meta name="description" content="This service allows you to convert an Internet-Draft from one format into another, including rendered outputs. In the background this service uses id2xml, kramdown-rfc, mmark, rst2rfcxml and xml2rfc, chaining them together as needed to deliver the requested conversion.">
     <link rel="canonical" href="https://author-tools.ietf.org/">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <link rel="stylesheet" href="styles/custom.css">
@@ -70,19 +70,20 @@
         <div class="row">
           <div>
             <p>
-              This service allows you to convert an Internet-Draft from one format into another, including rendered outputs. In the background this service uses id2xml, kramdown-rfc, mmark and xml2rfc, chaining them together as needed to deliver the requested conversion.<br>
+              This service allows you to convert an Internet-Draft from one format into another, including rendered outputs. In the background this service uses id2xml, kramdown-rfc, mmark, rst2rfcxml and xml2rfc, chaining them together as needed to deliver the requested conversion.<br>
               The input must be a valid Internet-Draft in one of the following formats:
             </p>
             <ul>
               <li>XML as .xml (automatically recognises v3 as defined in <a href="https://www.rfc-editor.org/info/rfc7991">RFC 7991</a> and v2 as defined in <a href="https://www.rfc-editor.org/info/rfc7749">RFC 7749</a>)</li>
               <li>Markdown as .md or .mkd (<a href="https://github.com/cabo/kramdown-rfc">kramdown-rfc</a> and <a href="https://mmark.miek.nl/">mmark</a> dialects are supported)</li>
+              <li>reStructuredText (RST) as .rst (Author tools uses <a href="https://github.com/dthaler/rst2rfcxml/">rst2rfcxml</a>.)</li>
               <li>Plain text as .txt</li>
             </ul>
             <p>
               Visit <a href="https://authors.ietf.org">authors.ietf.org</a> for information on how to write an Internet-Draft.
             </p>
             <label for="formFile" class="form-label">Input file</label>
-            <input class="form-control form-control-lg" id="formFile" type="file" accept=".xml,.md,.mkd,.txt" required data-bs-toggle="tooltip" data-bs-placement="bottom" title="Select input file. Input file can be XML, Markdown (kramdown-rfc or mmark) or text.">
+            <input class="form-control form-control-lg" id="formFile" type="file" accept=".xml,.md,.mkd,.rst,.txt" required data-bs-toggle="tooltip" data-bs-placement="bottom" title="Select input file. Input file can be XML, Markdown (kramdown-rfc or mmark) or text.">
           </div>
         </div>
         <div class="row mt-2">
