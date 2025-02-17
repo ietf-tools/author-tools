@@ -5,7 +5,9 @@ info:
   version: 6.6.6
 servers:
   - url: https://author-tools.ietf.org
-    description: Alpha server
+    description: Production server
+  - url: https://author-tools.staging.ietf.org
+    description: Staging server
 components:
   securitySchemes:
     apiKeyAuth:
