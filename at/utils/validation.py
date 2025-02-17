@@ -6,7 +6,7 @@ from lxml.etree import XMLSyntaxError
 
 from at.utils.file import cleanup_output, get_extension, get_filename
 from at.utils.logs import process_xml2rfc_log
-from at.utils.processor import process_file, XML2RFCError
+from at.utils.processor import process_file, ProcessingError
 from at.utils.text import get_text_id_from_file
 from at.utils.runner import proc_run, RunnerError
 
@@ -51,7 +51,7 @@ def validate_xml(filename, logger=getLogger()):
 
     except XMLSyntaxError as e:
         logger.info("xml2rfc error: {}".format(str(e)))
-        raise XML2RFCError(e)
+        raise ProcessingError(e)
 
     logger.info("new file saved at {}".format(filename))
 
@@ -106,7 +106,7 @@ def convert_v2v3(filename, logger=getLogger()):
         output.check_returncode()
     except RunnerError as e:  # pragma: no cover
         logger.info(f"process error: {str(e)}")
-        raise XML2RFCError(str(e))
+        raise ProcessingError(str(e))
     except CalledProcessError:
         if output.stderr:
             error = output.stderr.decode("utf-8")
@@ -114,7 +114,7 @@ def convert_v2v3(filename, logger=getLogger()):
         else:
             error = "v2v3 conversion error"
             logger.info("xml2rfc v2v3 error: no stderr output")
-        raise XML2RFCError(error)
+        raise ProcessingError(error)
 
     logger.info("new file saved at {}".format(xml_file))
     return xml_file, output

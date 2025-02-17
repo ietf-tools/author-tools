@@ -15,6 +15,7 @@ ALLOWED_EXTENSIONS = (
     "xml",
     "md",
     "mkd",
+    "rst",
 )
 ALLOWED_EXTENSIONS_BY_PROCESS = {
     "svgcheck": ("svg",),

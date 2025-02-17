@@ -29,7 +29,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                  description: kramdown-rfc/mmark (.md, .mkd) file, xml2rfc v2/v3 (.xml) file, rst2rfcxml (.rst) file or text draft (.txt)
                 apikey:
                   type: string
                   description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)
@@ -89,7 +89,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                  description: kramdown-rfc/mmark (.md, .mkd) file, xml2rfc v2/v3 (.xml) file, rst2rfcxml (.rst) file or text draft (.txt)
                 apikey:
                   type: string
                   description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)
@@ -149,7 +149,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                  description: kramdown-rfc/mmark (.md, .mkd) file, xml2rfc v2/v3 (.xml) file, rst2rfcxml (.rst) file or text draft (.txt)
                 apikey:
                   type: string
                   description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)
@@ -209,7 +209,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                  description: kramdown-rfc/mmark (.md, .mkd) file, xml2rfc v2/v3 (.xml) file, rst2rfcxml (.rst) file or text draft (.txt)
                 apikey:
                   type: string
                   description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)
@@ -269,7 +269,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                  description: kramdown-rfc/mmark (.md, .mkd) file, xml2rfc v2/v3 (.xml) file, rst2rfcxml (.rst) file or text draft (.txt)
                 apikey:
                   type: string
                   description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). API Key can be submitted as X-API-KEY in headers as well. (optional)
@@ -338,11 +338,11 @@ paths:
                 file_1:
                   type: string
                   format: binary
-                  description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text document (.txt)
+                  description: kramdown-rfc/mmark (.md, .mkd) file, xml2rfc v2/v3 (.xml) file, rst2rfcxml (.rst) file or text draft (.txt)
                 file_2:
                   type: string
                   format: binary
-                  description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text document (.txt). This is optional. If file_2, doc_2 or url_2 is not provided, second document will be identified based on the first document or first document file name.
+                  description: kramdown-rfc/mmark (.md, .mkd) file, xml2rfc v2/v3 (.xml) file, rst2rfcxml (.rst) file or text draft (.txt). This is optional. If file_2, doc_2 or url_2 is not provided, second document will be identified based on the first document or first document file name.
                 doc_1:
                   type: string
                   description: First document name unless file_1 is provided.
@@ -577,7 +577,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                  description: kramdown-rfc/mmark (.md, .mkd) file, xml2rfc v2/v3 (.xml) file, rst2rfcxml (.rst) file or text draft (.txt)
                 verbose:
                   type: integer
                   minimum: 0
@@ -679,7 +679,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: kramdown-rfc/mmark (.md, .mkd) file or xml2rfc v2/v3 (.xml) file or text draft (.txt)
+                  description: kramdown-rfc/mmark (.md, .mkd) file, xml2rfc v2/v3 (.xml) file, rst2rfcxml (.rst) file or text draft (.txt)
                 year:
                   type: integer
                   description: Use the given year in the boilerplate (instead of the current year).

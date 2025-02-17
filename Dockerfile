@@ -34,6 +34,9 @@ RUN apt-get update && \
         bison \
         flex \
         make \
+        git \
+        build-essential \
+        cmake \
         nginx \
         supervisor && \
     rm -rf /var/lib/apt/lists/* /var/log/dpkg.log && \
@@ -64,6 +67,7 @@ RUN wget https://github.com/ietf-tools/bap/archive/refs/heads/master.zip && \
     ./configure && \
     make && \
     cp aex bap /bin && \
+    cd && \
     rm -rf /tmp/bap master.zip
 
 # Install idnits
@@ -78,6 +82,16 @@ RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
     wget "https://github.com/mmarkdown/mmark/releases/download/v2.2.46/mmark_2.2.46_linux_$arch.tgz" && \
     tar zxf mmark_*.tgz -C /bin/ && \
     rm mmark_*.tgz
+
+# Build & install rst2rfcxml
+RUN git clone --branch v1.5.0 --recurse-submodules https://github.com/dthaler/rst2rfcxml.git && \
+    cd rst2rfcxml && \
+    cmake -B build -DCMAKE_BUILD_TYPE=Release && \
+    cmake --build build && \
+    mv ./build/rst2rfcxml/rst2rfcxml /bin && \
+    chmod +x /bin/rst2rfcxml && \
+    cd .. && \
+    rm -rf rst2rfcxml
 
 COPY Gemfile Gemfile.lock LICENSE README.md api.yml constraints.txt package-lock.json package.json requirements.txt docker/version.py ./
 COPY at ./at

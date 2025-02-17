@@ -17,6 +17,7 @@ VERSION_INFORMATION = {
     "svgcheck": "0.7.1",
     "rfcdiff": "1.48",
     "bap": "1.4",
+    "rst2rfcxml": "1.5.0",
 }
 VERSION_LABELS = (
     "author_tools_api",
@@ -32,6 +33,7 @@ VERSION_LABELS = (
     "svgcheck",
     "rfcdiff",
     "bap",
+    "rst2rfcxml",
 )
 
 

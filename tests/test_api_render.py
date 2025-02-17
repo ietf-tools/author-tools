@@ -225,7 +225,7 @@ class TestApiRender(TestCase):
                 json_data = result.get_json()
 
                 self.assertEqual(result.status_code, 400)
-                self.assertTrue(json_data["error"].startswith("kramdown-rfc error:"))
+                self.assertTrue(json_data["error"].startswith("processing error:"))
 
     def test_text_error(self):
         with self.app.test_client() as client:
@@ -243,7 +243,7 @@ class TestApiRender(TestCase):
                 json_data = result.get_json()
 
                 self.assertEqual(result.status_code, 400)
-                self.assertTrue(json_data["error"].startswith("id2xml error:"))
+                self.assertTrue(json_data["error"].startswith("processing error:"))
 
     def test_xml_error(self):
         with self.app.test_client() as client:
@@ -258,7 +258,7 @@ class TestApiRender(TestCase):
                 json_data = result.get_json()
 
                 self.assertEqual(result.status_code, 400)
-                self.assertTrue(json_data["error"].startswith("xml2rfc error:"))
+                self.assertTrue(json_data["error"].startswith("processing error:"))
 
     def test_export_error(self):
         with self.app.test_client() as client:

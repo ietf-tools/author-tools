@@ -5,9 +5,8 @@ from at.utils.processor import (
     get_text,
     get_xml,
     md2xml,
-    KramdownError,
-    MmarkError,
-    XML2RFCError,
+    rst2xml,
+    ProcessingError,
 )
 
 
@@ -58,9 +57,11 @@ def get_text_id(dir_path, filename, logger=getLogger()):
         try:
             if file_ext.lower() in [".md", ".mkd"]:
                 filename = md2xml(filename, logger)
+            elif file_ext.lower() in [".rst"]:
+                filename = rst2xml(filename, logger)
             xml_file, _ = get_xml(filename, logger=logger)
             filename, _ = get_text(xml_file, logger=logger)
-        except (KramdownError, MmarkError, XML2RFCError) as e:
+        except ProcessingError as e:
             logger.error("error processing non text file: {}".format(filename))
             raise TextProcessingError(str(e))
 
