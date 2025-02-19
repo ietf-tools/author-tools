@@ -84,7 +84,7 @@ RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
     rm mmark_*.tgz
 
 # Build & install rst2rfcxml
-RUN git clone --branch v1.5.0 --recurse-submodules https://github.com/dthaler/rst2rfcxml.git && \
+RUN git clone --branch v1.6.0 --recurse-submodules https://github.com/dthaler/rst2rfcxml.git && \
     cd rst2rfcxml && \
     cmake -B build -DCMAKE_BUILD_TYPE=Release && \
     cmake --build build && \
