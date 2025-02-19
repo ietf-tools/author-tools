@@ -958,3 +958,6 @@ paths:
                       rfcdiff:
                         type: string
                         description: rfcdiff version
+                      rst2rfcxml:
+                        type: string
+                        description: rst2rfcxml version
