@@ -238,6 +238,12 @@ function diff() {
         return blob.text();
       }
       else {
+        data_blob = URL.createObjectURL(blob);
+        buttonDownload.style.display = 'block';
+        buttonDownload.setAttribute('download', getDownloadFilename(file));
+        buttonDownload.href = data_blob;
+        buttonOpen.style.display = 'block';
+        buttonOpen.href = data_blob;
         return blob.text();
       }
     })
@@ -256,4 +262,9 @@ function diff() {
       alertError.style.display = 'block';
       messageError.innerHTML = error;
     });
+}
+
+function getDownloadFilename(file) {
+    filename = file.name.replace(/\.[^/.]+$/, '');
+    return filename + '.diff.html';
 }
