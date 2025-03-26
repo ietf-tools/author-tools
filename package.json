@@ -1,7 +1,7 @@
 {
   "name": "author-tools",
-  "version": "1.2.0",
-  "description": "IETF Author Tools API",
+  "version": "1.9.0",
+  "description": "IETF Author Tools",
   "main": "",
   "directories": {},
   "scripts": {},
@@ -16,7 +16,7 @@
   },
   "homepage": "https://github.com/ietf-tools/author-tools#readme",
   "dependencies": {
-    "@ietf-tools/idnits": "^3.0.0-alpha.33",
+    "@ietf-tools/idnits": "^3.0.0-alpha.37",
     "aasvg": "^0.4.0"
   }
 }

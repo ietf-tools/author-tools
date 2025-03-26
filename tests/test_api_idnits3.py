@@ -128,7 +128,7 @@ class TestApiidnits3(TestCase):
                 self.assertIn("idnits", data)
                 self.assertNotIn("warnings", data)
                 # submission check
-                self.assertIn("Document is VALID.", data)
+                self.assertIn("Mode  submission", data)
 
     def test_no_file(self):
         with self.app.test_client() as client:
