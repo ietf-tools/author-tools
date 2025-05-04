@@ -72,11 +72,10 @@ spec:
             readOnlyRootFilesystem: true
             runAsUser: 33
             runAsGroup: 33
-          # author tools has it's own node for now
-          #resources:
-          #  limits:
-          #    memory: "4Gi"
-          #    cpu: "1000m"
+          resources:
+            limits:
+              memory: "4Gi"
+              cpu: "2000m"
       volumes:
         - name: at-tmp
           emptyDir:
@@ -96,7 +95,6 @@ spec:
         - name: at-app-tmp
           emptyDir:
             sizeLimit: "4Gi"
-      dnsPolicy: ClusterFirst
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
 ---
