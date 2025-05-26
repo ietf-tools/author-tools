@@ -79,7 +79,7 @@ RUN wget https://github.com/ietf-tools/idnits/archive/refs/tags/2.17.1.zip && \
 
 # Install mmark
 RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
-    wget "https://github.com/mmarkdown/mmark/releases/download/v2.2.46/mmark_2.2.46_linux_$arch.tgz" && \
+    wget "https://github.com/mmarkdown/mmark/releases/download/v2.2.47/mmark_2.2.47_linux_$arch.tgz" && \
     tar zxf mmark_*.tgz -C /bin/ && \
     rm mmark_*.tgz
 
