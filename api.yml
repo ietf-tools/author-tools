@@ -622,99 +622,6 @@ paths:
                   error:
                     type: string
                     description: Error description
-  /api/idnits3:
-    get:
-      summary: Get idnits v3 output. idnits v3 is still in alpha state.
-      parameters:
-        - in: query
-          name: url
-          schema:
-            type: string
-          required: true
-          description: Draft URL
-        - in: query
-          name: year
-          schema:
-            type: integer
-          description: Use the given year in the boilerplate (instead of the current year).
-        - in: query
-          name: submitcheck
-          schema:
-            type: string
-          description: Set this to do submission checks
-      responses:
-        '200':
-          description: Returns idnits output
-          content:
-            text/plain:
-              schema:
-                type: string
-        '400':
-          description: Error has occured.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error description
-        '401':
-          description: Failed to authenticate.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error description
-    post:
-      summary: Get idnits v3 output. idnits v3 is still in alpha state.
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                file:
-                  type: string
-                  format: binary
-                  description: kramdown-rfc/mmark (.md, .mkd) file, xml2rfc v2/v3 (.xml) file, rst2rfcxml (.rst) file or text draft (.txt)
-                year:
-                  type: integer
-                  description: Use the given year in the boilerplate (instead of the current year).
-                submitcheck:
-                  type: string
-                  description: Set this to do submission checks
-      responses:
-        '200':
-          description: Returns idnits output
-          content:
-            text/plain:
-              schema:
-                type: string
-        '400':
-          description: Error has occured.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error description
-        '401':
-          description: Failed to authenticate.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error description
   /api/abnf/extract:
     get:
       summary: Extract ABNF using BAP aex
@@ -940,9 +847,6 @@ paths:
                       idnits:
                         type: string
                         description: idnits version
-                      idnits3:
-                        type: string
-                        description: idnits v3 version
                       iddiff:
                         type: string
                         description: iddiff version

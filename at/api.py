@@ -45,7 +45,6 @@ from at.utils.text import (
 )
 from at.utils.validation import (
     idnits as get_idnits,
-    idnits3 as get_idnits3,
     svgcheck as get_svgcheck,
     validate_draft,
 )
@@ -204,66 +203,6 @@ def idnits():
         year=year,
         submit_check=submit_check,
     )
-
-    response = make_response(output)
-    response.headers["Content-Type"] = "text/plain; charset=UTF-8"
-
-    return response
-
-
-@bp.route("/idnits3", methods=("GET", "POST"))
-@require_api_key
-@check_file
-def idnits3():
-    """GET/POST: /idnits3 API call
-    Returns idnits3 output"""
-
-    logger = current_app.logger
-
-    url = request.values.get("url", "").strip()
-    year = request.values.get("year", "").strip()
-    if request.values.get("submitcheck", False):
-        submit_check = True
-    else:
-        submit_check = False
-
-    if request.method == "POST":
-        if "file" not in request.files:
-            logger.info("no input file")
-            return jsonify(error="No file"), BAD_REQUEST
-
-        file = request.files["file"]
-
-        try:
-            _, filename = get_text_id_from_file(
-                file=file,
-                text_or_xml=True,
-                upload_dir=current_app.config["UPLOAD_DIR"],
-                logger=logger,
-            )
-        except TextProcessingError as e:
-            return jsonify(error=str(e)), BAD_REQUEST
-    else:
-        if url == "":
-            logger.info("URL is missing")
-            return jsonify(error="URL is missing"), BAD_REQUEST
-
-        try:
-            if is_valid_url(url, current_app.config["ALLOWED_DOMAINS"], logger):
-                _, filename = get_text_id_from_url(
-                    url,
-                    current_app.config["UPLOAD_DIR"],
-                    text_or_xml=True,
-                    logger=logger,
-                )
-        except TextProcessingError as e:
-            return jsonify(error=str(e)), BAD_REQUEST
-        except InvalidURL as e:
-            return jsonify(error=str(e)), BAD_REQUEST
-        except DownloadError as e:
-            return jsonify(error=str(e)), BAD_REQUEST
-
-    output = get_idnits3(filename, logger=logger, year=year, submit_check=submit_check)
 
     response = make_response(output)
     response.headers["Content-Type"] = "text/plain; charset=UTF-8"

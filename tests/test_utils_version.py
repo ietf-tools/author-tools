@@ -3,7 +3,6 @@ from unittest import TestCase
 from docker.version import (
     get_aasvg_version,
     get_idnits_version,
-    get_idnits3_version,
     get_id2xml_version,
     get_iddiff_version,
     get_mmark_version,
@@ -51,12 +50,6 @@ class TestUtilsVersion(TestCase):
 
     def test_get_idnits_version(self):
         result = get_idnits_version()
-
-        self.assertIsNotNone(result)
-        self.assertIn(".", result)
-
-    def test_get_idnits3_version(self):
-        result = get_idnits3_version()
 
         self.assertIsNotNone(result)
         self.assertIn(".", result)
