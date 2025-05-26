@@ -82,7 +82,6 @@ jobs:
     - name: Install dependencies
       run: |
         npm install
-        mv ./node_modules/.bin/idnits ./node_modules/.bin/idnits3
     # Tests
     - name: Run Black
       run: black --check .

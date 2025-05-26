@@ -69,19 +69,6 @@ def get_idnits_version(logger=getLogger()):
         return None
 
 
-def get_idnits3_version(logger=getLogger()):
-    """Return idnits3 version"""
-
-    output = proc_run(args=["idnits3", "--version"], capture_output=True)
-
-    try:
-        output.check_returncode()
-        return output.stdout.decode("utf-8").replace("idnits3", "").strip()
-    except CalledProcessError:  # pragma: no cover
-        logger.info("idnits3 error: {}".format(output.stderr.decode("utf-8")))
-        return None
-
-
 def get_aasvg_version(logger=getLogger()):
     """Return aasvg version"""
 
@@ -167,7 +154,6 @@ if __name__ == "__main__":
         "id2xml": get_id2xml_version(),
         "weasyprint": get_weasyprint_version(),
         "idnits": get_idnits_version(),
-        "idnits3": get_idnits3_version(),
         "iddiff": get_iddiff_version(),
         "aasvg": get_aasvg_version(),
         "svgcheck": get_svgcheck_version(),

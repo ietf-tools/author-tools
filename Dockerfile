@@ -99,9 +99,6 @@ COPY at ./at
 # Install JavaScript dependencies
 RUN npm install
 
-# Rename idnits v3 binary
-RUN mv ./node_modules/.bin/idnits ./node_modules/.bin/idnits3
-
 # Install Python dependencies
 ENV PYTHONUNBUFFERED=1
 ENV VENV_DIR=/usr/src/app/venv
