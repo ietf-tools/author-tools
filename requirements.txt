@@ -8,4 +8,4 @@ iddiff>=0.4.3
 requests>=2.32.4
 sentry-sdk[flask]>=2.33.0
 svgcheck>=0.10.0
-xml2rfc[pdf]>=3.30.0
+xml2rfc[pdf]>=3.30.1
