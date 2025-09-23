@@ -27,7 +27,7 @@ GEM
     net-http-persistent (4.0.5)
       connection_pool (~> 2.2)
     ostruct (0.6.1)
-    rexml (3.4.1)
+    rexml (3.4.2)
     unicode-blocks (1.10.0)
     unicode-name (1.13.5)
       unicode-types (~> 1.10)
