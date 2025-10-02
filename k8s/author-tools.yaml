@@ -12,6 +12,7 @@ spec:
     metadata:
       labels:
         app: author-tools
+        workload: app
     spec:
       securityContext:
         fsGroup: 33
