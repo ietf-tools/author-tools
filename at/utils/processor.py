@@ -21,7 +21,7 @@ def process_file(file, upload_dir, logger=getLogger()):
     """Returns XML version of the given file.
     NOTE: if file is an XML file, that file wouldn't go through conversion."""
 
-    (dir_path, filename) = save_file(file, upload_dir)
+    dir_path, filename = save_file(file, upload_dir)
 
     logger.info("file saved at {}".format(filename))
 

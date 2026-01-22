@@ -3,7 +3,6 @@ from urllib.parse import urlsplit
 
 from requests import get
 
-
 OK = 200
 ALLOWED_SCHEMES = ["http", "https"]
 
