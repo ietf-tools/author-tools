@@ -22,12 +22,12 @@ def get_text_id_from_file(
 ):
     """Save file and returns text draft"""
 
-    (dir_path, filename) = save_file(file, upload_dir)
+    dir_path, filename = save_file(file, upload_dir)
 
     if not raw:
         file_ext = get_extension(filename).lower()
         if not text_or_xml or (text_or_xml and file_ext not in [".txt", ".xml"]):
-            (dir_path, filename) = get_text_id(dir_path, filename, logger)
+            dir_path, filename = get_text_id(dir_path, filename, logger)
 
     return (dir_path, filename)
 
@@ -37,12 +37,12 @@ def get_text_id_from_url(
 ):
     """Save file from URL and returns text draft"""
 
-    (dir_path, filename) = save_file_from_url(url, upload_dir)
+    dir_path, filename = save_file_from_url(url, upload_dir)
 
     if not raw:
         file_ext = get_extension(filename).lower()
         if not text_or_xml or (text_or_xml and file_ext not in [".txt", ".xml"]):
-            (dir_path, filename) = get_text_id(dir_path, filename, logger)
+            dir_path, filename = get_text_id(dir_path, filename, logger)
 
     return (dir_path, filename)
 

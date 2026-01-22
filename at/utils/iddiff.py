@@ -3,7 +3,6 @@ from subprocess import CalledProcessError
 
 from at.utils.runner import proc_run, RunnerError
 
-
 OK = 200
 ALLOWED_SCHEMES = ["http", "https"]
 TIMEOUT = 20  # in seconds
