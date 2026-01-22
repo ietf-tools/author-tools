@@ -9,7 +9,6 @@ from requests import get
 from requests.exceptions import ConnectionError, Timeout
 from werkzeug.utils import secure_filename
 
-
 ALLOWED_EXTENSIONS = (
     "txt",
     "xml",

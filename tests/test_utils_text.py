@@ -51,7 +51,7 @@ class TestUtilsText(TestCase):
             original = "".join([TEST_DATA_DIR, filename])
             new = "".join([TEMPORARY_DATA_DIR, filename])
             copy(original, new)
-            (dir_path, file_path) = get_text_id(TEMPORARY_DATA_DIR, new)
+            dir_path, file_path = get_text_id(TEMPORARY_DATA_DIR, new)
             self.assertTrue(Path(dir_path).exists())
             self.assertTrue(Path(file_path).exists())
             self.assertEqual(Path(file_path).suffix, ".txt")
@@ -69,7 +69,7 @@ class TestUtilsText(TestCase):
         for filename in TEST_DATA:
             with open("".join([TEST_DATA_DIR, filename]), "rb") as file:
                 file_object = FileStorage(file, filename=filename)
-                (dir_path, file_path) = get_text_id_from_file(
+                dir_path, file_path = get_text_id_from_file(
                     file_object, TEMPORARY_DATA_DIR
                 )
                 self.assertTrue(Path(dir_path).exists())
@@ -85,7 +85,7 @@ class TestUtilsText(TestCase):
 
     def test_get_text_id_from_url(self):
         url = "https://www.ietf.org/archive/id/draft-iab-xml2rfcv2-01.xml"
-        (dir_path, file_path) = get_text_id_from_url(url, TEMPORARY_DATA_DIR)
+        dir_path, file_path = get_text_id_from_url(url, TEMPORARY_DATA_DIR)
         self.assertTrue(Path(dir_path).exists())
         self.assertTrue(Path(file_path).exists())
         self.assertEqual(Path(file_path).suffix, ".txt")
@@ -100,7 +100,7 @@ class TestUtilsText(TestCase):
             suffix = f".{filename.split('.')[-1]}"
             with open("".join([TEST_DATA_DIR, filename]), "rb") as file:
                 file_object = FileStorage(file, filename=filename)
-                (dir_path, file_path) = get_text_id_from_file(
+                dir_path, file_path = get_text_id_from_file(
                     file_object, TEMPORARY_DATA_DIR, raw=True
                 )
                 self.assertTrue(Path(dir_path).exists())
@@ -109,7 +109,7 @@ class TestUtilsText(TestCase):
 
     def test_get_text_id_from_url_raw(self):
         url = "https://www.ietf.org/archive/id/draft-iab-xml2rfcv2-01.xml"
-        (dir_path, file_path) = get_text_id_from_url(url, TEMPORARY_DATA_DIR, raw=True)
+        dir_path, file_path = get_text_id_from_url(url, TEMPORARY_DATA_DIR, raw=True)
         self.assertTrue(Path(dir_path).exists())
         self.assertTrue(Path(file_path).exists())
         self.assertEqual(Path(file_path).suffix, ".xml")
@@ -119,7 +119,7 @@ class TestUtilsText(TestCase):
             suffix = f".{filename.split('.')[-1]}"
             with open("".join([TEST_DATA_DIR, filename]), "rb") as file:
                 file_object = FileStorage(file, filename=filename)
-                (dir_path, file_path) = get_text_id_from_file(
+                dir_path, file_path = get_text_id_from_file(
                     file_object, TEMPORARY_DATA_DIR, text_or_xml=True
                 )
                 self.assertTrue(Path(dir_path).exists())
@@ -131,7 +131,7 @@ class TestUtilsText(TestCase):
 
     def test_get_text_id_from_url_text_or_xml(self):
         url = "https://www.ietf.org/archive/id/draft-iab-xml2rfcv2-01.xml"
-        (dir_path, file_path) = get_text_id_from_url(
+        dir_path, file_path = get_text_id_from_url(
             url, TEMPORARY_DATA_DIR, text_or_xml=True
         )
         self.assertTrue(Path(dir_path).exists())

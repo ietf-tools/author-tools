@@ -103,7 +103,7 @@ class TestUtilsFile(TestCase):
         for filename in TEST_DATA:
             with open("".join([TEST_DATA_DIR, filename]), "rb") as file:
                 file_object = FileStorage(file, filename=filename)
-                (dir_path, file_path) = save_file(file_object, TEMPORARY_DATA_DIR)
+                dir_path, file_path = save_file(file_object, TEMPORARY_DATA_DIR)
                 self.assertTrue(Path(dir_path).exists())
                 self.assertTrue(Path(file_path).exists())
 
@@ -137,7 +137,7 @@ class TestUtilsFile(TestCase):
 
     def test_save_file_from_url_valid(self):
         id_url = "https://www.ietf.org/archive/id/draft-ietf-quic-http-23.txt"
-        (dir_path, file_path) = save_file_from_url(id_url, TEMPORARY_DATA_DIR)
+        dir_path, file_path = save_file_from_url(id_url, TEMPORARY_DATA_DIR)
         self.assertTrue(Path(dir_path).exists())
         self.assertTrue(Path(file_path).exists())
 
