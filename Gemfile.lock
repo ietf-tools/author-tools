@@ -1,19 +1,19 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    base64 (0.2.0)
+    base64 (0.3.0)
     certified (1.0.0)
-    connection_pool (2.5.0)
+    connection_pool (3.0.2)
     differ (0.1.2)
     json_pure (2.8.1)
     kramdown (2.4.0)
       rexml
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
-    kramdown-rfc (1.7.29)
-      kramdown-rfc2629 (= 1.7.29)
-    kramdown-rfc2629 (1.7.29)
-      base64 (>= 0.1)
+    kramdown-rfc (1.7.30)
+      kramdown-rfc2629 (= 1.7.30)
+    kramdown-rfc2629 (1.7.30)
+      base64 (~> 0.2)
       certified (~> 1.0)
       differ (~> 0.1)
       json_pure (~> 2.0)
@@ -24,24 +24,25 @@ GEM
       unicode-blocks (~> 1.0)
       unicode-name (~> 1.0)
       unicode-scripts (~> 1.0)
-    net-http-persistent (4.0.5)
-      connection_pool (~> 2.2)
-    ostruct (0.6.1)
-    rexml (3.4.2)
-    unicode-blocks (1.10.0)
-    unicode-name (1.13.5)
-      unicode-types (~> 1.10)
-    unicode-scripts (1.11.0)
-    unicode-types (1.10.0)
+    net-http-persistent (4.0.8)
+      connection_pool (>= 2.2.4, < 4)
+    ostruct (0.6.3)
+    rexml (3.4.4)
+    unicode-blocks (1.11.0)
+    unicode-name (1.14.0)
+      unicode-types (~> 1.11)
+    unicode-scripts (1.12.0)
+    unicode-types (1.11.0)
 
 PLATFORMS
   arm64-darwin-20
   arm64-darwin-23
   arm64-darwin-24
+  arm64-darwin-25
   x86_64-linux
 
 DEPENDENCIES
   kramdown-rfc
 
 BUNDLED WITH
-   2.6.3
+  4.0.3
