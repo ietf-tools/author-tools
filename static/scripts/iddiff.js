@@ -224,7 +224,12 @@ function compare(event) {
   });
 
   fetch(request)
-    .then(response => response.blob())
+    .then(function(response) {
+      if (!response.ok) {
+        throw new Error(`There was an issue processing your request. (HTTP Status: ${response.status})`);
+      }
+      return response.blob();
+    })
     .then(blob => {
       if (blob.type == 'application/json') {
         alertError.style.display = 'block';

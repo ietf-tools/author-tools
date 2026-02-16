@@ -97,7 +97,12 @@ function render(event) {
   });
 
   fetch(request)
-    .then(function(response) { return response.json(); })
+    .then(function(response) {
+      if (!response.ok) {
+        throw new Error(`There was an issue processing your request. (HTTP Status: ${response.status})`);
+      }
+      return response.json();
+    })
     .then(function(json) {
       resetButtons();
       if (json.error) {
@@ -161,7 +166,12 @@ function validate() {
   });
 
   fetch(request)
-    .then(function(response) { return response.json(); })
+    .then(function(response) {
+      if (!response.ok) {
+        throw new Error(`There was an issue processing your request. (HTTP Status: ${response.status})`);
+      }
+      return response.json();
+    })
     .then(function(json) {
       resetButtons();
       if (json.error) {
