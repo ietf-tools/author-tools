@@ -15,7 +15,7 @@ def extract_abnf(filename, logger=getLogger()):
     result = ""
 
     if output and output.stderr:
-        error = output.stderr.decode("utf-8")
+        error = output.stderr.decode("utf-8", errors="ignore")
         result += error
         logger.info("bap aex error: {}".format(error))
 
@@ -42,7 +42,7 @@ def parse_abnf(filename, logger=getLogger()):
     abnf = ""
 
     if output and output.stderr:
-        errors = output.stderr.decode("utf-8").replace(filename, "")
+        errors = output.stderr.decode("utf-8", errors="ignore").replace(filename, "")
 
     if output and output.stdout:
         abnf = output.stdout.decode("utf-8", errors="ignore")
