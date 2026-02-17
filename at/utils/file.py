@@ -86,6 +86,8 @@ def save_file_from_text(text, upload_dir):
 
     with open(filename, "w") as file:
         file.write(text)
+        if text and not text.endswith("\n"):
+            file.write("\n")
 
     return (dir_path, filename)
 
