@@ -87,7 +87,9 @@ def get_id_diff(
                 logger=logger,
             )
     except CalledProcessError:
-        logger.info("iddiff error: {}".format(output.stderr.decode("utf-8", errors="replace")))
+        logger.info(
+            "iddiff error: {}".format(output.stderr.decode("utf-8", errors="replace"))
+        )
         raise IddiffError(output.stderr.decode("utf-8", errors="replace"))
 
     return output.stdout.decode("utf-8", errors="replace")
