@@ -496,6 +496,8 @@ def abnf_parse():
     logger = current_app.logger
 
     input = request.values.get("input", "")
+    if input and not input.endswith("\n"):
+        input += "\n"
     _, filename = save_file_from_text(input, current_app.config["UPLOAD_DIR"])
 
     errors, abnf = parse_abnf(filename, logger=logger)
