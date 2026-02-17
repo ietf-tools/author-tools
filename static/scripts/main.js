@@ -98,7 +98,8 @@ function render(event) {
 
   fetch(request)
     .then(function(response) {
-      if (!response.ok) {
+      var contentType = response.headers.get('content-type');
+      if (!response.ok && !(contentType && contentType.includes('application/json'))) {
         throw new Error(`There was an issue processing your request. (HTTP Status: ${response.status})`);
       }
       return response.json();
@@ -167,7 +168,8 @@ function validate() {
 
   fetch(request)
     .then(function(response) {
-      if (!response.ok) {
+      var contentType = response.headers.get('content-type');
+      if (!response.ok && !(contentType && contentType.includes('application/json'))) {
         throw new Error(`There was an issue processing your request. (HTTP Status: ${response.status})`);
       }
       return response.json();
