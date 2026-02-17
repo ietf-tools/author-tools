@@ -39,10 +39,10 @@ def process_file(file, upload_dir, logger=getLogger()):
 
 def md2xml(filename, logger=getLogger()):
     """Calls correct markdown processor for markdown files"""
-    with open(filename, "r") as file:
+    with open(filename, "rb") as file:
         first_line = file.readline().strip()
 
-    if len(first_line) > 2 and first_line[:3] == "%%%":
+    if len(first_line) > 2 and first_line[:3] == b"%%%":
         return mmark2xml(filename, logger)
     else:
         return kramdown2xml(filename, logger)
