@@ -36,17 +36,19 @@ for (let button of renderButtons) {
   button.addEventListener("click", render);
 }
 
-function reset() {
+function reset(keepDownload) {
   for (let tooltip of tooltipList) {
     tooltip.hide();
   }
 
   alertError.style.display = 'none';
-  buttonDownload.style.display = 'none';
-  buttonDownload.setAttribute('download', '');
-  buttonDownload.href = '#';
-  buttonOpen.style.display = 'none';
-  buttonOpen.href = '#';
+  if (!keepDownload) {
+    buttonDownload.style.display = 'none';
+    buttonDownload.setAttribute('download', '');
+    buttonDownload.href = '#';
+    buttonOpen.style.display = 'none';
+    buttonOpen.href = '#';
+  }
   messageError.innerHTML = '';
   accordionValidation.style.display = 'none';
   accordionItemWarnings.style.display = 'none';
@@ -149,7 +151,7 @@ function render(event) {
 }
 
 function validate() {
-  reset();
+  reset(true);
 
   buttonValidate.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' + buttonValidate.innerHTML;
   disableButtons();
