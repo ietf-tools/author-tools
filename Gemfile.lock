@@ -2,7 +2,6 @@ GEM
   remote: https://rubygems.org/
   specs:
     base64 (0.3.0)
-    certified (1.0.0)
     connection_pool (3.0.2)
     differ (0.1.2)
     json_pure (2.8.1)
@@ -10,11 +9,10 @@ GEM
       rexml
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
-    kramdown-rfc (1.7.31)
-      kramdown-rfc2629 (= 1.7.31)
-    kramdown-rfc2629 (1.7.31)
+    kramdown-rfc (1.7.35)
+      kramdown-rfc2629 (= 1.7.35)
+    kramdown-rfc2629 (1.7.35)
       base64 (~> 0.2)
-      certified (~> 1.0)
       differ (~> 0.1)
       json_pure (~> 2.0)
       kramdown (~> 2.4.0)
@@ -45,4 +43,4 @@ DEPENDENCIES
   kramdown-rfc
 
 BUNDLED WITH
-  4.0.3
+  4.0.8
