@@ -866,7 +866,7 @@ class TestApiIddiff(TestCase):
                 json_data = result.get_json()
 
                 self.assertEqual(result.status_code, 400)
-                msg = "Error occured while downloading file."
+                msg = "Error occurred while downloading file."
                 self.assertEqual(json_data["error"], msg)
 
     @responses.activate
@@ -900,7 +900,7 @@ class TestApiIddiff(TestCase):
                 json_data = result.get_json()
 
                 self.assertEqual(result.status_code, 400)
-                msg = "Error occured while downloading file."
+                msg = "Error occurred while downloading file."
                 self.assertEqual(json_data["error"], msg)
 
     @responses.activate
@@ -927,7 +927,7 @@ class TestApiIddiff(TestCase):
                 json_data = result.get_json()
 
                 self.assertEqual(result.status_code, 400)
-                msg = "Error occured while downloading file."
+                msg = "Error occurred while downloading file."
                 self.assertEqual(json_data["error"], msg)
 
     def test_error_draft_name_error(self):

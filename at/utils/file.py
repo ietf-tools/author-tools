@@ -108,12 +108,12 @@ def save_file_from_url(url, upload_dir, logger=getLogger()):
                     file.write(response.text)
             else:
                 logger.error("Error downloading file: {}".format(url))
-                raise DownloadError("Error occured while downloading file.")
+                raise DownloadError("Error occurred while downloading file.")
 
         return (dir_path, filename)
     except (ConnectionError, Timeout) as e:
         logger.error("Connection error on {url}: {error}".format(url=url, error=e))
-        raise DownloadError("Error occured while downloading file.")
+        raise DownloadError("Error occurred while downloading file.")
 
 
 def get_name(filename):

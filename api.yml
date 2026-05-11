@@ -59,7 +59,7 @@ paths:
                     type: string
                     description: Temporary URL to requested format
         '400':
-          description: Error has occured.
+          description: Error has occurred.
           content:
             application/json:
               schema:
@@ -119,7 +119,7 @@ paths:
                     type: string
                     description: Temporary URL to requested format
         '400':
-          description: Error has occured.
+          description: Error has occurred.
           content:
             application/json:
               schema:
@@ -179,7 +179,7 @@ paths:
                     type: string
                     description: Temporary URL to requested format
         '400':
-          description: Error has occured.
+          description: Error has occurred.
           content:
             application/json:
               schema:
@@ -239,7 +239,7 @@ paths:
                     type: string
                     description: Temporary URL to requested format
         '400':
-          description: Error has occured.
+          description: Error has occurred.
           content:
             application/json:
               schema:
@@ -308,7 +308,7 @@ paths:
                       type: string
                       description: warning description
         '400':
-          description: Error has occured.
+          description: Error has occurred.
           content:
             application/json:
               schema:
@@ -397,7 +397,7 @@ paths:
         '200':
           description: Returns iddiff as HTML or text
         '400':
-          description: Error has occured.
+          description: Error has occurred.
           content:
             application/json:
               schema:
@@ -488,7 +488,7 @@ paths:
         '200':
           description: Returns iddiff as HTML or text
         '400':
-          description: Error has occured.
+          description: Error has occurred.
           content:
             application/json:
               schema:
@@ -548,7 +548,7 @@ paths:
               schema:
                 type: string
         '400':
-          description: Error has occured.
+          description: Error has occurred.
           content:
             application/json:
               schema:
@@ -603,7 +603,7 @@ paths:
               schema:
                 type: string
         '400':
-          description: Error has occured.
+          description: Error has occurred.
           content:
             application/json:
               schema:
@@ -644,7 +644,7 @@ paths:
               schema:
                 type: string
         '400':
-          description: Error has occured.
+          description: Error has occurred.
           content:
             application/json:
               schema:
@@ -691,7 +691,7 @@ paths:
                     type: string
                     description: Parsed ABNF from BAP
         '400':
-          description: Error has occured.
+          description: Error has occurred.
           content:
             application/json:
               schema:
@@ -745,7 +745,7 @@ paths:
                     type: string
                     description: svgcheck errors
         '400':
-          description: Error has occured.
+          description: Error has occurred.
           content:
             application/json:
               schema:
@@ -793,7 +793,7 @@ paths:
                     type: string
                     description: Temporary URL to requested format
         '400':
-          description: Error has occured.
+          description: Error has occurred.
           content:
             application/json:
               schema:
