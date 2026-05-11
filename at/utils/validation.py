@@ -160,7 +160,7 @@ def idnits(
             error = output.stderr.decode("utf-8")
             logger.info("idnits error: {}".format(error))
         else:
-            error = "Error occured while running idnits"
+            error = "Error occurred while running idnits"
             logger.info("idnits error: no stderr output")
 
     if output and output.stdout:
@@ -199,7 +199,7 @@ def svgcheck(filename, logger=getLogger()):
             errors = output.stderr.decode("utf-8")
             logger.info("svgcheck error: {}".format(errors))
         else:
-            errors = "Error occured while running svgcheck"
+            errors = "Error occurred while running svgcheck"
             logger.info("svgcheck error: no stderr output")
 
     if not errors:

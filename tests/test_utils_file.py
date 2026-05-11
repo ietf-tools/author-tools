@@ -120,12 +120,12 @@ class TestUtilsFile(TestCase):
     def test_save_file_from_url_connection_error(self):
         with self.assertRaises(DownloadError) as error:
             save_file_from_url("https://example.foobar/draft.txt", TEMPORARY_DATA_DIR)
-        self.assertEqual(str(error.exception), "Error occured while downloading file.")
+        self.assertEqual(str(error.exception), "Error occurred while downloading file.")
 
     def test_save_file_from_url_404_error(self):
         with self.assertRaises(DownloadError) as error:
             save_file_from_url("https://example.com/draft-404.txt", TEMPORARY_DATA_DIR)
-        self.assertEqual(str(error.exception), "Error occured while downloading file.")
+        self.assertEqual(str(error.exception), "Error occurred while downloading file.")
 
     def test_save_file_from_url_no_filename(self):
         url = "https://example.com/"

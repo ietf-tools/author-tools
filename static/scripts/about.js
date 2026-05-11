@@ -29,5 +29,5 @@ fetch(request)
   })
   .catch(error => {
       alertError.style.display = 'block';
-      messageError.textContent = 'Error occured while retrieving version infomation.';
+      messageError.textContent = 'Error occurred while retrieving version infomation.';
   });

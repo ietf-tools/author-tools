@@ -72,7 +72,7 @@ class TestApiAbnfExtract(TestCase):
 
                 self.assertEqual(result.status_code, 400)
                 self.assertEqual(
-                    json_data["error"], "Error occured while downloading file."
+                    json_data["error"], "Error occurred while downloading file."
                 )
 
     def test_text_processing(self):
