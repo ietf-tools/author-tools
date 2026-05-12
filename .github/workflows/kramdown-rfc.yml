@@ -1,4 +1,4 @@
-name: kramdown-rfc
+name: Check for kramdown-rfc updates
 
 on:
   schedule:
@@ -12,11 +12,11 @@ jobs:
     - uses: actions/checkout@v4
     - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: '3.0'
+        ruby-version: .ruby-version
         bundler-cache: false
 
     - name: Run bundle update
-      run: bundle update
+      run: bundle update --all
 
     - name: Check for changes
       id: diff
