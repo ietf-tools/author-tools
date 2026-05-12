@@ -1,0 +1,31 @@
+name: kramdown-rfc
+
+on:
+  schedule:
+    - cron: '44 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  dependency-update:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.0'
+        bundler-cache: false
+
+    - name: Run bundle update
+      run: bundle update
+
+    - name: Check for changes
+      id: diff
+      run: |
+          git diff --exit-code Gemfile.lock || echo "has_changes=true" >> $GITHUB_OUTPUT
+
+    - name: Create Pull Request
+      if: steps.diff.outputs.has_changes == 'true'
+      uses: peter-evans/create-pull-request@v7
+      with:
+        title: 'New kramdown-rfc release'
+        commit-message: 'chore(deps): Bump up kramdown-rfc'
