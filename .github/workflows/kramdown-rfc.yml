@@ -16,7 +16,9 @@ jobs:
         bundler-cache: false
 
     - name: Run bundle update
-      run: bundle update --all
+      run: |
+          gem install bundler:4.0.10
+          bundle update --all
 
     - name: Check for changes
       id: diff
