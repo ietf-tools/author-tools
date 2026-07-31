@@ -24,7 +24,6 @@ class TestApiAbnfExtract(TestCase):
 
         config = {
             "UPLOAD_DIR": abspath(TEMPORARY_DATA_DIR),
-            "REQUIRE_AUTH": False,
             "DT_LATEST_DRAFT_URL": DT_LATEST_DRAFT_URL,
             "ALLOWED_DOMAINS": ALLOWED_DOMAINS,
         }

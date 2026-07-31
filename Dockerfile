@@ -123,7 +123,6 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
 RUN mkdir -p tmp && \
     echo "UPLOAD_DIR = '$PWD/tmp'" > at/config.py && \
     echo "VERSION = '${VERSION}'" >> at/config.py && \
-    echo "REQUIRE_AUTH = False" >> at/config.py && \
     echo "DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/api/rfcdiff-latest-json'" >> at/config.py && \
     echo "ALLOWED_DOMAINS = ['ietf.org', 'rfc-editor.org', 'github.com', 'githubusercontent.com', 'github.io', 'gitlab.com', 'gitlab.io', 'codeberg.page', 'httpwg.org', 'quicwg.org']" >> at/config.py && \
     python3 version.py >> at/config.py && \

@@ -43,7 +43,6 @@ class TestApiVersion(TestCase):
         set_logger(CRITICAL)
 
         config = {
-            "REQUIRE_AUTH": False,
             "VERSION_INFORMATION": VERSION_INFORMATION,
             "VERSION": AUTHOR_TOOLS_API_TEST_VERSION,
         }

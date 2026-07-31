@@ -44,7 +44,6 @@ class TestApiRender(TestCase):
 
         config = {
             "UPLOAD_DIR": abspath(TEMPORARY_DATA_DIR),
-            "REQUIRE_AUTH": False,
             "SITE_URL": SITE_URL,
         }
 
