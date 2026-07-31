@@ -8,15 +8,6 @@ servers:
     description: Production server
   - url: https://author-tools.staging.ietf.org
     description: Staging server
-components:
-  securitySchemes:
-    apiKeyAuth:
-      type: apiKey
-      in: header
-      name: X-API-KEY
-      description: Personal API can be generated from datatracker (https://datatracker.ietf.org/accounts/apikey). (optional)
-security:
-  - apiKeyAuth: []
 paths:
   /api/render/text:
     post:
