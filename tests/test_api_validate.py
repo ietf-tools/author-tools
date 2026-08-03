@@ -35,7 +35,7 @@ class TestApiValidate(TestCase):
         # create temporary data dir
         Path(TEMPORARY_DATA_DIR).mkdir(exist_ok=True)
 
-        config = {"UPLOAD_DIR": abspath(TEMPORARY_DATA_DIR), "REQUIRE_AUTH": False}
+        config = {"UPLOAD_DIR": abspath(TEMPORARY_DATA_DIR)}
 
         self.app = create_app(config)
 

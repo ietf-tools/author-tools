@@ -8,7 +8,6 @@ from flask import (
 )
 
 from at.utils.abnf import extract_abnf, parse_abnf
-from at.utils.authentication import require_api_key
 from at.utils.file import (
     check_file,
     get_file,
@@ -55,7 +54,6 @@ bp = Blueprint("api", __name__, url_prefix="/api")
 
 
 @bp.route("/render/<format>", methods=("POST",))
-@require_api_key
 @check_file
 def render(format):
     """POST: /render/<format> API call
@@ -109,7 +107,6 @@ def render(format):
 
 
 @bp.route("/export/<dir>/<file>", methods=("GET",))
-@require_api_key
 def export(dir, file):
     as_attachment = request.values.get("download", False)
     dir = dir.replace(".", "")
@@ -120,7 +117,6 @@ def export(dir, file):
 
 
 @bp.route("/validate", methods=("POST",))
-@require_api_key
 @check_file
 def validate():
     """POST: /validate API call
@@ -145,7 +141,6 @@ def validate():
 
 
 @bp.route("/idnits", methods=("GET", "POST"))
-@require_api_key
 @check_file
 def idnits():
     """GET/POST: /idnits API call
@@ -211,7 +206,6 @@ def idnits():
 
 
 @bp.route("/iddiff", methods=("POST", "GET"))
-@require_api_key
 @check_file
 def id_diff():
     """POST: /iddiff API call
@@ -446,7 +440,6 @@ def id_diff():
 
 
 @bp.route("/abnf/extract", methods=("GET",))
-@require_api_key
 def abnf_extract():
     """GET: /abnf/extract API call
     Returns abnf extract"""
@@ -488,7 +481,6 @@ def abnf_extract():
 
 
 @bp.route("/abnf/parse", methods=("POST",))
-@require_api_key
 def abnf_parse():
     """GET: /abnf/parse API call
     Parse ABNF input and returns results"""
@@ -506,7 +498,6 @@ def abnf_parse():
 
 
 @bp.route("/svgcheck", methods=("POST",))
-@require_api_key
 @check_file
 def svgcheck():
     """POST: /svgcheck API call
@@ -528,7 +519,6 @@ def svgcheck():
 
 
 @bp.route("/clean_svg_ids", methods=("POST",))
-@require_api_key
 @check_file
 def clean_svg_ids():
     """POST: /clean_svg_ids API call

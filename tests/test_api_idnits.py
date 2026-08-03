@@ -32,7 +32,6 @@ class TestApiIdnits(TestCase):
 
         config = {
             "UPLOAD_DIR": abspath(TEMPORARY_DATA_DIR),
-            "REQUIRE_AUTH": False,
             "ALLOWED_DOMAINS": ALLOWED_DOMAINS,
         }
 
