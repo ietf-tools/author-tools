@@ -69,7 +69,7 @@ RUN wget https://github.com/ietf-tools/idnits/archive/refs/tags/2.17.1.zip && \
 
 # Install mmark
 RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
-    wget "https://github.com/mmarkdown/mmark/releases/download/v2.2.46/mmark_2.2.46_linux_$arch.tgz" && \
+    wget "https://github.com/mmarkdown/mmark/releases/download/v2.2.48/mmark_2.2.48_linux_$arch.tgz" && \
     tar zxf mmark_*.tgz -C /bin/ && \
     rm mmark_*.tgz
 
@@ -88,9 +88,6 @@ COPY at ./at
 
 # Install JavaScript dependencies
 RUN npm install
-
-# Rename idnits v3 binary
-RUN mv ./node_modules/.bin/idnits ./node_modules/.bin/idnits3
 
 # Install Python dependencies
 ENV PYTHONUNBUFFERED=1
@@ -116,7 +113,6 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
 RUN mkdir -p tmp && \
     echo "UPLOAD_DIR = '$PWD/tmp'" > at/config.py && \
     echo "VERSION = '${VERSION}'" >> at/config.py && \
-    echo "REQUIRE_AUTH = False" >> at/config.py && \
     echo "DT_LATEST_DRAFT_URL = 'https://datatracker.ietf.org/api/rfcdiff-latest-json'" >> at/config.py && \
     echo "ALLOWED_DOMAINS = ['ietf.org', 'rfc-editor.org', 'github.com', 'githubusercontent.com', 'github.io', 'gitlab.com', 'gitlab.io', 'codeberg.page', 'httpwg.org', 'quicwg.org']" >> at/config.py && \
     python3 version.py >> at/config.py && \
