@@ -153,12 +153,7 @@ def get_pyang_version(logger=getLogger()):
 
     try:
         output.check_returncode()
-        return (
-            output.stdout.decode("utf-8")
-            .split("\n")[0]
-            .replace("pyang", "")
-            .strip()
-        )
+        return output.stdout.decode("utf-8").split("\n")[0].replace("pyang", "").strip()
     except CalledProcessError:  # pragma: no cover
         logger.info("pyang error: {}".format(output.stderr.decode("utf-8")))
         return None
