@@ -44,3 +44,14 @@ docker run -it author-tools:dev
 ```sh
 python3 -m unittest discover tests
 ```
+
+* Run HTML tests.
+```sh
+npm exec html-validate static/*.html static/doc/*.html
+```
+
+* Get coverage.
+```sh
+coverage run -m unittest discover tests
+coverage report -m
+```
