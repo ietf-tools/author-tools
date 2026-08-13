@@ -950,7 +950,7 @@ class TestApiIddiff(TestCase):
             with self.app.app_context():
                 result = client.post(
                     "/api/iddiff",
-                    data={"url_1": "https://www.ietf.org/rfc/fyi-index.txt"},
+                    data={"url_1": "https://www.rfc-editor.org/fyi/fyi-index.txt"},
                 )
                 json_data = result.get_json()
 
