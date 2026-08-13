@@ -37,7 +37,7 @@ class TestUtilsYang(TestCase):
         pyang, errors = validate_yang("".join([TEMPORARY_DATA_DIR, TEST_YANG]))
 
         self.assertEqual(errors, "")
-        self.assertEqual(pyang, "")
+        self.assertEqual(pyang, "YANG file is valid.")
 
     def test_validate_yang_error(self):
         pyang, errors = validate_yang("".join([TEMPORARY_DATA_DIR, TEST_YANG_ERROR]))
