@@ -61,7 +61,7 @@ function parse() {
       }
       if (json.pyang) {
         accordionItemYANGValidate.style.display = 'block';
-        preYANGValidate.innerText = json.svgcheck;
+        preYANGValidate.innerText = json.pyang;
       }
       if (json.error) {
         alertError.style.display = 'block';

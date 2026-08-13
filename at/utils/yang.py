@@ -22,4 +22,7 @@ def validate_yang(filename, logger=getLogger()):
     if output and output.stdout:
         pyang = output.stdout.decode("utf-8", errors="ignore")
 
+    if not errors and not pyang:
+        pyang = "YANG file is valid."
+
     return (pyang, errors)

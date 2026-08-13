@@ -56,7 +56,7 @@ class TestApiYangValidate(TestCase):
 
                 self.assertEqual(result.status_code, 200)
                 self.assertEqual(json_data["errors"], "")
-                self.assertEqual(json_data["pyang"], "")
+                self.assertEqual(json_data["pyang"], "YANG file is valid.")
 
     def test_yang_validate_error(self):
         with self.app.test_client() as client:
