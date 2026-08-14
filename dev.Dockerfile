@@ -133,6 +133,8 @@ COPY api.yml /usr/share/nginx/html/
 COPY docker/gunicorn.py /usr/src/app/
 COPY docker/nginx-default-site.conf /etc/nginx/sites-available/default
 COPY docker/supervisord.conf /etc/supervisor/
+COPY .htmlvalidate.json /usr/src/app/
+COPY static /usr/src/app/static
 COPY requirements.dev.txt /usr/src/app/
 COPY tests /usr/src/app/tests
 COPY docker /usr/src/app/docker
