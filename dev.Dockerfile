@@ -137,4 +137,8 @@ COPY requirements.dev.txt /usr/src/app/
 COPY tests /usr/src/app/tests
 COPY docker /usr/src/app/docker
 
+# Install test dependencies
+RUN python -m pip install -r requirements.dev.txt
+RUN npm install html-validate
+
 CMD ["bash"]
