@@ -19,6 +19,8 @@ spec:
         runAsUser: 33
         runAsGroup: 33
         runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: author-tools
           image: "ghcr.io/ietf-tools/author-tools:$APP_IMAGE_TAG"
