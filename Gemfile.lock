@@ -9,9 +9,9 @@ GEM
       rexml
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
-    kramdown-rfc (1.7.42)
-      kramdown-rfc2629 (= 1.7.42)
-    kramdown-rfc2629 (1.7.42)
+    kramdown-rfc (1.7.43)
+      kramdown-rfc2629 (= 1.7.43)
+    kramdown-rfc2629 (1.7.43)
       base64 (~> 0.2)
       differ (~> 0.1)
       json_pure (~> 2.0)
