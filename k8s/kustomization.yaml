@@ -1,3 +1,4 @@
+---
 namespace: author-tools
 resources:
   - author-tools.yaml
