@@ -135,4 +135,4 @@ at/config.py
 /node_modules
 
 # vim
-.swp
+*.swp
