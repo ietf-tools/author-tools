@@ -35,6 +35,49 @@ spec:
           securityContext:
             runAsUser: 0
             runAsNonRoot: false
+        - name: yang-modules
+          image: "ghcr.io/ietf-tools/author-tools:$APP_IMAGE_TAG"
+          imagePullPolicy: Always
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -eu
+              if [ -d /yang/.git ]; then
+                echo "yang modules present, last update: $(cat /yang/.last-update 2>/dev/null || echo unknown)"
+                exit 0
+              fi
+              git init -q /yang
+              git -C /yang remote add origin \
+                https://github.com/YangModels/yang.git
+              git -C /yang fetch --depth 1 origin main
+              git -C /yang sparse-checkout set standard
+              git -C /yang checkout -q --force FETCH_HEAD
+              git -C /yang submodule update --init --depth 1 \
+                standard/bbf standard/mef
+              date -u +%Y-%m-%dT%H:%M:%SZ > /yang/.last-update
+          env:
+            - name: HOME
+              value: /tmp
+          volumeMounts:
+            - name: yang-modules
+              mountPath: /yang
+            - name: at-tmp
+              mountPath: /tmp
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsUser: 33
+            runAsGroup: 33
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
       containers:
         - name: author-tools
           image: "ghcr.io/ietf-tools/author-tools:$APP_IMAGE_TAG"
@@ -57,6 +100,9 @@ spec:
               mountPath: /var/www/.cache
             - name: at-app-tmp
               mountPath: /usr/src/app/tmp
+            - name: yang-modules
+              persistentVolumeClaim:
+              claimName: author-tools-yang
           env:
             - name: "CONTAINER_ROLE"
               value: "author-tools"

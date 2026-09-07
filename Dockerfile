@@ -138,8 +138,7 @@ ENV KRAMDOWN_REFCACHEDIR=/tmp/cache/refcache
 
 # yin yang
 WORKDIR /usr/src/app/
-RUN git clone --depth 1 --recurse-submodules https://github.com/YangModels/yang.git
-ENV YANG_ROOT=/usr/app/yang
+ENV YANG_ROOT=/usr/src/app/yang
 ENV YANG_MODPATH="\
 ${YANG_ROOT}/standard/ietf/RFC:\
 ${YANG_ROOT}/standard/ietf/DRAFT:\
@@ -158,6 +157,7 @@ ${YANG_ROOT}/vendor/fujitsu:\
 ${YANG_ROOT}/vendor/readylinks:\
 ${YANG_ROOT}/vendor/alliedtelesis:\
 ${YANG_ROOT}/vendor/arrcus:\
+${YANG_ROOT}/standard/etsi:\
 ${YANG_ROOT}/vendor/ciena"
 
 # COPY required files
