@@ -42,7 +42,7 @@ spec:
           args:
             - |
               set -eu
-              if [ -d /yang/.git ]; then
+              if [ -f /yang/.last-update ] && [ -d /yang/standard ]; then
                 echo "yang modules present, last update: $(cat /yang/.last-update 2>/dev/null || echo unknown)"
                 exit 0
               fi
