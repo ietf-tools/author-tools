@@ -136,6 +136,29 @@ RUN mkdir -p /tmp/cache/xml2rfc && \
     chown -R www-data:0 /tmp/cache /var/www/.cache
 ENV KRAMDOWN_REFCACHEDIR=/tmp/cache/refcache
 
+# yin yang
+WORKDIR /usr/src/app/
+ENV YANG_ROOT=/usr/src/app/yang
+ENV YANG_MODPATH="\
+${YANG_ROOT}/standard/ietf/RFC:\
+${YANG_ROOT}/standard/ietf/DRAFT:\
+${YANG_ROOT}/standard/iana:\
+${YANG_ROOT}/standard/ieee/published:\
+${YANG_ROOT}/standard/ieee/draft:\
+${YANG_ROOT}/standard/bbf:\
+${YANG_ROOT}/standard/mef:\
+${YANG_ROOT}/standard/itu:\
+${YANG_ROOT}/standard/etsi:\
+${YANG_ROOT}/vendor/cisco:\
+${YANG_ROOT}/vendor/huawei:\
+${YANG_ROOT}/vendor/nokia:\
+${YANG_ROOT}/vendor/juniper:\
+${YANG_ROOT}/vendor/fujitsu:\
+${YANG_ROOT}/vendor/readylinks:\
+${YANG_ROOT}/vendor/alliedtelesis:\
+${YANG_ROOT}/vendor/arrcus:\
+${YANG_ROOT}/standard/etsi:\
+${YANG_ROOT}/vendor/ciena"
 
 # COPY required files
 COPY static /usr/share/nginx/html/
