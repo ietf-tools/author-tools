@@ -133,3 +133,6 @@ at/config.py
 
 # JavaScript
 /node_modules
+
+# vim
+.swp
