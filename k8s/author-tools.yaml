@@ -101,8 +101,8 @@ spec:
             - name: at-app-tmp
               mountPath: /usr/src/app/tmp
             - name: yang-modules
-              persistentVolumeClaim:
-              claimName: author-tools-yang
+              mountPath: /usr/src/app/yang
+              readOnly: true
           env:
             - name: "CONTAINER_ROLE"
               value: "author-tools"
@@ -146,6 +146,9 @@ spec:
         - name: at-app-tmp
           emptyDir:
             sizeLimit: "4Gi"
+        - name: yang-modules
+          persistentVolumeClaim:
+            claimName: author-tools-yang
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
 ---
