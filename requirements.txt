@@ -4,6 +4,7 @@ flask-cors>=6.0.5
 gunicorn[gevent]>=26.0.0
 id2xml>=1.6.0
 iddiff>=0.5.1
+pyang>=2.7.1
 requests>=2.34.2
 sentry-sdk[flask]>=2.64.0
 svgcheck>=0.12.0

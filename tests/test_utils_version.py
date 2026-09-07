@@ -12,6 +12,7 @@ from docker.version import (
     get_weasyprint_version,
     get_xml2rfc_version,
     get_rst2rfcxml_version,
+    get_pyang_version,
 )
 
 
@@ -80,6 +81,12 @@ class TestUtilsVersion(TestCase):
 
     def test_get_rst2rfcxml_version(self):
         result = get_rst2rfcxml_version()
+
+        self.assertIsNotNone(result)
+        self.assertIn(".", result)
+
+    def test_get_pyang_version(self):
+        result = get_pyang_version()
 
         self.assertIsNotNone(result)
         self.assertIn(".", result)

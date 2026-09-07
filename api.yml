@@ -803,6 +803,54 @@ paths:
                   error:
                     type: string
                     description: Error description
+  /api/yang/validate:
+    post:
+      summary: Validate YANG module with pyang
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: YANG module file with .yang extension
+      responses:
+        '200':
+          description: Returns pyang output
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pyang:
+                    type: string
+                    description: pyang output
+                  errors:
+                    type: string
+                    description: pyang errors and warnings
+        '400':
+          description: Error has occurred.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
+        '401':
+          description: Failed to authenticate.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
   /api/version:
     get:
       summary: Returns version information.
@@ -856,3 +904,6 @@ paths:
                       rst2rfcxml:
                         type: string
                         description: rst2rfcxml version
+                      pyang:
+                        type: string
+                        description: pyang version

@@ -2,3 +2,5 @@
 namespace: author-tools
 resources:
   - author-tools.yaml
+  - yang-pvc.yaml
+  - yang-update-cronjob.yaml
