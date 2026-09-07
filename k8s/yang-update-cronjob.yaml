@@ -54,6 +54,12 @@ spec:
               env:
                 - name: HOME
                   value: /tmp
+                - name: GIT_CONFIG_COUNT
+                  value: "1"
+                - name: GIT_CONFIG_KEY_0
+                  value: safe.directory
+                - name: GIT_CONFIG_VALUE_0
+                  value: /yang
               volumeMounts:
                 - name: yang-modules
                   mountPath: /yang
