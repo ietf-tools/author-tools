@@ -47,6 +47,7 @@ from at.utils.validation import (
     svgcheck as get_svgcheck,
     validate_draft,
 )
+from at.utils.yang import validate_yang
 
 BAD_REQUEST = 400
 
@@ -495,6 +496,27 @@ def abnf_parse():
     errors, abnf = parse_abnf(filename, logger=logger)
 
     return jsonify({"errors": errors, "abnf": abnf})
+
+
+@bp.route("/yang/validate", methods=("POST",))
+@check_file
+def yang_validate():
+    """GET: /yang/validate API call
+    Validate YANG file and returns results"""
+
+    logger = current_app.logger
+
+    if "file" not in request.files:
+        logger.info("no input file")
+        return jsonify(error="No file"), BAD_REQUEST
+
+    file = request.files["file"]
+
+    _, filename = save_file(file, current_app.config["UPLOAD_DIR"])
+
+    result, errors = validate_yang(filename, logger=logger)
+
+    return jsonify({"pyang": result, "errors": errors})
 
 
 @bp.route("/svgcheck", methods=("POST",))

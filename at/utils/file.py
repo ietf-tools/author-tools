@@ -19,6 +19,7 @@ ALLOWED_EXTENSIONS = (
 ALLOWED_EXTENSIONS_BY_PROCESS = {
     "svgcheck": ("svg",),
     "clean_svg_ids": ("xml",),
+    "yang_validate": ("yang",),
 }
 DIR_MODE = 0o770
 DRAFT_NAME = re_compile(r"(-\d+)?(\..*)?$")
@@ -157,6 +158,8 @@ def check_file(f, *args, **kwargs):
         file_check_process = "svgcheck"
     if "/clean_svg_ids" in request.path:
         file_check_process = "clean_svg_ids"
+    if "/yang/validate" in request.path:
+        file_check_process = "yang_validate"
 
     for file_entry in request.files:
         file = request.files[file_entry]
