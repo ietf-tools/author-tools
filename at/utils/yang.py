@@ -9,7 +9,9 @@ def validate_yang(filename, logger=getLogger()):
     output = None
 
     try:
-        output = proc_run(args=["pyang", "--ietf", filename], capture_output=True)
+        output = proc_run(
+            args=["pyang", "--ietf", "--strict", filename], capture_output=True
+        )
     except RunnerError as e:  # pragma: no cover
         logger.info(f"process error: {str(e)}")
 
