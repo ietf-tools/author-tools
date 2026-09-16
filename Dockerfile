@@ -139,9 +139,10 @@ ENV KRAMDOWN_REFCACHEDIR=/tmp/cache/refcache
 # yin yang
 WORKDIR /usr/src/app/
 ENV YANG_ROOT=/usr/src/app/yang
+# experimental/ietf-extracted-YANG-modules has YANG models extracted from I-Ds.
 ENV YANG_MODPATH="\
 ${YANG_ROOT}/standard/ietf/RFC:\
-${YANG_ROOT}/standard/ietf/DRAFT:\
+${YANG_ROOT}/experimental/ietf-extracted-YANG-modules:\
 ${YANG_ROOT}/standard/iana:\
 ${YANG_ROOT}/standard/ieee/published:\
 ${YANG_ROOT}/standard/ieee/draft:\
