@@ -50,7 +50,7 @@ spec:
               git -C /yang remote add origin \
                 https://github.com/YangModels/yang.git
               git -C /yang fetch --depth 1 origin main
-              git -C /yang sparse-checkout set standard
+              git -C /yang sparse-checkout set standard experimental/ietf-extracted-YANG-modules
               git -C /yang checkout -q --force FETCH_HEAD
               git -C /yang submodule update --init --depth 1 \
                 standard/bbf standard/mef
