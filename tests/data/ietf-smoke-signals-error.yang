@@ -1,0 +1,10 @@
+module ietf-smoke-signals-error {
+  namespace "urn:example:smoke-signals";
+  prefix smoke;
+
+  container smoke-signals {
+    leaf signal {
+      type strng;
+    }
+  }
+}

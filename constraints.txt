@@ -27,6 +27,7 @@ packaging==26.3
 pathlib2==2.3.7.post1
 pillow==12.3.0
 platformdirs==4.11.8
+pyang==2.7.1
 pycountry==26.2.16
 pycparser==3.0
 pydyf==0.12.1
