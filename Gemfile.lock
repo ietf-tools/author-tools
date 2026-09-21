@@ -26,11 +26,11 @@ GEM
       connection_pool (>= 2.2.4, < 4)
     ostruct (0.6.3)
     rexml (3.4.4)
-    unicode-blocks (1.11.0)
-    unicode-name (1.14.0)
-      unicode-types (~> 1.11)
-    unicode-scripts (1.12.0)
-    unicode-types (1.11.0)
+    unicode-blocks (1.12.0)
+    unicode-name (1.15.0)
+      unicode-types (~> 1.12)
+    unicode-scripts (1.13.0)
+    unicode-types (1.12.0)
 
 PLATFORMS
   arm64-darwin-20
