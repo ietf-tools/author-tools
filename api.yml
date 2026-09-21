@@ -793,6 +793,21 @@ paths:
                   type: string
                   format: binary
                   description: YANG module file with .yang extension
+                ietf:
+                  type: boolean
+                  default: true
+                  description: >-
+                    Validate against IETF YANG guidelines (pyang --ietf).
+                verbose:
+                  type: boolean
+                  default: true
+                  description: >-
+                    Enable verbose pyang output (pyang --verbose).
+                strict:
+                  type: boolean
+                  default: false
+                  description: >-
+                    Force strict YANG compliance (pyang --strict).
       responses:
         '200':
           description: Returns pyang output

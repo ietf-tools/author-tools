@@ -86,6 +86,21 @@
             <label for="formFile" class="form-label">Input YANG file</label>
             <input class="form-control form-control-lg" id="formFile" type="file" accept=".yang" required data-bs-toggle="tooltip" data-bs-placement="bottom" title="Select input YANG file.">
           </div>
+          <div>
+            <p class="mt-3 mb-1">Options for pyang validation:</p>
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="switchIETF" checked>
+            <label class="form-check-label" for="switchIETF">IETF guidelines (--ietf)</label>
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="switchVerbose" checked>
+            <label class="form-check-label" for="switchVerbose">Verbose output (--verbose)</label>
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="switchStrict">
+            <label class="form-check-label" for="switchStrict">Strict compliance (--strict)</label>
+          </div>
         </div>
         <div class="row mt-2">
           <div class="d-grid gap-2 d-md-flex justify-content-md-center">

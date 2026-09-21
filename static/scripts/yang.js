@@ -2,6 +2,9 @@ const alertError  = document.getElementById('alertError');
 const buttonDownload = document.getElementById('buttonDownload');
 const buttonCheck = document.getElementById('buttonCheck');
 const formFile = document.getElementById('formFile');
+const switchIETF = document.getElementById('switchIETF');
+const switchVerbose = document.getElementById('switchVerbose');
+const switchStrict = document.getElementById('switchStrict');
 const messageError = document.getElementById('messageError');
 const accordionYANGValidate = document.getElementById('accordionYANGValidate');
 const accordionItemErrors = document.getElementById('accordionItemErrors');
@@ -45,6 +48,15 @@ function parse() {
   const file = formFile.files[0];
 
   formData.append('file', file);
+  if (!switchIETF.checked) {
+    formData.append('ietf', 'false');
+  }
+  if (!switchVerbose.checked) {
+    formData.append('verbose', 'false');
+  }
+  if (switchStrict.checked) {
+    formData.append('strict', 'true');
+  }
 
   const request = new Request(apiCall, {
     method: 'POST',

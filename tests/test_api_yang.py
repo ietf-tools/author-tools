@@ -50,7 +50,11 @@ class TestApiYangValidate(TestCase):
         with self.app.test_client() as client:
             with self.app.app_context():
                 result = client.post(
-                    API, data={"file": (open(get_path(TEST_YANG), "rb"), TEST_YANG)}
+                    API,
+                    data={
+                        "file": (open(get_path(TEST_YANG), "rb"), TEST_YANG),
+                        "verbose": "false",
+                    },
                 )
                 json_data = result.get_json()
 
@@ -76,6 +80,41 @@ class TestApiYangValidate(TestCase):
                 self.assertGreater(len(json_data["errors"]), 0)
                 self.assertIn('type "strng" not found', json_data["errors"])
                 self.assertIn("RFC 8407", json_data["errors"])
+
+    def test_yang_validate_no_ietf(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post(
+                    API,
+                    data={
+                        "file": (
+                            open(get_path(TEST_YANG_ERROR), "rb"),
+                            TEST_YANG_ERROR,
+                        ),
+                        "ietf": "false",
+                    },
+                )
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 200)
+                self.assertNotIn("RFC 8407", json_data["errors"])
+
+    def test_yang_validate_verbose(self):
+        with self.app.test_client() as client:
+            with self.app.app_context():
+                result = client.post(
+                    API,
+                    data={
+                        "file": (open(get_path(TEST_YANG), "rb"), TEST_YANG),
+                        "verbose": "true",
+                    },
+                )
+                json_data = result.get_json()
+
+                self.assertEqual(result.status_code, 200)
+                # verbose output is written to stderr
+                self.assertGreater(len(json_data["errors"]), 0)
+                self.assertIn("# read", json_data["errors"])
 
     def test_yang_validate_no_internal_paths(self):
         with self.app.test_client() as client:
