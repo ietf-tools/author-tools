@@ -3,15 +3,22 @@ from logging import getLogger
 from at.utils.runner import proc_run, RunnerError
 
 
-def validate_yang(filename, logger=getLogger()):
+def validate_yang(filename, ietf=True, verbose=True, strict=False, logger=getLogger()):
     """Validate YANG files with pyang"""
     logger.debug("running pyang")
     output = None
 
+    args = ["pyang"]
+    if ietf:
+        args.append("--ietf")
+    if verbose:
+        args.append("--verbose")
+    if strict:
+        args.append("--strict")
+    args.append(filename)
+
     try:
-        output = proc_run(
-            args=["pyang", "--ietf", "--strict", filename], capture_output=True
-        )
+        output = proc_run(args=args, capture_output=True)
     except RunnerError as e:  # pragma: no cover
         logger.info(f"process error: {str(e)}")
 

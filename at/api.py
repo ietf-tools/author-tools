@@ -514,7 +514,13 @@ def yang_validate():
 
     _, filename = save_file(file, current_app.config["UPLOAD_DIR"])
 
-    result, errors = validate_yang(filename, logger=logger)
+    ietf = str(request.values.get("ietf", "true")).lower() != "false"
+    verbose = str(request.values.get("verbose", "true")).lower() != "false"
+    strict = str(request.values.get("strict", "false")).lower() == "true"
+
+    result, errors = validate_yang(
+        filename, ietf=ietf, verbose=verbose, strict=strict, logger=logger
+    )
 
     return jsonify({"pyang": result, "errors": errors})
 

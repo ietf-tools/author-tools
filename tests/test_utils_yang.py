@@ -34,7 +34,9 @@ class TestUtilsYang(TestCase):
         rmtree(TEMPORARY_DATA_DIR, ignore_errors=True)
 
     def test_validate_yang(self):
-        pyang, errors = validate_yang("".join([TEMPORARY_DATA_DIR, TEST_YANG]))
+        pyang, errors = validate_yang(
+            "".join([TEMPORARY_DATA_DIR, TEST_YANG]), verbose=False
+        )
 
         self.assertEqual(errors, "")
         self.assertEqual(pyang, "YANG file is valid.")
@@ -51,6 +53,22 @@ class TestUtilsYang(TestCase):
 
         self.assertIn("RFC 8407", errors)
         self.assertIn("warning: ", errors)
+
+    def test_validate_yang_no_ietf(self):
+        pyang, errors = validate_yang(
+            "".join([TEMPORARY_DATA_DIR, TEST_YANG_ERROR]), ietf=False
+        )
+
+        self.assertNotIn("RFC 8407", errors)
+
+    def test_validate_yang_verbose(self):
+        pyang, errors = validate_yang(
+            "".join([TEMPORARY_DATA_DIR, TEST_YANG]), verbose=True
+        )
+
+        # verbose output is written to stderr
+        self.assertGreater(len(errors), 0)
+        self.assertIn("# read", errors)
 
     def test_validate_yang_non_yang_file(self):
         pyang, errors = validate_yang("".join([TEMPORARY_DATA_DIR, TEST_TEXT_DRAFT]))
