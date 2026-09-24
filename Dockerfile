@@ -37,6 +37,8 @@ RUN apt-get update && \
         git \
         build-essential \
         cmake \
+        bmake \
+        clang \
         nginx \
         supervisor && \
     rm -rf /var/lib/apt/lists/* /var/log/dpkg.log && \
@@ -92,6 +94,14 @@ RUN git clone --branch v1.6.0 --recurse-submodules https://github.com/dthaler/rs
     chmod +x /bin/rst2rfcxml && \
     cd .. && \
     rm -rf rst2rfcxml
+
+# Build and install kgt
+RUN git clone --depth 1 --recursive https://github.com/katef/kgt.git kgt && \
+    cd kgt && \
+    CC=clang bmake -r && \
+    bmake -r install && \
+    cd .. && \
+    rm -rf kgt
 
 COPY Gemfile Gemfile.lock LICENSE README.md api.yml constraints.txt package-lock.json package.json requirements.txt docker/version.py ./
 COPY at ./at
