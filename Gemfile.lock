@@ -2,7 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     base64 (0.3.0)
-    connection_pool (3.0.2)
+    connection_pool (3.0.3)
     differ (0.1.2)
     json_pure (2.8.1)
     kramdown (2.4.0)
