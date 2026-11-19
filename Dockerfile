@@ -1,4 +1,4 @@
-FROM ubuntu:noble
+FROM ubuntu:resolute
 LABEL maintainer="Kesara Rathnayake <kesara@staff.ietf.org>"
 
 ARG VERSION=6.6.6
@@ -11,12 +11,6 @@ ENV KRAMDOWN_SAFE=1
 WORKDIR /usr/src/app
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
-# Add nodejs 18.x
-RUN apt-get update && \
-    apt-get install -y curl gpg && \
-    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
-    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_18.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
 
 RUN apt-get update && \
     apt-get install -y \
@@ -38,6 +32,8 @@ RUN apt-get update && \
         build-essential \
         cmake \
         nginx \
+        nodejs \
+        npm \
         supervisor && \
     rm -rf /var/lib/apt/lists/* /var/log/dpkg.log && \
     apt-get autoremove -y && \
